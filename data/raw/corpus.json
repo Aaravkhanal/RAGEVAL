@@ -4,6 +4,10 @@
     "text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth. Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters. Operating cash flow reached $215 million, compared to $145 million in Q3 2023. Net retention rate stood at 119%, moderating slightly from 122% in the prior quarter due to enterprise budget scrutiny in EMEA. For Q4 2024, management expects revenue between $880 million and $890 million with capital expenditures capped at $95 million.",
     "title": "ApexCloud Q3 2024 Financial Performance & Guidance",
     "domain": "finance",
+    "license": "original-synthetic-in-repo",
+    "source_url": null,
+    "provenance": "Author-written fiction in rageval/dataset/generator.py. Entities are not real.",
+    "retrieved_date": null,
     "metadata": {
       "quarter": "Q3 2024",
       "ticker": "APEX",
@@ -15,6 +19,10 @@
     "text": "As of September 30, 2024, ApexCloud held total cash, cash equivalents, and marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029. The notes carry a fixed coupon rate of 3.875% payable semi-annually. In August 2024, the company repurchased $150 million in Class A common stock under its existing $500 million share repurchase authorization.",
     "title": "ApexCloud Long-Term Debt and Capital Structure",
     "domain": "finance",
+    "license": "original-synthetic-in-repo",
+    "source_url": null,
+    "provenance": "Author-written fiction in rageval/dataset/generator.py. Entities are not real.",
+    "retrieved_date": null,
     "metadata": {
       "filing": "Debt Note 7",
       "source": "SEC Edgar"
@@ -25,6 +33,10 @@
     "text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. Grade 3 or higher treatment-related adverse events occurred in 31.2% of patients receiving combination therapy, predominantly manifested as elevated alanine aminotransferase (ALT) and immune-mediated colitis. Discontinuation due to adverse events was 9.4%.",
     "title": "Phase 3 Clinical Evaluation of Veloceptin in Metastatic Melanoma",
     "domain": "biomedical",
+    "license": "original-synthetic-in-repo",
+    "source_url": null,
+    "provenance": "Author-written fiction in rageval/dataset/generator.py. Entities are not real.",
+    "retrieved_date": null,
     "metadata": {
       "trial_id": "NCT04892110",
       "phase": "Phase 3",
@@ -36,6 +48,10 @@
     "text": "Veloceptin is a humanized monoclonal IgG1-kappa antibody targeting immunosuppressive receptor Siglec-15. Following intravenous infusion at the recommended phase 2/3 dose of 10 mg/kg every three weeks, terminal elimination half-life was 18.4 days with steady-state concentration achieved by cycle 4. No dose-limiting toxicities were observed up to 20 mg/kg.",
     "title": "Pharmacokinetics and Dosing Tolerability of Veloceptin",
     "domain": "biomedical",
+    "license": "original-synthetic-in-repo",
+    "source_url": null,
+    "provenance": "Author-written fiction in rageval/dataset/generator.py. Entities are not real.",
+    "retrieved_date": null,
     "metadata": {
       "molecule": "Veloceptin",
       "target": "Siglec-15"
@@ -46,6 +62,10 @@
     "text": "HydraKV is a geo-replicated distributed key-value store utilizing a quorum-lease consensus protocol optimized for read-heavy workloads. Under uniform 95% read traffic across 5 planetary regions, HydraKV achieved a median read latency of 1.4 ms and a 99th percentile (p99) read latency of 4.8 ms by servicing reads locally via monotonic read lease grants. Write operations require strict majority quorum consensus with Raft, yielding a median write latency of 74.2 ms across cross-Atlantic links. When partition tolerance is challenged, HydraKV guarantees linearizable reads and sequential consistency for concurrent multi-key transactions.",
     "title": "HydraKV: Consensus Protocol and Latency Benchmarks",
     "domain": "systems",
+    "license": "original-synthetic-in-repo",
+    "source_url": null,
+    "provenance": "Author-written fiction in rageval/dataset/generator.py. Entities are not real.",
+    "retrieved_date": null,
     "metadata": {
       "system": "HydraKV",
       "conference": "OSDI 2024"
@@ -56,6 +76,10 @@
     "text": "HydraKV uses an append-only LSM-tree storage engine with tiered leveling compaction. In crash recovery benchmarks on NVMe arrays, node recovery times averaged 3.2 seconds for a 500 GB partition state. Node failure detection utilizes heartbeats calibrated with a 450 ms timeout threshold, triggering leader election within an average of 620 ms.",
     "title": "HydraKV Fault Recovery and Compaction Architecture",
     "domain": "systems",
+    "license": "original-synthetic-in-repo",
+    "source_url": null,
+    "provenance": "Author-written fiction in rageval/dataset/generator.py. Entities are not real.",
+    "retrieved_date": null,
     "metadata": {
       "system": "HydraKV",
       "topic": "Crash Recovery"
@@ -66,6 +90,10 @@
     "text": "NovaDrive formally launched its commercial Level 4 robotaxi service in Phoenix, Arizona in January 2024, deploying an initial fleet of 250 fully autonomous electric vehicles operating 24 hours a day without safety drivers. The fleet completed over 100,000 passenger trips in its first 90 days with zero reported safety incidents.",
     "title": "NovaDrive Autonomous Vehicle Fleet Launch - Press Release (Q1)",
     "domain": "autonomous_vehicles",
+    "license": "original-synthetic-in-repo",
+    "source_url": null,
+    "provenance": "Author-written fiction in rageval/dataset/generator.py. Entities are not real.",
+    "retrieved_date": null,
     "metadata": {
       "version": "early_report",
       "source": "NovaDrive PR"
@@ -76,6 +104,10 @@
     "text": "The Arizona Transportation Safety Board safety audit concluded that NovaDrive had deployed only 85 active vehicles in Phoenix as of April 2024, and mandated that all vehicles maintain licensed backup safety operators behind the wheel following two non-fatal intersection collisions in February 2024. The 24-hour unsupervised permit was suspended indefinitely.",
     "title": "State Transportation Safety Board Audit on NovaDrive - Official Report (Q3)",
     "domain": "autonomous_vehicles",
+    "license": "original-synthetic-in-repo",
+    "source_url": null,
+    "provenance": "Author-written fiction in rageval/dataset/generator.py. Entities are not real.",
+    "retrieved_date": null,
     "metadata": {
       "version": "safety_audit",
       "source": "Arizona Safety Board"

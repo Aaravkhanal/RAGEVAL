@@ -11,6 +11,9 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
+import yaml
+
+from rageval.core.config import PipelineConfig
 from rageval.core.schemas import BenchmarkRunSummary
 
 
@@ -54,6 +57,7 @@ def save_run(
     run_dir: str,
     summaries: List[BenchmarkRunSummary],
     extra_manifest: Optional[Dict[str, Any]] = None,
+    pipeline_configs: Optional[List[PipelineConfig]] = None,
 ) -> None:
     os.makedirs(run_dir, exist_ok=True)
     manifest = {
@@ -75,3 +79,11 @@ def save_run(
                 record = result.model_dump()
                 record["config_name"] = summary.config_name
                 f.write(json.dumps(record) + "\n")
+
+    if pipeline_configs:
+        cfg_dir = os.path.join(run_dir, "configs")
+        os.makedirs(cfg_dir, exist_ok=True)
+        for cfg in pipeline_configs:
+            safe_name = "".join(ch if ch.isalnum() or ch in "-_" else "_" for ch in cfg.name)
+            with open(os.path.join(cfg_dir, f"{safe_name}.yaml"), "w", encoding="utf-8") as f:
+                yaml.safe_dump(cfg.model_dump(), f, sort_keys=False)

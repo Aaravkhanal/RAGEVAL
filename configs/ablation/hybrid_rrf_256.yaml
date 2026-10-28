@@ -1,0 +1,18 @@
+name: Hybrid_RRF_Chunk256
+seed: 0
+chunker:
+  strategy: fixed
+  chunk_size: 256
+  chunk_overlap: 32
+retriever:
+  method: hybrid
+  top_k: 5
+reranker:
+  enabled: false
+generator:
+  backend: mock
+  mock_mode: faithful
+  abstention_policy: empty_context
+evaluator:
+  method: nli
+  allow_heuristic_fallback: false

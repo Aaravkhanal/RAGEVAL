@@ -1,0 +1,589 @@
+[
+  {
+    "id": "v1_001",
+    "domain": "space",
+    "question": "When did Apollo 11 launch, and who were the three crew members?",
+    "gold_answer": "Apollo 11 launched from Cape Kennedy on July 16, 1969, carrying Neil Armstrong, Michael Collins, and Edwin \"Buzz\" Aldrin.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nasa_apollo11_objective",
+        "span": "Apollo 11 launched from Cape Kennedy on July 16, 1969, carrying Commander Neil Armstrong, Command Module Pilot Michael Collins and Lunar Module Pilot Edwin \"Buzz\" Aldrin",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Apollo 11 launched on July 16, 1969",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_apollo11_objective"
+        ]
+      },
+      {
+        "claim": "The crew included Neil Armstrong, Michael Collins, and Edwin Buzz Aldrin",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_apollo11_objective"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "metadata": {}
+  },
+  {
+    "id": "v1_002",
+    "domain": "space",
+    "question": "Where did the Eagle land on the Moon?",
+    "gold_answer": "The Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nasa_apollo11_landing",
+        "span": "the Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The Eagle landed in the Sea of Tranquility",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_apollo11_landing"
+        ]
+      },
+      {
+        "claim": "The landing site was Site 2",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_apollo11_landing"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "metadata": {}
+  },
+  {
+    "id": "v1_003",
+    "domain": "public_health",
+    "question": "Which influenza virus types cause seasonal epidemics in people in the United States?",
+    "gold_answer": "Influenza A and B viruses cause seasonal epidemics of disease in people almost every winter in the United States.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cdc_flu_types",
+        "span": "Influenza A and B viruses cause seasonal epidemics of disease in people (known as flu season) almost every winter in the United States.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Influenza A viruses cause seasonal epidemics in people",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_flu_types"
+        ]
+      },
+      {
+        "claim": "Influenza B viruses cause seasonal epidemics in people",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_flu_types"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "metadata": {}
+  },
+  {
+    "id": "v1_004",
+    "domain": "public_health",
+    "question": "Which influenza A subtypes routinely circulate in people, and do influenza D viruses cause illness in people?",
+    "gold_answer": "Current subtypes that routinely circulate in people include A(H1N1) and A(H3N2). Influenza D viruses are not known to cause illness in people.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cdc_flu_subtypes",
+        "span": "Current subtypes of influenza A viruses that routinely circulate in people include A(H1N1) and A(H3N2).",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_cdc_flu_types",
+        "span": "Influenza D viruses primarily affect cattle with spillover to other animals but are not known to cause illness in people.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "A(H1N1) and A(H3N2) routinely circulate in people",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_flu_subtypes"
+        ]
+      },
+      {
+        "claim": "Influenza D viruses are not known to cause illness in people",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_flu_types"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "metadata": {}
+  },
+  {
+    "id": "v1_005",
+    "domain": "parks",
+    "question": "Why was Yellowstone National Park established, and how large is the Greater Yellowstone Ecosystem?",
+    "gold_answer": "Yellowstone was established primarily to protect hydrothermal areas that contain about half the world's active geysers. The Greater Yellowstone Ecosystem is 28,000 square miles.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_yellowstone_ecosystem",
+        "span": "Established primarily to protect hydrothermal areas that contain about half the world's active geysers, the park also forms the core of the Greater Yellowstone Ecosystem. At 28,000 square miles, it is one of the largest, nearly intact temperate-zone ecosystems on Earth.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Yellowstone was established primarily to protect hydrothermal areas",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yellowstone_ecosystem"
+        ]
+      },
+      {
+        "claim": "Those areas contain about half the world's active geysers",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yellowstone_ecosystem"
+        ]
+      },
+      {
+        "claim": "The Greater Yellowstone Ecosystem is 28,000 square miles",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yellowstone_ecosystem"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "metadata": {}
+  },
+  {
+    "id": "v1_006",
+    "domain": "parks",
+    "question": "How many mammal and bird species does Yellowstone preserve according to the Nature page?",
+    "gold_answer": "The Nature page lists 67 mammals and 285 birds.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_yellowstone_wildlife",
+        "span": "Learn about the park's abundant and diverse species\u201467 mammals, 285 birds, 16 fish, 5 amphibians, and 6 reptiles.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The park has 67 mammal species",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yellowstone_wildlife"
+        ]
+      },
+      {
+        "claim": "The park has 285 bird species",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yellowstone_wildlife"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "metadata": {}
+  },
+  {
+    "id": "v1_007",
+    "domain": "finance",
+    "question": "What was HarborNet's Q2 2025 subscription revenue and monthly churn?",
+    "gold_answer": "HarborNet reported subscription revenue of $412 million for Q2 2025 and monthly churn of 1.8%.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_harbornet_q2",
+        "span": "HarborNet reported subscription revenue of $412 million for the second quarter of 2025, a 9% increase from $378 million in Q2 2024. Average revenue per user was $54.10. Monthly churn was 1.8%.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "HarborNet Q2 2025 subscription revenue was $412 million",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_q2"
+        ]
+      },
+      {
+        "claim": "Monthly churn was 1.8%",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_q2"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "metadata": {}
+  },
+  {
+    "id": "v1_008",
+    "domain": "finance",
+    "question": "How much senior notes does HarborNet have, when do they mature, and how much of the May 2025 repurchase was executed?",
+    "gold_answer": "HarborNet issued $640 million of senior notes due March 2031. Of an $80 million Class B repurchase authorization, $22 million was executed.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_harbornet_balance",
+        "span": "issued $640 million of senior notes due March 2031 at a 5.25% coupon. In May 2025 the board authorized an $80 million repurchase of Class B shares, of which $22 million was executed.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "HarborNet issued $640 million of senior notes due March 2031",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_balance"
+        ]
+      },
+      {
+        "claim": "$22 million of the Class B repurchase was executed",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_balance"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "metadata": {}
+  },
+  {
+    "id": "v1_009",
+    "domain": "systems",
+    "question": "What are LumenGrid's median and p99 GET latencies under the reported read-heavy workload?",
+    "gold_answer": "Median GET latency was 2.1 ms and p99 GET latency was 9.6 ms.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_lumengrid_latency",
+        "span": "median GET latency was 2.1 ms and p99 GET latency was 9.6 ms.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "LumenGrid median GET latency was 2.1 ms",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_lumengrid_latency"
+        ]
+      },
+      {
+        "claim": "LumenGrid p99 GET latency was 9.6 ms",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_lumengrid_latency"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "metadata": {}
+  },
+  {
+    "id": "v1_010",
+    "domain": "systems",
+    "question": "How long did LumenGrid crash recovery take on a 200 GB shard, and what is the heartbeat timeout?",
+    "gold_answer": "Crash recovery on a 200 GB shard completed in 6.4 seconds. Failure detection uses a 300 ms heartbeat timeout.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_lumengrid_recovery",
+        "span": "LumenGrid crash recovery on a 200 GB shard completed in 6.4 seconds on NVMe. Failure detection uses a 300 ms heartbeat timeout",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Recovery of a 200 GB shard completed in 6.4 seconds",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_lumengrid_recovery"
+        ]
+      },
+      {
+        "claim": "Heartbeat timeout is 300 ms",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_lumengrid_recovery"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "metadata": {}
+  },
+  {
+    "id": "v1_011",
+    "domain": "biomedical",
+    "question": "What was median PFS and confirmed ORR for Nerexin plus pembrolizumab in SHORELINE?",
+    "gold_answer": "Median progression-free survival was 11.2 months and confirmed objective response rate was 44.0% in the combination arm.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nerexin_trial",
+        "span": "Nerexin plus pembrolizumab produced median progression-free survival of 11.2 months versus 6.4 months with pembrolizumab alone (hazard ratio 0.72; 95% CI 0.58-0.89). Confirmed objective response rate was 44.0% versus 27.5%.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Median PFS was 11.2 months for Nerexin plus pembrolizumab",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nerexin_trial"
+        ]
+      },
+      {
+        "claim": "Confirmed ORR was 44.0% in the combination arm",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nerexin_trial"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "metadata": {}
+  },
+  {
+    "id": "v1_012",
+    "domain": "finance",
+    "question": "What subscription revenue range did HarborNet guide for Q3 2025?",
+    "gold_answer": "HarborNet expects subscription revenue of $420 million to $428 million for Q3 2025.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_harbornet_guidance",
+        "span": "For Q3 2025 HarborNet expects subscription revenue of $420 million to $428 million",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Q3 2025 subscription revenue guidance is $420 million to $428 million",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_guidance"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "metadata": {}
+  },
+  {
+    "id": "v1_019",
+    "domain": "public_health",
+    "question": "Which influenza virus types cause seasonal epidemics in people in the United States?",
+    "gold_answer": "Influenza A and B viruses cause seasonal epidemics of disease in people almost every winter in the United States.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cdc_flu_types",
+        "span": "Influenza A and B viruses cause seasonal epidemics of disease in people (known as flu season) almost every winter in the United States.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Influenza A and B viruses cause seasonal epidemics in people",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_flu_types"
+        ]
+      },
+      {
+        "claim": "Influenza D viruses cause seasonal epidemics in people",
+        "status": "contradicted",
+        "gold_doc_ids": [
+          "doc_cdc_flu_types"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "mixed_support",
+    "split": "dev",
+    "metadata": {
+      "example_mixed_answer": "Influenza A and B viruses cause seasonal epidemics of disease in people almost every winter in the United States. Influenza D viruses also cause seasonal epidemics in people.",
+      "rq3_note": "Token F1 vs gold stays high if the mixed sentence is appended; claim labels are mixed."
+    }
+  },
+  {
+    "id": "v1_020",
+    "domain": "space",
+    "question": "Where did the Eagle land on the Moon?",
+    "gold_answer": "The Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nasa_apollo11_landing",
+        "span": "the Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The Eagle landed in the Sea of Tranquility",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_apollo11_landing"
+        ]
+      },
+      {
+        "claim": "Armstrong remained on the lunar surface for 14 days",
+        "status": "unsupported",
+        "gold_doc_ids": []
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "mixed_support",
+    "split": "test",
+    "metadata": {
+      "example_mixed_answer": "The Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude. Armstrong remained on the lunar surface for 14 days."
+    }
+  },
+  {
+    "id": "v1_021",
+    "domain": "finance",
+    "question": "What was HarborNet's Q2 2025 subscription revenue?",
+    "gold_answer": "HarborNet reported subscription revenue of $412 million for the second quarter of 2025.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_harbornet_q2",
+        "span": "HarborNet reported subscription revenue of $412 million for the second quarter of 2025",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "HarborNet Q2 2025 subscription revenue was $412 million",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_q2"
+        ]
+      },
+      {
+        "claim": "HarborNet employed 48,000 people in Osaka",
+        "status": "unsupported",
+        "gold_doc_ids": []
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "mixed_support",
+    "split": "dev",
+    "metadata": {
+      "example_mixed_answer": "HarborNet reported subscription revenue of $412 million for the second quarter of 2025 and employed 48,000 people in Osaka."
+    }
+  },
+  {
+    "id": "v1_022",
+    "domain": "parks",
+    "question": "Does Yellowstone contain hydrothermal features?",
+    "gold_answer": "Yellowstone was established primarily to protect hydrothermal areas that contain about half the world's active geysers.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_yellowstone_ecosystem",
+        "span": "Established primarily to protect hydrothermal areas that contain about half the world's active geysers",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Yellowstone contains hydrothermal areas with many active geysers",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yellowstone_ecosystem"
+        ]
+      },
+      {
+        "claim": "Yellowstone contains no hydrothermal features",
+        "status": "contradicted",
+        "gold_doc_ids": [
+          "doc_nps_yellowstone_ecosystem"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "mixed_support",
+    "split": "dev",
+    "metadata": {
+      "example_mixed_answer": "Yellowstone was established primarily to protect hydrothermal areas that contain about half the world's active geysers. Yellowstone contains no hydrothermal features."
+    }
+  }
+]

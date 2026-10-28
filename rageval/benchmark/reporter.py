@@ -23,10 +23,16 @@ class BenchmarkReporter:
                 "Citation Precision": s.mean_citation_precision,
                 "Recall@5": s.mean_recall_at_5,
                 "MRR": s.mean_mrr,
+                "Answer EM": s.mean_answer_em,
+                "Answer F1": s.mean_answer_f1,
+                "Mixed-support n": s.mixed_support_n,
+                "Mixed-support F1": s.mixed_support_mean_answer_f1,
+                "Mixed-support Faithfulness": s.mixed_support_mean_faithfulness,
                 "Abstention Acc": s.abstention_accuracy,
                 "Latency (ms)": s.mean_latency_ms,
                 "P95 Latency (ms)": s.p95_latency_ms,
                 "Est. Cost ($)": s.total_estimated_cost_usd,
+                "Dataset": s.dataset_id,
             })
         return pd.DataFrame(records)
 

@@ -1,0 +1,226 @@
+[
+  {
+    "id": "doc_nasa_apollo11_objective",
+    "text": "The primary objective of Apollo 11 was to complete a national goal set by President John F. Kennedy on May 25, 1961: perform a crewed lunar landing and return to Earth. Apollo 11 launched from Cape Kennedy on July 16, 1969, carrying Commander Neil Armstrong, Command Module Pilot Michael Collins and Lunar Module Pilot Edwin \"Buzz\" Aldrin into an initial Earth-orbit of 114 by 116 miles. An estimated 650 million people watched Armstrong's televised image and heard his voice describe the event as he took \"one small step for a man, one giant leap for mankind\" on July 20, 1969.",
+    "title": "Apollo 11 mission objective, launch, and crew",
+    "domain": "space",
+    "license": "US-government-work-public-domain-17USC105",
+    "source_url": "https://www.nasa.gov/missions/apollo/apollo-11/apollo-11-mission-overview/",
+    "provenance": "Excerpt from NASA Apollo 11 Mission Overview (Sarah A. Loff, 2015-04-17). U.S. government work.",
+    "retrieved_date": "2026-10-28",
+    "metadata": {
+      "text_normalization": "ascii-quotes",
+      "kind": "us_gov_excerpt"
+    }
+  },
+  {
+    "id": "doc_nasa_apollo11_landing",
+    "text": "Partially piloted manually by Armstrong, the Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude. This was about four miles downrange from the predicted touchdown point and occurred almost one-and-a-half minutes earlier than scheduled. It included a powered descent that ran a mere nominal 40 seconds longer than preflight planning due to translation maneuvers to avoid a crater during the final phase of landing.",
+    "title": "Apollo 11 lunar landing site",
+    "domain": "space",
+    "license": "US-government-work-public-domain-17USC105",
+    "source_url": "https://www.nasa.gov/missions/apollo/apollo-11/apollo-11-mission-overview/",
+    "provenance": "Excerpt from NASA Apollo 11 Mission Overview landing paragraph. U.S. government work.",
+    "retrieved_date": "2026-10-28",
+    "metadata": {
+      "text_normalization": "ascii-quotes",
+      "kind": "us_gov_excerpt"
+    }
+  },
+  {
+    "id": "doc_cdc_flu_types",
+    "text": "There are four types of influenza viruses: A, B, C, and D. Influenza A and B viruses cause seasonal epidemics of disease in people (known as flu season) almost every winter in the United States. Influenza A viruses are the only influenza viruses known to cause flu pandemics (i.e., global epidemics of flu disease). Influenza C virus infections generally cause mild illness and are not thought to cause human epidemics. Influenza D viruses primarily affect cattle with spillover to other animals but are not known to cause illness in people.",
+    "title": "Types of influenza viruses",
+    "domain": "public_health",
+    "license": "US-government-work-public-domain-17USC105",
+    "source_url": "https://www.cdc.gov/flu/about/viruses-types.html",
+    "provenance": "Excerpt from CDC Types of Influenza Viruses (page date 2025-09-26). U.S. government work.",
+    "retrieved_date": "2026-10-28",
+    "metadata": {
+      "text_normalization": "ascii-quotes",
+      "kind": "us_gov_excerpt"
+    }
+  },
+  {
+    "id": "doc_cdc_flu_subtypes",
+    "text": "Influenza A viruses are divided into subtypes based on two proteins on the surface of the virus: hemagglutinin (H) and neuraminidase (N). There are 18 hemagglutinin subtypes and 11 neuraminidase subtypes (H1 through H18 and N1 through N11, respectively). Current subtypes of influenza A viruses that routinely circulate in people include A(H1N1) and A(H3N2). Currently circulating influenza A(H1N1) viruses are descendants of the 2009 H1N1 pandemic virus that emerged in the spring of 2009 and caused a flu pandemic. B/Yamagata viruses have not been detected after March 2020.",
+    "title": "Influenza A subtypes and B/Yamagata",
+    "domain": "public_health",
+    "license": "US-government-work-public-domain-17USC105",
+    "source_url": "https://www.cdc.gov/flu/about/viruses-types.html",
+    "provenance": "Excerpt from CDC Types of Influenza Viruses subtype section. U.S. government work.",
+    "retrieved_date": "2026-10-28",
+    "metadata": {
+      "text_normalization": "ascii-quotes",
+      "kind": "us_gov_excerpt"
+    }
+  },
+  {
+    "id": "doc_nps_yellowstone_ecosystem",
+    "text": "Yellowstone National Park is as wondrous as it is complex. Established primarily to protect hydrothermal areas that contain about half the world's active geysers, the park also forms the core of the Greater Yellowstone Ecosystem. At 28,000 square miles, it is one of the largest, nearly intact temperate-zone ecosystems on Earth. It preserves a great variety of terrestrial, aquatic, and microbial life.",
+    "title": "Yellowstone hydrothermal areas and Greater Yellowstone Ecosystem",
+    "domain": "parks",
+    "license": "US-government-work-public-domain-17USC105",
+    "source_url": "https://www.nps.gov/yell/learn/nature/index.htm",
+    "provenance": "Excerpt from NPS Yellowstone Nature page (last updated 2025-04-18). U.S. government work.",
+    "retrieved_date": "2026-10-28",
+    "metadata": {
+      "text_normalization": "ascii-quotes",
+      "kind": "us_gov_excerpt"
+    }
+  },
+  {
+    "id": "doc_nps_yellowstone_wildlife",
+    "text": "Learn about the park's abundant and diverse species\u201467 mammals, 285 birds, 16 fish, 5 amphibians, and 6 reptiles. Hydrothermal features are habitats for microscopic organisms called thermophiles: \"thermo\" for heat, \"phile\" for lover. Fire is a natural process and shapes the ecosystem.",
+    "title": "Yellowstone wildlife counts and thermophiles",
+    "domain": "parks",
+    "license": "US-government-work-public-domain-17USC105",
+    "source_url": "https://www.nps.gov/yell/learn/nature/index.htm",
+    "provenance": "Counts taken from the NPS Yellowstone Nature wildlife blurb on the same page. U.S. government work.",
+    "retrieved_date": "2026-10-28",
+    "metadata": {
+      "text_normalization": "ascii-quotes",
+      "kind": "us_gov_excerpt"
+    }
+  },
+  {
+    "id": "doc_harbornet_q2",
+    "text": "HarborNet reported subscription revenue of $412 million for the second quarter of 2025, a 9% increase from $378 million in Q2 2024. Average revenue per user was $54.10. Monthly churn was 1.8%. Capital expenditure was $67 million, primarily for metro fiber laterals in Portland and Boise.",
+    "title": "HarborNet Q2 2025 subscription results",
+    "domain": "finance",
+    "license": "CC-BY-4.0",
+    "source_url": null,
+    "provenance": "Original fiction written for RAGeval; entities are not real organizations.",
+    "retrieved_date": "2026-10-28",
+    "metadata": {
+      "kind": "original_synthetic",
+      "license_note": "CC-BY-4.0"
+    }
+  },
+  {
+    "id": "doc_harbornet_balance",
+    "text": "As of June 30, 2025, HarborNet held cash and cash equivalents of $290 million and issued $640 million of senior notes due March 2031 at a 5.25% coupon. In May 2025 the board authorized an $80 million repurchase of Class B shares, of which $22 million was executed.",
+    "title": "HarborNet cash, notes, and repurchase",
+    "domain": "finance",
+    "license": "CC-BY-4.0",
+    "source_url": null,
+    "provenance": "Original fiction written for RAGeval; entities are not real organizations.",
+    "retrieved_date": "2026-10-28",
+    "metadata": {
+      "kind": "original_synthetic",
+      "license_note": "CC-BY-4.0"
+    }
+  },
+  {
+    "id": "doc_harbornet_guidance",
+    "text": "For Q3 2025 HarborNet expects subscription revenue of $420 million to $428 million and monthly churn at or below 1.9%. Management capped fiber capital expenditure at $70 million for the quarter.",
+    "title": "HarborNet Q3 2025 guidance",
+    "domain": "finance",
+    "license": "CC-BY-4.0",
+    "source_url": null,
+    "provenance": "Original fiction written for RAGeval; entities are not real organizations.",
+    "retrieved_date": "2026-10-28",
+    "metadata": {
+      "kind": "original_synthetic",
+      "license_note": "CC-BY-4.0"
+    }
+  },
+  {
+    "id": "doc_lumengrid_latency",
+    "text": "LumenGrid is a geo-sharded object store. Under a 90% read workload across four availability zones, median GET latency was 2.1 ms and p99 GET latency was 9.6 ms. Writes use a two-phase commit with a median PUT latency of 41 ms.",
+    "title": "LumenGrid GET/PUT latency",
+    "domain": "systems",
+    "license": "CC-BY-4.0",
+    "source_url": null,
+    "provenance": "Original fiction written for RAGeval; entities are not real organizations.",
+    "retrieved_date": "2026-10-28",
+    "metadata": {
+      "kind": "original_synthetic",
+      "license_note": "CC-BY-4.0"
+    }
+  },
+  {
+    "id": "doc_lumengrid_recovery",
+    "text": "LumenGrid crash recovery on a 200 GB shard completed in 6.4 seconds on NVMe. Failure detection uses a 300 ms heartbeat timeout and elects a new coordinator in 510 ms on average.",
+    "title": "LumenGrid crash recovery",
+    "domain": "systems",
+    "license": "CC-BY-4.0",
+    "source_url": null,
+    "provenance": "Original fiction written for RAGeval; entities are not real organizations.",
+    "retrieved_date": "2026-10-28",
+    "metadata": {
+      "kind": "original_synthetic",
+      "license_note": "CC-BY-4.0"
+    }
+  },
+  {
+    "id": "doc_nerexin_trial",
+    "text": "In the Phase 3 SHORELINE trial (n=510), Nerexin plus pembrolizumab produced median progression-free survival of 11.2 months versus 6.4 months with pembrolizumab alone (hazard ratio 0.72; 95% CI 0.58-0.89). Confirmed objective response rate was 44.0% versus 27.5%. Grade 3 or higher treatment-related adverse events occurred in 22.1% of the combination arm.",
+    "title": "Nerexin SHORELINE Phase 3 results",
+    "domain": "biomedical",
+    "license": "CC-BY-4.0",
+    "source_url": null,
+    "provenance": "Original fiction written for RAGeval; entities are not real organizations.",
+    "retrieved_date": "2026-10-28",
+    "metadata": {
+      "kind": "original_synthetic",
+      "license_note": "CC-BY-4.0"
+    }
+  },
+  {
+    "id": "doc_nerexin_pk",
+    "text": "Nerexin is a humanized IgG4 antibody against OX40. The recommended dose is 6 mg/kg every four weeks. Terminal elimination half-life was 12.1 days. No dose-limiting toxicities were observed up to 12 mg/kg.",
+    "title": "Nerexin dose and pharmacokinetics",
+    "domain": "biomedical",
+    "license": "CC-BY-4.0",
+    "source_url": null,
+    "provenance": "Original fiction written for RAGeval; entities are not real organizations.",
+    "retrieved_date": "2026-10-28",
+    "metadata": {
+      "kind": "original_synthetic",
+      "license_note": "CC-BY-4.0"
+    }
+  },
+  {
+    "id": "doc_cedarrail_pr",
+    "text": "CedarRail opened unsupervised light-rail service in Tacoma in March 2025 with 40 driverless cars running 20 hours per day and zero passenger injuries in the first 60 days.",
+    "title": "CedarRail unsupervised service press note",
+    "domain": "transit",
+    "license": "CC-BY-4.0",
+    "source_url": null,
+    "provenance": "Original fiction written for RAGeval; entities are not real organizations.",
+    "retrieved_date": "2026-10-28",
+    "metadata": {
+      "kind": "original_synthetic",
+      "license_note": "CC-BY-4.0"
+    }
+  },
+  {
+    "id": "doc_cedarrail_audit",
+    "text": "The Pierce County transit audit found 12 of the advertised 40 CedarRail cars in revenue service as of June 2025 and required a licensed operator in every cab after three platform overruns in April 2025. Unsupervised service was suspended.",
+    "title": "Pierce County CedarRail audit",
+    "domain": "transit",
+    "license": "CC-BY-4.0",
+    "source_url": null,
+    "provenance": "Original fiction written for RAGeval; entities are not real organizations.",
+    "retrieved_date": "2026-10-28",
+    "metadata": {
+      "kind": "original_synthetic",
+      "license_note": "CC-BY-4.0"
+    }
+  },
+  {
+    "id": "doc_millford_library",
+    "text": "The Millford Public Library on Cedar Street is open Tuesday through Saturday from 10:00 a.m. to 6:00 p.m. The local history room holds 14,000 cataloged photographs. Fines are $0.25 per day.",
+    "title": "Millford Public Library hours",
+    "domain": "municipal",
+    "license": "CC-BY-4.0",
+    "source_url": null,
+    "provenance": "Original fiction written for RAGeval; entities are not real organizations.",
+    "retrieved_date": "2026-10-28",
+    "metadata": {
+      "kind": "original_synthetic",
+      "license_note": "CC-BY-4.0"
+    }
+  }
+]

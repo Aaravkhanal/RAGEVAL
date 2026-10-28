@@ -1,0 +1,228 @@
+[
+  {
+    "id": "v1_013",
+    "domain": "space",
+    "question": "What meals did the Apollo 11 crew eat during translunar coast?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "answerability": "unanswerable",
+    "scenario_type": "unanswerable",
+    "split": "dev",
+    "metadata": {
+      "adversarial_reason": "The excerpts describe launch, crew, and landing; they do not list meals."
+    }
+  },
+  {
+    "id": "v1_014",
+    "domain": "finance",
+    "question": "What share of HarborNet Q2 2025 revenue came from Japanese enterprise customers?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "answerability": "unanswerable",
+    "scenario_type": "unanswerable",
+    "split": "dev",
+    "metadata": {
+      "adversarial_reason": "HarborNet reports total subscription revenue, not a Japan split."
+    }
+  },
+  {
+    "id": "v1_015",
+    "domain": "parks",
+    "question": "How many recreational visits did Yellowstone record in calendar year 2024?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "answerability": "unanswerable",
+    "scenario_type": "unanswerable",
+    "split": "dev",
+    "metadata": {
+      "adversarial_reason": "The Nature page excerpts do not state 2024 visitation."
+    }
+  },
+  {
+    "id": "v1_016",
+    "domain": "biomedical",
+    "question": "What was the 5-year overall survival for pediatric patients treated with Nerexin?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "answerability": "unanswerable",
+    "scenario_type": "unanswerable",
+    "split": "test",
+    "metadata": {
+      "adversarial_reason": "SHORELINE reports adult PFS/ORR; pediatric 5-year OS is absent."
+    }
+  },
+  {
+    "id": "v1_017",
+    "domain": "transit",
+    "question": "Did CedarRail operate unsupervised light-rail cars in Tacoma without licensed operators?",
+    "gold_answer": "Sources conflict. The press note says CedarRail opened unsupervised service with 40 driverless cars. The Pierce County audit required a licensed operator in every cab and suspended unsupervised service.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cedarrail_pr",
+        "span": "CedarRail opened unsupervised light-rail service in Tacoma in March 2025 with 40 driverless cars",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_cedarrail_audit",
+        "span": "required a licensed operator in every cab after three platform overruns in April 2025. Unsupervised service was suspended.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The press note claimed unsupervised driverless service",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cedarrail_pr"
+        ]
+      },
+      {
+        "claim": "The audit required a licensed operator in every cab",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cedarrail_audit"
+        ]
+      }
+    ],
+    "test_type": "conflicting",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "conflicting",
+    "split": "dev",
+    "metadata": {
+      "conflict_docs": [
+        "doc_cedarrail_pr",
+        "doc_cedarrail_audit"
+      ]
+    }
+  },
+  {
+    "id": "v1_018",
+    "domain": "transit",
+    "question": "How many CedarRail cars were in revenue service?",
+    "gold_answer": "Sources conflict. The press note advertised 40 driverless cars; the audit found 12 of the advertised 40 cars in revenue service as of June 2025.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cedarrail_pr",
+        "span": "with 40 driverless cars running 20 hours per day",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_cedarrail_audit",
+        "span": "The Pierce County transit audit found 12 of the advertised 40 CedarRail cars in revenue service as of June 2025",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The press note advertised 40 driverless cars",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cedarrail_pr"
+        ]
+      },
+      {
+        "claim": "The audit found 12 cars in revenue service as of June 2025",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cedarrail_audit"
+        ]
+      }
+    ],
+    "test_type": "conflicting",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "conflicting",
+    "split": "test",
+    "metadata": {
+      "conflict_docs": [
+        "doc_cedarrail_pr",
+        "doc_cedarrail_audit"
+      ]
+    }
+  },
+  {
+    "id": "v1_023",
+    "domain": "finance",
+    "question": "What was HarborNet monthly churn in Q2 2025?",
+    "gold_answer": "Monthly churn was 1.8%.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_harbornet_q2",
+        "span": "Monthly churn was 1.8%.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Monthly churn was 1.8%",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_q2"
+        ]
+      }
+    ],
+    "test_type": "distractor",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "distractor",
+    "split": "dev",
+    "metadata": {
+      "distractor_docs": [
+        "doc_millford_library",
+        "doc_nerexin_trial"
+      ]
+    }
+  },
+  {
+    "id": "v1_024",
+    "domain": "public_health",
+    "question": "Are influenza A viruses the only influenza viruses known to cause flu pandemics?",
+    "gold_answer": "Yes. Influenza A viruses are the only influenza viruses known to cause flu pandemics.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cdc_flu_types",
+        "span": "Influenza A viruses are the only influenza viruses known to cause flu pandemics",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Influenza A viruses are the only influenza viruses known to cause flu pandemics",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_flu_types"
+        ]
+      }
+    ],
+    "test_type": "distractor",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "distractor",
+    "split": "test",
+    "metadata": {
+      "distractor_docs": [
+        "doc_millford_library",
+        "doc_harbornet_q2"
+      ]
+    }
+  }
+]

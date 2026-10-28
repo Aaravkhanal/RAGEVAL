@@ -8,6 +8,9 @@
     "gold_atomic_claims": [],
     "test_type": "unanswerable",
     "expected_abstention": true,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "smoke",
     "metadata": {
       "adversarial_reason": "ApexCloud reports total revenue and EMEA budget scrutiny, but Japanese revenue split is never mentioned."
     }
@@ -21,6 +24,9 @@
     "gold_atomic_claims": [],
     "test_type": "unanswerable",
     "expected_abstention": true,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "smoke",
     "metadata": {
       "adversarial_reason": "The trial only evaluates adult metastatic melanoma progression-free survival (14.8 months); 5-year pediatric data does not exist."
     }
@@ -34,25 +40,27 @@
       {
         "doc_id": "doc_conflict_a",
         "span": "deploying an initial fleet of 250 fully autonomous electric vehicles operating 24 hours a day without safety drivers.",
-        "chunk_id": null
+        "chunk_id": null,
+        "passage_id": null
       },
       {
         "doc_id": "doc_conflict_b",
         "span": "mandated that all vehicles maintain licensed backup safety operators behind the wheel following two non-fatal intersection collisions",
-        "chunk_id": null
+        "chunk_id": null,
+        "passage_id": null
       }
     ],
     "gold_atomic_claims": [
       {
         "claim": "NovaDrive PR claimed 250 vehicles operated without safety drivers",
-        "status": "ENTAILEMENT",
+        "status": "supported",
         "gold_doc_ids": [
           "doc_conflict_a"
         ]
       },
       {
         "claim": "State Safety Board mandated licensed backup safety operators behind the wheel",
-        "status": "ENTAILEMENT",
+        "status": "supported",
         "gold_doc_ids": [
           "doc_conflict_b"
         ]
@@ -60,6 +68,9 @@
     ],
     "test_type": "conflicting",
     "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "smoke",
     "metadata": {
       "conflict_docs": [
         "doc_conflict_a",

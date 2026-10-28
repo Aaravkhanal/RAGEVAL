@@ -1,5 +1,12 @@
 """Pure metric functions with documented formulas."""
 
+from rageval.metrics.answer import (
+    answer_em_f1,
+    exact_match,
+    mixed_support_answer_gap,
+    normalize_answer,
+    token_f1,
+)
 from rageval.metrics.claims import (
     claim_coverage,
     claim_support_rate,
@@ -20,4 +27,9 @@ __all__ = [
     "noise_ratio",
     "citation_existence_precision",
     "citation_completeness",
+    "normalize_answer",
+    "exact_match",
+    "token_f1",
+    "answer_em_f1",
+    "mixed_support_answer_gap",
 ]

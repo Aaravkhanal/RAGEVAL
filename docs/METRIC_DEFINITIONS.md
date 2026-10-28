@@ -31,7 +31,17 @@ If \(L\) is empty: support rate is 1.0 when the answer is empty or an abstention
 
 ## Answer-level
 
-Gold-answer token F1 / EM is **not implemented yet** (RQ3 pending). Abstention accuracy = fraction of unanswerable items with `abstained=True`.
+Implemented in `rageval/metrics/answer.py`.
+
+Normalize: lowercase, strip punctuation, drop English articles `a`/`an`/`the`, collapse whitespace, split on spaces.
+
+- **Exact match (EM)** = 1 if normalized prediction equals normalized gold, else 0.
+- **Token F1** = bag-of-tokens F1 after the same normalize. Empty/empty is 1.0.
+- **Unanswerable items** (expected abstention and no gold string): EM/F1 = 1 if the system abstained, else 0.
+
+These scores ignore retrieved evidence. A mixed-support answer can keep token F1 high while claim-level labels are mixed (`mixed_support_answer_gap`).
+
+Abstention accuracy = fraction of unanswerable items with `abstained=True`.
 
 ## System
 

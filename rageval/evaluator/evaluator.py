@@ -17,6 +17,7 @@ from rageval.evaluator.citation_parser import CitationParser
 from rageval.evaluator.decomposer import AtomicClaimDecomposer
 from rageval.evaluator.nli_verifier import NLIVerifier
 from rageval.evaluator.retrieval_metrics import RetrievalMetricsCalculator
+from rageval.metrics.answer import answer_em_f1
 from rageval.metrics.claims import claim_coverage, claim_support_rate, contradiction_rate, unsupported_claim_rate
 
 
@@ -92,10 +93,22 @@ class RAGEvalEvaluator:
             else:
                 correctly_abstained = not abstained
 
+        answer_em: Optional[float] = None
+        answer_f1: Optional[float] = None
+        scenario_type: Optional[str] = None
+        split: Optional[str] = None
         if item:
             retrieval_metrics = RetrievalMetricsCalculator.calculate(retrieved_chunks, item)
             query_id = item.id
             test_type = item.test_type
+            scenario_type = item.scenario_type
+            split = item.split
+            answer_em, answer_f1 = answer_em_f1(
+                generated_answer,
+                item.gold_answer,
+                abstained=abstained,
+                expected_abstention=item.expected_abstention,
+            )
         else:
             retrieval_metrics = RetrievalMetricsCalculator.calculate(
                 retrieved_chunks,
@@ -135,6 +148,10 @@ class RAGEvalEvaluator:
             retrieval_metrics=retrieval_metrics,
             abstained=abstained,
             correctly_abstained=correctly_abstained,
+            answer_em=None if answer_em is None else round(answer_em, 4),
+            answer_f1=None if answer_f1 is None else round(answer_f1, 4),
+            scenario_type=scenario_type,
+            split=split,
             retrieval_latency_ms=round(retrieval_latency_ms, 2),
             generation_latency_ms=round(generation_latency_ms, 2),
             verification_latency_ms=round(verif_latency_ms, 2),

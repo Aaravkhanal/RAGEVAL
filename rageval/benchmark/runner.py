@@ -28,6 +28,8 @@ class BenchmarkRunner:
         self,
         documents: List[Document],
         benchmark_items: List[BenchmarkItem],
+        dataset_id: Optional[str] = None,
+        dataset_version: Optional[str] = None,
     ) -> BenchmarkRunSummary:
         # 1. Index corpus
         self.pipeline.index(documents)
@@ -72,7 +74,14 @@ class BenchmarkRunner:
                 p95_latency_ms=0.0,
                 abstention_accuracy=0.0,
                 conflicting_detection_rate=0.0,
+                mean_answer_em=None,
+                mean_answer_f1=None,
+                mixed_support_n=0,
+                mixed_support_mean_answer_f1=None,
+                mixed_support_mean_faithfulness=None,
                 total_estimated_cost_usd=0.0,
+                dataset_id=dataset_id,
+                dataset_version=dataset_version,
                 results=[],
             )
 
@@ -108,6 +117,12 @@ class BenchmarkRunner:
             else 1.0
         )
 
+        ems = [r.answer_em for r in results if r.answer_em is not None]
+        f1s = [r.answer_f1 for r in results if r.answer_f1 is not None]
+        mixed = [r for r in results if r.scenario_type == "mixed_support"]
+        mixed_f1 = [r.answer_f1 for r in mixed if r.answer_f1 is not None]
+        mixed_faith = [r.faithfulness_score for r in mixed]
+
         return BenchmarkRunSummary(
             config_name=self.pipeline.config.name,
             total_queries=total,
@@ -122,7 +137,14 @@ class BenchmarkRunner:
             p95_latency_ms=round(float(np.percentile(latencies, 95)), 2),
             abstention_accuracy=round(float(abstention_acc), 4),
             conflicting_detection_rate=round(float(conflict_detected), 4),
+            mean_answer_em=None if not ems else round(float(np.mean(ems)), 4),
+            mean_answer_f1=None if not f1s else round(float(np.mean(f1s)), 4),
+            mixed_support_n=len(mixed),
+            mixed_support_mean_answer_f1=None if not mixed_f1 else round(float(np.mean(mixed_f1)), 4),
+            mixed_support_mean_faithfulness=None if not mixed_faith else round(float(np.mean(mixed_faith)), 4),
             total_estimated_cost_usd=None if not costs else round(float(sum(costs)), 6),
+            dataset_id=dataset_id,
+            dataset_version=dataset_version,
             git_commit=git_commit(),
             results=results,
         )

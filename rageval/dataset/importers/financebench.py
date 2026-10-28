@@ -38,7 +38,11 @@ class FinanceBenchImporter:
             gold_atomic_claims=gold_claims,
             test_type=TestType.STANDARD,
             expected_abstention=False,
-            metadata={"source": "FinanceBench", "company": raw.get("company", "")},
+            metadata={
+                "source": "FinanceBench",
+                "company": raw.get("company", ""),
+                "license_note": "Stub only. Do not download FinanceBench until a data card records its license.",
+            },
         )
 
     @classmethod

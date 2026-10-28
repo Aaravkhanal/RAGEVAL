@@ -1,0 +1,24 @@
+{
+  "run_dir": "/Users/aaravkhanal/Desktop/RAGEVAL/experiments/runs/20261028T183042Z_a97ad68f",
+  "environment": {
+    "python": "3.13.13 | packaged by conda-forge | (main, Apr  8 2026, 02:29:07) [Clang 19.1.7 ]",
+    "platform": "macOS-14.5-arm64-arm-64bit-Mach-O",
+    "processor": "arm",
+    "git_commit": "3f8d3a38ca192bbfaceb5c28140a491d42b434d1",
+    "timestamp_utc": "2026-10-28T18:30:43.056745+00:00"
+  },
+  "configs": [
+    "Dense_Chunk128",
+    "Dense_Chunk256_Baseline",
+    "Dense_Chunk512",
+    "Sparse_BM25_Chunk256",
+    "Hybrid_RRF_Chunk256",
+    "Hybrid_RRF_Reranked"
+  ],
+  "data_dir": "data",
+  "dataset_id": "benchmark_v1",
+  "dataset_version": "1.0.0",
+  "split": "all",
+  "n_documents": 16,
+  "n_items": 24
+}

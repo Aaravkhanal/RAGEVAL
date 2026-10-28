@@ -19,11 +19,8 @@ class RAGPipeline:
     def __init__(self, config: Optional[PipelineConfig] = None):
         self.config = config or PipelineConfig()
         self.chunker = get_chunker(self.config.chunker)
-        self.embedder = SentenceTransformerEmbedder(self.config.embedder)
-        self.faiss_index = FAISSIndex(
-            embedder=self.embedder,
-            index_type=self.config.retriever.index_type,
-        )
+        self.embedder: Optional[SentenceTransformerEmbedder] = None
+        self.faiss_index: Optional[FAISSIndex] = None
         self.bm25_retriever: Optional[BM25Retriever] = None
         self.hybrid_retriever: Optional[HybridRetriever] = None
         self.reranker = CrossEncoderReranker(self.config.reranker)
@@ -31,31 +28,50 @@ class RAGPipeline:
         self.documents: List[Document] = []
         self.chunks: List[Chunk] = []
 
+    def _needs_dense(self) -> bool:
+        return self.config.retriever.method in {"dense", "hybrid"}
+
+    def _needs_sparse(self) -> bool:
+        return self.config.retriever.method in {"sparse", "hybrid"}
+
     def index(self, documents: List[Document]) -> None:
-        """Chunks documents and builds dense and sparse indices."""
+        """Chunks documents and builds only the indices the retriever method needs."""
         self.documents = documents
         self.chunks = self.chunker.chunk_documents(documents)
-        
-        # Build dense FAISS index
-        self.faiss_index.build(self.chunks)
 
-        # Build sparse BM25 and hybrid retriever
-        self.bm25_retriever = BM25Retriever(self.chunks)
-        self.hybrid_retriever = HybridRetriever(
-            faiss_index=self.faiss_index,
-            bm25_retriever=self.bm25_retriever,
-            rrf_k=self.config.retriever.rrf_k,
-        )
+        if self._needs_dense():
+            self.embedder = SentenceTransformerEmbedder(self.config.embedder)
+            self.faiss_index = FAISSIndex(
+                embedder=self.embedder,
+                index_type=self.config.retriever.index_type,
+            )
+            self.faiss_index.build(self.chunks)
+
+        if self._needs_sparse():
+            self.bm25_retriever = BM25Retriever(self.chunks)
+
+        if self.config.retriever.method == "hybrid" and self.faiss_index and self.bm25_retriever:
+            self.hybrid_retriever = HybridRetriever(
+                faiss_index=self.faiss_index,
+                bm25_retriever=self.bm25_retriever,
+                rrf_k=self.config.retriever.rrf_k,
+            )
 
     def retrieve(self, query: str, top_k: Optional[int] = None) -> List[RetrievedChunk]:
         k = top_k or self.config.retriever.top_k
         method = self.config.retriever.method
 
-        if method == "sparse" and self.bm25_retriever:
+        if method == "sparse":
+            if not self.bm25_retriever:
+                raise RuntimeError("Sparse retriever requested but BM25 index was not built.")
             candidates = self.bm25_retriever.search(query, top_k=k)
-        elif method == "hybrid" and self.hybrid_retriever:
+        elif method == "hybrid":
+            if not self.hybrid_retriever:
+                raise RuntimeError("Hybrid retriever requested but hybrid index was not built.")
             candidates = self.hybrid_retriever.search(query, top_k=k)
         else:
+            if not self.faiss_index:
+                raise RuntimeError("Dense retriever requested but FAISS index was not built.")
             candidates = self.faiss_index.search(query, top_k=k)
 
         # Apply reranking if configured

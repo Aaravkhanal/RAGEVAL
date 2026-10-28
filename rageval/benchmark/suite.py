@@ -1,7 +1,7 @@
 """Ablation benchmark suite executing grid matrix comparisons."""
 
 from __future__ import annotations
-from typing import Dict, List, Optional
+from typing import List, Optional
 from rageval.core.schemas import Document, BenchmarkItem, BenchmarkRunSummary
 from rageval.core.config import (
     PipelineConfig,
@@ -84,6 +84,8 @@ class BenchmarkSuite:
         self,
         documents: List[Document],
         benchmark_items: List[BenchmarkItem],
+        dataset_id: Optional[str] = None,
+        dataset_version: Optional[str] = None,
     ) -> List[BenchmarkRunSummary]:
         summaries: List[BenchmarkRunSummary] = []
         
@@ -94,7 +96,12 @@ class BenchmarkSuite:
             print(f"--> Running ablation configuration: {cfg.name}")
             pipeline = RAGPipeline(cfg)
             runner = BenchmarkRunner(pipeline, evaluator=evaluator)
-            summary = runner.run(documents, benchmark_items)
+            summary = runner.run(
+                documents,
+                benchmark_items,
+                dataset_id=dataset_id,
+                dataset_version=dataset_version,
+            )
             summaries.append(summary)
 
         return summaries

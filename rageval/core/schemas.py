@@ -23,6 +23,10 @@ class Document(BaseModel):
     text: str
     title: Optional[str] = None
     domain: Optional[str] = "general"
+    license: Optional[str] = None
+    source_url: Optional[str] = None
+    provenance: Optional[str] = None
+    retrieved_date: Optional[str] = None
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
 
@@ -153,6 +157,11 @@ class QueryEvaluationResult(BaseModel):
     abstained: bool = False
     correctly_abstained: Optional[bool] = None
 
+    answer_em: Optional[float] = None
+    answer_f1: Optional[float] = None
+    scenario_type: Optional[str] = None
+    split: Optional[str] = None
+
     retrieval_latency_ms: float = 0.0
     generation_latency_ms: float = 0.0
     verification_latency_ms: float = 0.0
@@ -177,6 +186,11 @@ class BenchmarkRunSummary(BaseModel):
     p95_latency_ms: float
     abstention_accuracy: float
     conflicting_detection_rate: float
+    mean_answer_em: Optional[float] = None
+    mean_answer_f1: Optional[float] = None
+    mixed_support_n: int = 0
+    mixed_support_mean_answer_f1: Optional[float] = None
+    mixed_support_mean_faithfulness: Optional[float] = None
     total_estimated_cost_usd: Optional[float] = None
     run_id: Optional[str] = None
     dataset_id: Optional[str] = None

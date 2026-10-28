@@ -64,6 +64,8 @@ Existing `rageval` modules are the implementation surface. New files are added o
 
 ## Phase 2 — Dataset construction and ground-truth design
 
+**Status:** Complete for the licensed 24-item pilot (`benchmark_v1`). Expansion toward 50–150 items remains a later increment.
+
 **Objective:** A versioned, licensed, small-but-valid benchmark plus retention of the current 8-item set as `smoke`.
 
 **Prerequisites:** Phase 1 terminology and schema fields approved.
@@ -97,6 +99,8 @@ Existing `rageval` modules are the implementation surface. New files are added o
 ---
 
 ## Phase 3 — RAG baseline pipeline (harden, do not rebuild)
+
+**Status:** Complete for the mock/CPU baseline: YAML ablation configs, sparse-only pipelines skip MiniLM, unique run dirs snapshot YAML, blinded mock, `rageval validate`, `tests/test_pipeline_smoke.py`.
 
 **Objective:** A reproducible, blinded, configurable baseline that can run a **smoke** experiment without API keys.
 

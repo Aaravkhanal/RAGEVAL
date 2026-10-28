@@ -24,14 +24,37 @@ def main():
     bench_parser = subparsers.add_parser("benchmark", help="Run ablation benchmark across configurations")
     bench_parser.add_argument("--data-dir", default="data", help="Directory containing corpus and benchmark data")
     bench_parser.add_argument(
+        "--dataset",
+        default="benchmark_v1",
+        help="Dataset id (smoke_v1 or benchmark_v1)",
+    )
+    bench_parser.add_argument(
+        "--split",
+        default="all",
+        help="Item split: all, standard, adversarial, dev, or test",
+    )
+    bench_parser.add_argument(
         "--output-dir",
         default="experiments/runs",
         help="Parent directory for unique run folders (never overwritten)",
     )
+    bench_parser.add_argument(
+        "--config",
+        action="append",
+        default=None,
+        help="Pipeline YAML (repeatable). Default is the 6-config ablation matrix.",
+    )
+
+    validate_parser = subparsers.add_parser("validate", help="Validate corpus/item integrity for a dataset")
+    validate_parser.add_argument("--data-dir", default="data")
+    validate_parser.add_argument("--dataset", default="benchmark_v1")
+    validate_parser.add_argument("--split", default="all")
 
     # Subcommand: report
     report_parser = subparsers.add_parser("report", help="Generate paper-style analysis report and figures")
     report_parser.add_argument("--output-dir", default="reports", help="Output directory for paper analysis")
+    report_parser.add_argument("--dataset", default="benchmark_v1", help="Dataset id")
+    report_parser.add_argument("--data-dir", default="data", help="Directory containing corpus and benchmark data")
 
     # Subcommand: evaluate
     eval_parser = subparsers.add_parser("evaluate", help="Perform claim-level evaluation on a specific answer")
@@ -50,17 +73,40 @@ def main():
     if args.command == "benchmark":
         from rageval.benchmark.run_store import create_run_dir, save_run
 
-        loader = DatasetLoader(args.data_dir)
+        loader = DatasetLoader(args.data_dir, dataset_id=args.dataset)
         corpus = loader.load_corpus()
-        items = loader.load_benchmark("all")
-        print(f"Loaded {len(corpus)} corpus documents and {len(items)} benchmark items.")
-        suite = BenchmarkSuite()
-        summaries = suite.run_suite(corpus, items)
+        items = loader.load_benchmark(args.split)
+        manifest = loader.load_manifest() or {}
+        dataset_version = manifest.get("version")
+        print(
+            f"Loaded {len(corpus)} corpus documents and {len(items)} benchmark items "
+            f"(dataset={args.dataset}, split={args.split})."
+        )
+        if args.config:
+            from rageval.core.config import pipeline_config_from_yaml
+
+            suite = BenchmarkSuite([pipeline_config_from_yaml(path) for path in args.config])
+        else:
+            suite = BenchmarkSuite()
+        summaries = suite.run_suite(
+            corpus,
+            items,
+            dataset_id=args.dataset,
+            dataset_version=dataset_version,
+        )
         run_dir = create_run_dir(args.output_dir)
         save_run(
             run_dir,
             summaries,
-            extra_manifest={"data_dir": args.data_dir, "dataset_id": "smoke_v1"},
+            extra_manifest={
+                "data_dir": args.data_dir,
+                "dataset_id": args.dataset,
+                "dataset_version": dataset_version,
+                "split": args.split,
+                "n_documents": len(corpus),
+                "n_items": len(items),
+            },
+            pipeline_configs=suite.configs,
         )
         BenchmarkReporter.export(summaries, output_dir=run_dir)
         df = BenchmarkReporter.to_dataframe(summaries)
@@ -68,8 +114,29 @@ def main():
         print("\n=== Benchmark Summary ===")
         print(df.to_string(index=False))
 
+    elif args.command == "validate":
+        from rageval.dataset.validator import validate_benchmark_integrity
+
+        loader = DatasetLoader(args.data_dir, dataset_id=args.dataset)
+        corpus = loader.load_corpus()
+        items = loader.load_benchmark(args.split)
+        licensed = args.dataset != "smoke_v1"
+        report = validate_benchmark_integrity(
+            corpus,
+            items,
+            require_license=licensed,
+            require_verbatim_spans=licensed,
+        )
+        print(json.dumps(report, indent=2))
+        if not report["valid"]:
+            sys.exit(1)
+
     elif args.command == "report":
-        report_path = run_and_generate_paper_analysis(output_dir=args.output_dir)
+        report_path = run_and_generate_paper_analysis(
+            output_dir=args.output_dir,
+            dataset_id=args.dataset,
+            data_dir=args.data_dir,
+        )
         print(f"Successfully generated paper analysis at: {report_path}")
 
     elif args.command == "evaluate":

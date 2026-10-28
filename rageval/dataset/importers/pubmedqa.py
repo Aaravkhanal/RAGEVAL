@@ -33,7 +33,11 @@ class PubMedQAImporter:
             gold_atomic_claims=gold_claims,
             test_type=TestType.STANDARD,
             expected_abstention=False,
-            metadata={"source": "PubMedQA", "pmid": pmid},
+            metadata={
+                "source": "PubMedQA",
+                "pmid": pmid,
+                "license_note": "Stub only. Do not download PubMedQA until a data card records its license.",
+            },
         )
 
     @classmethod

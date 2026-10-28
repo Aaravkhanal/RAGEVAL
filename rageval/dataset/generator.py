@@ -132,6 +132,10 @@ def create_synthetic_benchmark() -> Tuple[List[Document], List[BenchmarkItem]]:
             metadata={"version": "safety_audit", "source": "Arizona Safety Board"},
         ),
     ]
+    for document in documents:
+        document.license = "original-synthetic-in-repo"
+        document.provenance = "Author-written fiction in rageval/dataset/generator.py. Entities are not real."
+        document.retrieved_date = None
 
     # 2. Benchmark Queries (Standard, Adversarial Unanswerable, Conflicting Context)
     benchmark_items = [

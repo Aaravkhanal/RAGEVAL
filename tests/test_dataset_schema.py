@@ -16,3 +16,5 @@ def test_smoke_dataset_loads_and_maps_labels():
     gold_statuses = [c.status for it in items for c in it.gold_atomic_claims]
     assert gold_statuses
     assert all(s == VerificationLabel.SUPPORTED for s in gold_statuses)
+    assert all(doc.license == "original-synthetic-in-repo" for doc in docs)
+    assert all(doc.provenance for doc in docs)

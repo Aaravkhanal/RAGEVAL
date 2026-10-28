@@ -9,15 +9,25 @@ from rageval.benchmark.reporter import BenchmarkReporter
 from rageval.analysis.paper_plots import generate_all_paper_figures
 
 
-def run_and_generate_paper_analysis(output_dir: str = "reports") -> str:
+def run_and_generate_paper_analysis(
+    output_dir: str = "reports",
+    dataset_id: str = "benchmark_v1",
+    data_dir: str = "data",
+) -> str:
     os.makedirs(output_dir, exist_ok=True)
-    loader = DatasetLoader("data")
+    loader = DatasetLoader(data_dir, dataset_id=dataset_id)
     corpus = loader.load_corpus()
     items = loader.load_benchmark("all")
+    manifest = loader.load_manifest() or {}
 
     print(f"Loaded {len(corpus)} corpus documents and {len(items)} benchmark evaluation items.")
     suite = BenchmarkSuite()
-    summaries = suite.run_suite(corpus, items)
+    summaries = suite.run_suite(
+        corpus,
+        items,
+        dataset_id=dataset_id,
+        dataset_version=manifest.get("version"),
+    )
 
     # 1. Export tables (CSV, JSON, LaTeX)
     BenchmarkReporter.export(summaries, output_dir=output_dir)
@@ -47,7 +57,7 @@ This report must not claim retrieval or faithfulness improvements unless those d
 ## Notes
 
 - Default generation is a **blinded mock** that copies retrieved sentences. It is not a production LLM.
-- The smoke corpus is **synthetic** (8 documents). It is not SEC, NEJM, or OSDI source text.
+- Dataset: `{dataset_id}` ({len(corpus)} documents, {len(items)} items).
 - Cost is omitted unless explicit pricing is configured.
 - Compare configurations using the table, not canned commentary.
 

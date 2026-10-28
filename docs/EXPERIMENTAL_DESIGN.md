@@ -18,7 +18,7 @@ Embedder: `sentence-transformers/all-MiniLM-L6-v2`.
 ## Dataset
 
 - **smoke_v1**: 8 synthetic documents, 8 items (`data/cards/smoke_v1.md`). Development fixture and CI. Not for publication claims.
-- **benchmark v1**: not built yet (Phase 2 remainder).
+- **benchmark_v1**: 16 licensed documents, 24 items (`data/cards/benchmark_v1.md`). Mix of U.S. government public-domain excerpts and original CC-BY-4.0 fiction. Documented 16/8 dev/test split. The first ablation reports the **full 24-item set** because n_test=8 is underpowered.
 
 ## Analysis plan
 

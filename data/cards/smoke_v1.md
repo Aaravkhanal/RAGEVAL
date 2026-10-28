@@ -4,7 +4,7 @@
 | --- | --- |
 | Dataset id | `smoke_v1` |
 | Version | `1.0.0` |
-| License | Original text in this repository; no third-party corpus license |
+| License | `original-synthetic-in-repo` on every document |
 | Provenance | Author-written synthetic documents in `rageval/dataset/generator.py` |
 | Size | 8 documents, ~527 whitespace tokens; 8 questions (5 standard, 2 unanswerable, 1 conflicting) |
 | Domains | Fictional finance, biomedical, systems, and autonomous-vehicle prose |

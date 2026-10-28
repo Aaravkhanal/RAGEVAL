@@ -34,7 +34,11 @@ class HotpotQAImporter:
             gold_atomic_claims=gold_claims,
             test_type=TestType.STANDARD,
             expected_abstention=False,
-            metadata={"source": "HotpotQA", "level": raw.get("level", "medium")},
+            metadata={
+                "source": "HotpotQA",
+                "level": raw.get("level", "medium"),
+                "license_note": "Stub only. Do not download HotpotQA until a data card records its license. Wikipedia passages are CC-BY-SA.",
+            },
         )
 
     @classmethod

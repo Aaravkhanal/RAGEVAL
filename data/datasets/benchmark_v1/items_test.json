@@ -1,0 +1,272 @@
+[
+  {
+    "id": "v1_002",
+    "domain": "space",
+    "question": "Where did the Eagle land on the Moon?",
+    "gold_answer": "The Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nasa_apollo11_landing",
+        "span": "the Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The Eagle landed in the Sea of Tranquility",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_apollo11_landing"
+        ]
+      },
+      {
+        "claim": "The landing site was Site 2",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_apollo11_landing"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "metadata": {}
+  },
+  {
+    "id": "v1_006",
+    "domain": "parks",
+    "question": "How many mammal and bird species does Yellowstone preserve according to the Nature page?",
+    "gold_answer": "The Nature page lists 67 mammals and 285 birds.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_yellowstone_wildlife",
+        "span": "Learn about the park's abundant and diverse species\u201467 mammals, 285 birds, 16 fish, 5 amphibians, and 6 reptiles.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The park has 67 mammal species",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yellowstone_wildlife"
+        ]
+      },
+      {
+        "claim": "The park has 285 bird species",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yellowstone_wildlife"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "metadata": {}
+  },
+  {
+    "id": "v1_008",
+    "domain": "finance",
+    "question": "How much senior notes does HarborNet have, when do they mature, and how much of the May 2025 repurchase was executed?",
+    "gold_answer": "HarborNet issued $640 million of senior notes due March 2031. Of an $80 million Class B repurchase authorization, $22 million was executed.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_harbornet_balance",
+        "span": "issued $640 million of senior notes due March 2031 at a 5.25% coupon. In May 2025 the board authorized an $80 million repurchase of Class B shares, of which $22 million was executed.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "HarborNet issued $640 million of senior notes due March 2031",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_balance"
+        ]
+      },
+      {
+        "claim": "$22 million of the Class B repurchase was executed",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_balance"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "metadata": {}
+  },
+  {
+    "id": "v1_012",
+    "domain": "finance",
+    "question": "What subscription revenue range did HarborNet guide for Q3 2025?",
+    "gold_answer": "HarborNet expects subscription revenue of $420 million to $428 million for Q3 2025.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_harbornet_guidance",
+        "span": "For Q3 2025 HarborNet expects subscription revenue of $420 million to $428 million",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Q3 2025 subscription revenue guidance is $420 million to $428 million",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_guidance"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "metadata": {}
+  },
+  {
+    "id": "v1_016",
+    "domain": "biomedical",
+    "question": "What was the 5-year overall survival for pediatric patients treated with Nerexin?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "answerability": "unanswerable",
+    "scenario_type": "unanswerable",
+    "split": "test",
+    "metadata": {
+      "adversarial_reason": "SHORELINE reports adult PFS/ORR; pediatric 5-year OS is absent."
+    }
+  },
+  {
+    "id": "v1_018",
+    "domain": "transit",
+    "question": "How many CedarRail cars were in revenue service?",
+    "gold_answer": "Sources conflict. The press note advertised 40 driverless cars; the audit found 12 of the advertised 40 cars in revenue service as of June 2025.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cedarrail_pr",
+        "span": "with 40 driverless cars running 20 hours per day",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_cedarrail_audit",
+        "span": "The Pierce County transit audit found 12 of the advertised 40 CedarRail cars in revenue service as of June 2025",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The press note advertised 40 driverless cars",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cedarrail_pr"
+        ]
+      },
+      {
+        "claim": "The audit found 12 cars in revenue service as of June 2025",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cedarrail_audit"
+        ]
+      }
+    ],
+    "test_type": "conflicting",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "conflicting",
+    "split": "test",
+    "metadata": {
+      "conflict_docs": [
+        "doc_cedarrail_pr",
+        "doc_cedarrail_audit"
+      ]
+    }
+  },
+  {
+    "id": "v1_020",
+    "domain": "space",
+    "question": "Where did the Eagle land on the Moon?",
+    "gold_answer": "The Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nasa_apollo11_landing",
+        "span": "the Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The Eagle landed in the Sea of Tranquility",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_apollo11_landing"
+        ]
+      },
+      {
+        "claim": "Armstrong remained on the lunar surface for 14 days",
+        "status": "unsupported",
+        "gold_doc_ids": []
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "mixed_support",
+    "split": "test",
+    "metadata": {
+      "example_mixed_answer": "The Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude. Armstrong remained on the lunar surface for 14 days."
+    }
+  },
+  {
+    "id": "v1_024",
+    "domain": "public_health",
+    "question": "Are influenza A viruses the only influenza viruses known to cause flu pandemics?",
+    "gold_answer": "Yes. Influenza A viruses are the only influenza viruses known to cause flu pandemics.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cdc_flu_types",
+        "span": "Influenza A viruses are the only influenza viruses known to cause flu pandemics",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Influenza A viruses are the only influenza viruses known to cause flu pandemics",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_flu_types"
+        ]
+      }
+    ],
+    "test_type": "distractor",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "distractor",
+    "split": "test",
+    "metadata": {
+      "distractor_docs": [
+        "doc_millford_library",
+        "doc_harbornet_q2"
+      ]
+    }
+  }
+]
