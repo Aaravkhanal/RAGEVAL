@@ -50,6 +50,14 @@ def main():
     validate_parser.add_argument("--dataset", default="benchmark_v1")
     validate_parser.add_argument("--split", default="all")
 
+    ver_parser = subparsers.add_parser(
+        "verifier-eval",
+        help="Score a verifier against data/gold/verifier_eval_v1.json (RQ2)",
+    )
+    ver_parser.add_argument("--gold", default="data/gold/verifier_eval_v1.json")
+    ver_parser.add_argument("--method", default="nli", choices=["nli", "heuristic"])
+    ver_parser.add_argument("--output", default="reports/verifier_eval_v1.md")
+
     # Subcommand: report
     report_parser = subparsers.add_parser("report", help="Generate paper-style analysis report and figures")
     report_parser.add_argument("--output-dir", default="reports", help="Output directory for paper analysis")
@@ -130,6 +138,14 @@ def main():
         print(json.dumps(report, indent=2))
         if not report["valid"]:
             sys.exit(1)
+
+    elif args.command == "verifier-eval":
+        from rageval.evaluator.gold_eval import evaluate_verifier_on_gold, write_report
+
+        result = evaluate_verifier_on_gold(args.gold, method=args.method)
+        path = write_report(result, args.output)
+        print(f"Wrote {path} (macro-F1={result['macro_f1']}, n={result['n']}, method={result['method']})")
+        print(f"Failures: {len(result['failures'])}/{result['n']}")
 
     elif args.command == "report":
         report_path = run_and_generate_paper_analysis(

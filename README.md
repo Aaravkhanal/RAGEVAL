@@ -48,6 +48,9 @@ rageval benchmark --dataset smoke_v1 --data-dir data --output-dir experiments/ru
 # Validate a dataset
 rageval validate --dataset benchmark_v1
 
+# RQ2: score NLI (or heuristic) against the labeled claim set
+rageval verifier-eval --gold data/gold/verifier_eval_v1.json --method nli --output reports/verifier_eval_v1.md
+
 # Single YAML config (repeat --config for a custom matrix)
 rageval benchmark --dataset smoke_v1 --config configs/ablation/sparse_bm25_256.yaml
 
@@ -68,3 +71,4 @@ rageval serve --port 8000
 - `data/cards/smoke_v1.md` — smoke corpus card
 - `data/cards/benchmark_v1.md` — licensed pilot card
 - `docs/ANNOTATION_GUIDELINES.md`
+- `data/cards/verifier_eval_v1.md` — labeled claim set for RQ2

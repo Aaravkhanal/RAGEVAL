@@ -1,0 +1,409 @@
+{
+  "gold_path": "/Users/aaravkhanal/Desktop/RAGEVAL/data/gold/verifier_eval_v1.json",
+  "dataset_id": "verifier_eval_v1",
+  "schema_version": "rageval.verifier_eval.v1",
+  "annotator": "single-author, disclosed",
+  "method": "nli",
+  "n": 24,
+  "accuracy": 0.7917,
+  "macro_f1": 0.6921,
+  "per_class": {
+    "supported": {
+      "precision": 0.9,
+      "recall": 0.9,
+      "f1": 0.9,
+      "support": 10.0
+    },
+    "partially_supported": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 3.0
+    },
+    "unsupported": {
+      "precision": 0.6667,
+      "recall": 0.8,
+      "f1": 0.7273,
+      "support": 5.0
+    },
+    "contradicted": {
+      "precision": 0.7143,
+      "recall": 1.0,
+      "f1": 0.8333,
+      "support": 5.0
+    },
+    "ambiguous": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 1.0
+    }
+  },
+  "labels": [
+    "supported",
+    "partially_supported",
+    "unsupported",
+    "contradicted",
+    "ambiguous"
+  ],
+  "confusion_matrix": [
+    [
+      9,
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      1,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      4,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      5,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      1
+    ]
+  ],
+  "failures": [
+    {
+      "id": "ve_012",
+      "claim": "Yellowstone has 67 mammal species and 285 bird species.",
+      "gold": "supported",
+      "pred": "unsupported",
+      "correct": false,
+      "entailment_prob": 0.16200055181980133,
+      "contradiction_prob": 0.0015862510772421956,
+      "verifier_method": "nli",
+      "explanation": "Claim lacks supporting evidence in the retrieved context."
+    },
+    {
+      "id": "ve_017",
+      "claim": "HarborNet Q2 2025 subscription revenue was $412 million and monthly churn was 9.8%.",
+      "gold": "partially_supported",
+      "pred": "contradicted",
+      "correct": false,
+      "entailment_prob": 0.002631759736686945,
+      "contradiction_prob": 0.9953721165657043,
+      "verifier_method": "nli",
+      "explanation": "Claim contradicts retrieved evidence."
+    },
+    {
+      "id": "ve_018",
+      "claim": "Influenza A, B, C, and D viruses cause seasonal epidemics in people.",
+      "gold": "partially_supported",
+      "pred": "supported",
+      "correct": false,
+      "entailment_prob": 0.9911093711853027,
+      "contradiction_prob": 0.000239310713368468,
+      "verifier_method": "nli",
+      "explanation": "Claim is entailed by source evidence."
+    },
+    {
+      "id": "ve_020",
+      "claim": "LumenGrid is deployed in 40 availability zones.",
+      "gold": "unsupported",
+      "pred": "contradicted",
+      "correct": false,
+      "entailment_prob": 0.0008106973837129772,
+      "contradiction_prob": 0.9948216676712036,
+      "verifier_method": "nli",
+      "explanation": "Claim contradicts retrieved evidence."
+    },
+    {
+      "id": "ve_024",
+      "claim": "CedarRail opened unsupervised light-rail service in Tacoma with 40 driverless cars and a perfect five-year safety record.",
+      "gold": "partially_supported",
+      "pred": "unsupported",
+      "correct": false,
+      "entailment_prob": 0.0011173688108101487,
+      "contradiction_prob": 0.01308773085474968,
+      "verifier_method": "nli",
+      "explanation": "Claim lacks supporting evidence in the retrieved context."
+    }
+  ],
+  "predictions": [
+    {
+      "id": "ve_001",
+      "claim": "Influenza A and B viruses cause seasonal epidemics in people in the United States.",
+      "gold": "supported",
+      "pred": "supported",
+      "correct": true,
+      "entailment_prob": 0.9874668717384338,
+      "contradiction_prob": 0.00022664079733658582,
+      "verifier_method": "nli",
+      "explanation": "Claim is entailed by source evidence."
+    },
+    {
+      "id": "ve_002",
+      "claim": "Influenza A viruses are the only influenza viruses known to cause flu pandemics.",
+      "gold": "supported",
+      "pred": "supported",
+      "correct": true,
+      "entailment_prob": 0.9852768778800964,
+      "contradiction_prob": 0.0014168014749884605,
+      "verifier_method": "nli",
+      "explanation": "Claim is entailed by source evidence."
+    },
+    {
+      "id": "ve_003",
+      "claim": "Influenza D viruses cause seasonal epidemics in people.",
+      "gold": "contradicted",
+      "pred": "contradicted",
+      "correct": true,
+      "entailment_prob": 0.0005090770428068936,
+      "contradiction_prob": 0.9981010556221008,
+      "verifier_method": "nli",
+      "explanation": "Claim contradicts retrieved evidence."
+    },
+    {
+      "id": "ve_004",
+      "claim": "Current influenza A subtypes that routinely circulate in people include A(H1N1) and A(H3N2).",
+      "gold": "supported",
+      "pred": "supported",
+      "correct": true,
+      "entailment_prob": 0.6740981340408325,
+      "contradiction_prob": 0.003863194026052952,
+      "verifier_method": "nli",
+      "explanation": "Claim is entailed by source evidence."
+    },
+    {
+      "id": "ve_005",
+      "claim": "B/Yamagata viruses have circulated continuously since 2021.",
+      "gold": "contradicted",
+      "pred": "contradicted",
+      "correct": true,
+      "entailment_prob": 7.43706914363429e-05,
+      "contradiction_prob": 0.9995005130767822,
+      "verifier_method": "nli",
+      "explanation": "Claim contradicts retrieved evidence."
+    },
+    {
+      "id": "ve_006",
+      "claim": "Apollo 11 launched from Cape Kennedy on July 16, 1969.",
+      "gold": "supported",
+      "pred": "supported",
+      "correct": true,
+      "entailment_prob": 0.9974756836891174,
+      "contradiction_prob": 0.00013110667350701988,
+      "verifier_method": "nli",
+      "explanation": "Claim is entailed by source evidence."
+    },
+    {
+      "id": "ve_007",
+      "claim": "The Eagle landed in the Sea of Tranquility.",
+      "gold": "supported",
+      "pred": "supported",
+      "correct": true,
+      "entailment_prob": 0.997372031211853,
+      "contradiction_prob": 0.0010308328783139586,
+      "verifier_method": "nli",
+      "explanation": "Claim is entailed by source evidence."
+    },
+    {
+      "id": "ve_008",
+      "claim": "The Eagle landed in the Ocean of Storms.",
+      "gold": "contradicted",
+      "pred": "contradicted",
+      "correct": true,
+      "entailment_prob": 7.280468253156869e-06,
+      "contradiction_prob": 0.9999649524688721,
+      "verifier_method": "nli",
+      "explanation": "Claim contradicts retrieved evidence."
+    },
+    {
+      "id": "ve_009",
+      "claim": "Armstrong remained on the lunar surface for 14 days.",
+      "gold": "unsupported",
+      "pred": "unsupported",
+      "correct": true,
+      "entailment_prob": 2.644128107931465e-05,
+      "contradiction_prob": 0.006418167147785425,
+      "verifier_method": "nli",
+      "explanation": "Claim lacks supporting evidence in the retrieved context."
+    },
+    {
+      "id": "ve_010",
+      "claim": "The Greater Yellowstone Ecosystem is 28,000 square miles.",
+      "gold": "supported",
+      "pred": "supported",
+      "correct": true,
+      "entailment_prob": 0.9905663132667542,
+      "contradiction_prob": 0.00014355176244862378,
+      "verifier_method": "nli",
+      "explanation": "Claim is entailed by source evidence."
+    },
+    {
+      "id": "ve_011",
+      "claim": "Yellowstone contains no hydrothermal features.",
+      "gold": "contradicted",
+      "pred": "contradicted",
+      "correct": true,
+      "entailment_prob": 1.2626651368918829e-05,
+      "contradiction_prob": 0.9998345375061035,
+      "verifier_method": "nli",
+      "explanation": "Claim contradicts retrieved evidence."
+    },
+    {
+      "id": "ve_012",
+      "claim": "Yellowstone has 67 mammal species and 285 bird species.",
+      "gold": "supported",
+      "pred": "unsupported",
+      "correct": false,
+      "entailment_prob": 0.16200055181980133,
+      "contradiction_prob": 0.0015862510772421956,
+      "verifier_method": "nli",
+      "explanation": "Claim lacks supporting evidence in the retrieved context."
+    },
+    {
+      "id": "ve_013",
+      "claim": "Yellowstone recorded 4.5 million recreational visits in 2024.",
+      "gold": "unsupported",
+      "pred": "unsupported",
+      "correct": true,
+      "entailment_prob": 0.00010975538316415623,
+      "contradiction_prob": 7.361870666500181e-05,
+      "verifier_method": "nli",
+      "explanation": "Claim lacks supporting evidence in the retrieved context."
+    },
+    {
+      "id": "ve_014",
+      "claim": "HarborNet reported subscription revenue of $412 million for the second quarter of 2025.",
+      "gold": "supported",
+      "pred": "supported",
+      "correct": true,
+      "entailment_prob": 0.9973869919776917,
+      "contradiction_prob": 6.531598046422005e-05,
+      "verifier_method": "nli",
+      "explanation": "Claim is entailed by source evidence."
+    },
+    {
+      "id": "ve_015",
+      "claim": "HarborNet Q2 2025 subscription revenue was $50 million.",
+      "gold": "contradicted",
+      "pred": "contradicted",
+      "correct": true,
+      "entailment_prob": 0.0002969790657516569,
+      "contradiction_prob": 0.9991222023963928,
+      "verifier_method": "nli",
+      "explanation": "Claim contradicts retrieved evidence."
+    },
+    {
+      "id": "ve_016",
+      "claim": "HarborNet employed 48,000 people in Osaka.",
+      "gold": "unsupported",
+      "pred": "unsupported",
+      "correct": true,
+      "entailment_prob": 5.694244828191586e-05,
+      "contradiction_prob": 0.0009740153327584267,
+      "verifier_method": "nli",
+      "explanation": "Claim lacks supporting evidence in the retrieved context."
+    },
+    {
+      "id": "ve_017",
+      "claim": "HarborNet Q2 2025 subscription revenue was $412 million and monthly churn was 9.8%.",
+      "gold": "partially_supported",
+      "pred": "contradicted",
+      "correct": false,
+      "entailment_prob": 0.002631759736686945,
+      "contradiction_prob": 0.9953721165657043,
+      "verifier_method": "nli",
+      "explanation": "Claim contradicts retrieved evidence."
+    },
+    {
+      "id": "ve_018",
+      "claim": "Influenza A, B, C, and D viruses cause seasonal epidemics in people.",
+      "gold": "partially_supported",
+      "pred": "supported",
+      "correct": false,
+      "entailment_prob": 0.9911093711853027,
+      "contradiction_prob": 0.000239310713368468,
+      "verifier_method": "nli",
+      "explanation": "Claim is entailed by source evidence."
+    },
+    {
+      "id": "ve_019",
+      "claim": "LumenGrid median GET latency was 2.1 ms under the reported read-heavy workload.",
+      "gold": "supported",
+      "pred": "supported",
+      "correct": true,
+      "entailment_prob": 0.9977153539657593,
+      "contradiction_prob": 8.386003173654899e-05,
+      "verifier_method": "nli",
+      "explanation": "Claim is entailed by source evidence."
+    },
+    {
+      "id": "ve_020",
+      "claim": "LumenGrid is deployed in 40 availability zones.",
+      "gold": "unsupported",
+      "pred": "contradicted",
+      "correct": false,
+      "entailment_prob": 0.0008106973837129772,
+      "contradiction_prob": 0.9948216676712036,
+      "verifier_method": "nli",
+      "explanation": "Claim contradicts retrieved evidence."
+    },
+    {
+      "id": "ve_021",
+      "claim": "Median progression-free survival was 11.2 months for Nerexin plus pembrolizumab.",
+      "gold": "supported",
+      "pred": "supported",
+      "correct": true,
+      "entailment_prob": 0.9780213832855225,
+      "contradiction_prob": 6.39223144389689e-05,
+      "verifier_method": "nli",
+      "explanation": "Claim is entailed by source evidence."
+    },
+    {
+      "id": "ve_022",
+      "claim": "Five-year overall survival for pediatric Nerexin patients was 81%.",
+      "gold": "unsupported",
+      "pred": "unsupported",
+      "correct": true,
+      "entailment_prob": 0.00019924421212635934,
+      "contradiction_prob": 0.002114055212587118,
+      "verifier_method": "nli",
+      "explanation": "Claim lacks supporting evidence in the retrieved context."
+    },
+    {
+      "id": "ve_023",
+      "claim": "I do not have sufficient information in the provided context to answer this question.",
+      "gold": "ambiguous",
+      "pred": "ambiguous",
+      "correct": true,
+      "entailment_prob": 0.0,
+      "contradiction_prob": 0.0,
+      "verifier_method": "nli",
+      "explanation": "Abstention statement; excluded from claim-support denominators."
+    },
+    {
+      "id": "ve_024",
+      "claim": "CedarRail opened unsupervised light-rail service in Tacoma with 40 driverless cars and a perfect five-year safety record.",
+      "gold": "partially_supported",
+      "pred": "unsupported",
+      "correct": false,
+      "entailment_prob": 0.0011173688108101487,
+      "contradiction_prob": 0.01308773085474968,
+      "verifier_method": "nli",
+      "explanation": "Claim lacks supporting evidence in the retrieved context."
+    }
+  ]
+}

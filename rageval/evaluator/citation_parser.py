@@ -122,12 +122,16 @@ class CitationParser:
         requiring = 0
         with_supporting = 0
 
+        uncited: List[str] = []
+        contradicting_cites: List[str] = []
+
         for claim in claims:
             if claim.is_abstention:
                 continue
             verif = verif_by_id.get(claim.claim_id)
             requiring += 1
             if not claim.cited_chunk_ids:
+                uncited.append(claim.claim_id)
                 continue
             claim_has_support_cite = False
             for cid in claim.cited_chunk_ids:
@@ -137,12 +141,16 @@ class CitationParser:
                 if supports:
                     supporting_cites += 1
                     claim_has_support_cite = True
-                elif contradicts or (verif and verif.label == VerificationLabel.UNSUPPORTED):
+                if contradicts:
+                    contradicting_cites.append(f"{claim.claim_id}->{cid}")
+                if contradicts or (verif and verif.label == VerificationLabel.UNSUPPORTED and not supports):
                     misattributed.append(f"{claim.claim_id}->{cid}")
             if claim_has_support_cite:
                 with_supporting += 1
 
         base.misattributed_citations = misattributed
+        base.uncited_claim_ids = uncited
+        base.contradicting_citations = contradicting_cites
         base.citation_support_precision = citation_support_precision(supporting_cites, evaluated)
         base.citation_completeness = citation_completeness(with_supporting, requiring)
         return base

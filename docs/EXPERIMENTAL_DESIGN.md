@@ -23,9 +23,10 @@ Embedder: `sentence-transformers/all-MiniLM-L6-v2`.
 ## Analysis plan
 
 1. Per-config means of retrieval and claim metrics on the same items.
-2. Do not run significance tests on \(n=8\) as confirmatory results.
+2. Do not run significance tests on \(n=8\) or \(n=24\) as confirmatory results.
 3. Qualitative cases: mixed-support, unanswerable, conflicting.
 4. Report generator blinding (RQ4) as an engineering check on the mock.
+5. RQ2 verifier scores live in `reports/verifier_eval_v1.md` (n=24 labeled pairs). On this set DeBERTa macro-F1 was 0.692 and the lexical heuristic 0.514. Partial-support F1 was 0.0 for NLI. This does not confirm RQ2 beyond the labeled set.
 
 ## Exclusions
 

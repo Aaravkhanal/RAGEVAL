@@ -136,6 +136,8 @@ Existing `rageval` modules are the implementation surface. New files are added o
 
 ## Phase 4 — Claim-level evidence verification engine
 
+**Status:** Complete for the labeled 24-pair pilot. Offset-preserving decomposition, documented 5-way collapse, citation support vs existence, `verifier_eval_v1`, `rageval verifier-eval`. NLI macro-F1 0.692 vs heuristic 0.514 on that set (honest, underpowered).
+
 **Objective:** Make verification traceable, labeled as specified, and measurable against gold.
 
 **Prerequisites:** Phase 1 label set; Phase 2 gold claims (even if only smoke+a small gold set).

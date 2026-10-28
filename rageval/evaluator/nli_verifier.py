@@ -14,6 +14,11 @@ from rageval.core.schemas import (
     VerificationLabel,
 )
 from rageval.core.config import EvaluatorConfig
+from rageval.evaluator.label_decision import (
+    ENTAIL_THRESHOLD,
+    decide_claim_label,
+    schema_version,
+)
 
 
 class NLIVerifier:
@@ -172,6 +177,7 @@ class NLIVerifier:
                 contradiction_prob=0.0,
                 explanation="Abstention statement; excluded from claim-support denominators.",
                 verifier_method=self.method,
+                label_schema_version=schema_version(),
             )
 
         if not retrieved_chunks:
@@ -185,6 +191,7 @@ class NLIVerifier:
                 contradiction_prob=0.0,
                 explanation="No context chunks available to support claim.",
                 verifier_method=self.method,
+                label_schema_version=schema_version(),
             )
 
         # 1. Gather candidate premises (prioritize cited chunks if available)
@@ -199,8 +206,10 @@ class NLIVerifier:
 
         best_entailment_score = 0.0
         best_contradiction_score = 0.0
-        best_chunk_id = None
-        best_chunk_text = None
+        best_entail_chunk_id = None
+        best_entail_chunk_text = None
+        best_contra_chunk_id = None
+        best_contra_chunk_text = None
 
         supporting_ids = []
         contradicting_ids = []
@@ -209,59 +218,70 @@ class NLIVerifier:
             p_ent = scores["entailment"]
             p_con = scores["contradiction"]
 
-            if p_ent > 0.50:
+            if p_ent > ENTAIL_THRESHOLD:
                 supporting_ids.append(c.chunk.id)
-            if p_con > 0.50:
+            if p_con > ENTAIL_THRESHOLD:
                 contradicting_ids.append(c.chunk.id)
 
             if p_ent > best_entailment_score:
                 best_entailment_score = p_ent
-                best_chunk_id = c.chunk.id
-                best_chunk_text = c.chunk.text
+                best_entail_chunk_id = c.chunk.id
+                best_entail_chunk_text = c.chunk.text
 
             if p_con > best_contradiction_score:
                 best_contradiction_score = p_con
+                best_contra_chunk_id = c.chunk.id
+                best_contra_chunk_text = c.chunk.text
 
-        # Decide final label
-        if best_contradiction_score > 0.60 and best_contradiction_score > best_entailment_score:
-            label = VerificationLabel.CONTRADICTED
+        label, explanation = decide_claim_label(
+            best_entailment_score,
+            best_contradiction_score,
+            len(supporting_ids),
+            len(contradicting_ids),
+        )
+        if label == VerificationLabel.CONTRADICTED:
             confidence = best_contradiction_score
-            explanation = "Claim directly contradicts facts in retrieved evidence."
-        elif best_entailment_score >= 0.50:
-            label = VerificationLabel.SUPPORTED
+            best_chunk_id = best_contra_chunk_id or best_entail_chunk_id
+            best_chunk_text = best_contra_chunk_text or best_entail_chunk_text
+        elif label in (VerificationLabel.SUPPORTED, VerificationLabel.PARTIALLY_SUPPORTED):
             confidence = best_entailment_score
-            explanation = "Claim is strictly entailed by source evidence."
+            best_chunk_id = best_entail_chunk_id or best_contra_chunk_id
+            best_chunk_text = best_entail_chunk_text or best_contra_chunk_text
         else:
-            label = VerificationLabel.UNSUPPORTED
             confidence = 1.0 - max(best_entailment_score, best_contradiction_score)
-            explanation = "Claim lacks supporting evidence in the retrieved context."
+            best_chunk_id = best_entail_chunk_id or best_contra_chunk_id
+            best_chunk_text = best_entail_chunk_text or best_contra_chunk_text
 
-        # Localize exact character span in best matching chunk if available
         span_start = None
         span_end = None
         exact_span_text = None
 
-        if best_chunk_id and label in (VerificationLabel.SUPPORTED, VerificationLabel.CONTRADICTED):
+        if best_chunk_id and label in (
+            VerificationLabel.SUPPORTED,
+            VerificationLabel.CONTRADICTED,
+            VerificationLabel.PARTIALLY_SUPPORTED,
+        ):
             from rageval.evaluator.span_localizer import SpanLocalizer
             matching_chunk_obj = next((r.chunk for r in candidate_chunks if r.chunk.id == best_chunk_id), None)
             if matching_chunk_obj:
                 span_match = SpanLocalizer.find_best_evidence_span(
                     claim_text=claim.text,
                     chunk=matching_chunk_obj,
-                    is_supporting=(label == VerificationLabel.SUPPORTED),
+                    is_supporting=(label != VerificationLabel.CONTRADICTED),
                 )
                 if span_match:
                     span_start = span_match.start_char
                     span_end = span_match.end_char
                     exact_span_text = span_match.exact_span
 
+        method_id = self.method if self.model is not None else "heuristic"
         return ClaimVerification(
             claim_id=claim.claim_id,
             claim_text=claim.text,
             label=label,
             confidence=confidence,
             entailment_prob=best_entailment_score,
-            neutral_prob=1.0 - max(best_entailment_score, best_contradiction_score),
+            neutral_prob=max(0.0, 1.0 - max(best_entailment_score, best_contradiction_score)),
             contradiction_prob=best_contradiction_score,
             supporting_chunk_ids=supporting_ids,
             contradicting_chunk_ids=contradicting_ids,
@@ -271,5 +291,6 @@ class NLIVerifier:
             evidence_span_end=span_end,
             evidence_exact_text=exact_span_text,
             explanation=explanation,
-            verifier_method=self.method if self.model is not None else "heuristic",
+            verifier_method=method_id,
+            label_schema_version=schema_version(),
         )

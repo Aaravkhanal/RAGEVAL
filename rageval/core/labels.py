@@ -57,3 +57,15 @@ FACTUAL_LABELS = (
     VerificationLabel.CONTRADICTED,
     VerificationLabel.AMBIGUOUS,
 )
+
+# Versioned 5-way schema used by ClaimVerification.label_schema_version
+LABEL_SCHEMA_VERSION = "rageval.claim_labels.v1"
+
+# Official evaluation classes (abstention maps to AMBIGUOUS and is excluded from rates)
+EVAL_LABEL_ORDER = (
+    VerificationLabel.SUPPORTED,
+    VerificationLabel.PARTIALLY_SUPPORTED,
+    VerificationLabel.UNSUPPORTED,
+    VerificationLabel.CONTRADICTED,
+    VerificationLabel.AMBIGUOUS,
+)

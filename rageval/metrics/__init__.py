@@ -15,6 +15,12 @@ from rageval.metrics.claims import (
 )
 from rageval.metrics.retrieval import mrr, ndcg_at_k, noise_ratio, recall_at_k
 from rageval.metrics.citation import citation_completeness, citation_existence_precision
+from rageval.metrics.classification import (
+    accuracy,
+    confusion_matrix,
+    macro_f1,
+    per_class_scores,
+)
 
 __all__ = [
     "claim_support_rate",
@@ -32,4 +38,8 @@ __all__ = [
     "token_f1",
     "answer_em_f1",
     "mixed_support_answer_gap",
+    "confusion_matrix",
+    "per_class_scores",
+    "macro_f1",
+    "accuracy",
 ]

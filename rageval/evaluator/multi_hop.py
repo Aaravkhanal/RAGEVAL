@@ -93,11 +93,19 @@ class MultiHopEvidenceFusion:
                     neutral_prob=round(scores["neutral"], 4),
                     contradiction_prob=round(scores["contradiction"], 4),
                     supporting_chunk_ids=[c1.chunk.id, c2.chunk.id],
+                    contradicting_chunk_ids=list(single_chunk_verif.contradicting_chunk_ids),
                     best_matching_chunk_id=f"{c1.chunk.id}+{c2.chunk.id}",
                     best_matching_chunk_text=composite_premise,
                     evidence_exact_text=f"{c1.chunk.text[:60]}... + {c2.chunk.text[:60]}...",
-                    explanation="Claim is verified via multi-hop evidence fusion across complementary source chunks.",
+                    explanation=(
+                        "Diagnostic multi-hop fusion (enable_multi_hop=True). "
+                        "Primary metrics remain context-bounded; this upgrades an inconclusive "
+                        f"single-chunk label {single_chunk_verif.label.value}."
+                    ),
                     verifier_method="nli_multihop_pair",
+                    label_schema_version=single_chunk_verif.label_schema_version,
+                    fused_from_chunks=True,
+                    single_chunk_label=single_chunk_verif.label,
                 )
 
         return single_chunk_verif

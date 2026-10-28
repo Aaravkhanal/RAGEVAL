@@ -108,6 +108,9 @@ class ClaimVerification(BaseModel):
     evidence_exact_text: Optional[str] = None
     explanation: Optional[str] = None
     verifier_method: str = "nli"
+    label_schema_version: str = "rageval.claim_labels.v1"
+    fused_from_chunks: bool = False
+    single_chunk_label: Optional[VerificationLabel] = None
 
     @field_validator("label", mode="before")
     @classmethod
@@ -124,6 +127,8 @@ class CitationMetric(BaseModel):
     citation_recall: float
     citation_support_precision: float = 0.0
     citation_completeness: float = 0.0
+    uncited_claim_ids: List[str] = Field(default_factory=list)
+    contradicting_citations: List[str] = Field(default_factory=list)
 
 
 class RetrievalMetrics(BaseModel):

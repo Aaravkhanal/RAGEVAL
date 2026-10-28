@@ -22,6 +22,20 @@ Let \(L\) be labels of non-abstention claims.
 
 If \(L\) is empty: support rate is 1.0 when the answer is empty or an abstention, else 0.0.
 
+## Verifier labels (`rageval.claim_labels.v1`)
+
+NLI is 3-way (entailment / neutral / contradiction). Collapse onto 5-way labels:
+
+1. **contradicted** if max contradiction \(> 0.60\) and strictly greater than max entailment.
+2. **partially_supported** if both a supporting chunk and a contradicting chunk were recorded, or if max entailment is in \([0.30, 0.50)\).
+3. **supported** if max entailment \(\ge 0.50\).
+4. **unsupported** otherwise.
+5. **ambiguous** for abstention statements.
+
+Supporting and contradicting chunk id lists are **always retained** when both exist. Multi-hop fusion runs only when `evaluator.enable_multi_hop=true` and records `verifier_method=nli_multihop_pair`.
+
+RQ2 scoring uses `rageval/metrics/classification.py` on `data/gold/verifier_eval_v1.json`.
+
 ## Citation
 
 - **Existence precision** = in-pool citation tokens / all citation tokens (1.0 if none).

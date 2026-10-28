@@ -32,3 +32,20 @@ def test_atomic_claim_decomposition():
 
     # Verify citation preservation
     assert "c1" in claims[0].cited_chunk_ids
+
+    for claim in claims:
+        assert claim.char_start is not None
+        assert claim.char_end is not None
+        span = answer[claim.char_start : claim.char_end]
+        assert span
+        assert span in answer
+
+
+def test_decomposer_offsets_are_unique_occurrences():
+    answer = "Margin expanded to 78.2%. Margin expanded to 78.2% again."
+    claims = AtomicClaimDecomposer.decompose(answer, [])
+    assert len(claims) >= 2
+    starts = [c.char_start for c in claims]
+    assert starts[0] != starts[1]
+    for claim in claims:
+        assert answer[claim.char_start : claim.char_end]
