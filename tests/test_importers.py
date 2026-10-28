@@ -1,6 +1,6 @@
 """Unit tests for dataset benchmark importers: FinanceBench, PubMedQA, and HotpotQA."""
 
-from ragtruth.dataset.importers import FinanceBenchImporter, PubMedQAImporter, HotpotQAImporter
+from rageval.dataset.importers import FinanceBenchImporter, PubMedQAImporter, HotpotQAImporter
 
 
 def test_financebench_importer():

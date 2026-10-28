@@ -1,7 +1,7 @@
 """Unit tests for ecosystem adapters: decorator, LangChain callback, and LlamaIndex handler."""
 
 import pytest
-from ragtruth.integrations import monitor_rag, RAGTruthLangChainCallback, RAGTruthLlamaIndexHandler
+from rageval.integrations import monitor_rag, RAGEvalLangChainCallback, RAGEvalLlamaIndexHandler
 
 
 def test_monitor_rag_decorator():
@@ -12,8 +12,8 @@ def test_monitor_rag_decorator():
         return {"answer": answer, "contexts": context}
 
     result = sample_rag_pipeline(query="What was the gross margin?")
-    assert "ragtruth_evaluation" in result
-    eval_res = result["ragtruth_evaluation"]
+    assert "rageval_evaluation" in result
+    eval_res = result["rageval_evaluation"]
     assert eval_res.faithfulness_score == 1.0
 
 
@@ -30,7 +30,7 @@ def test_monitor_rag_fail_on_hallucination():
 
 
 def test_langchain_callback():
-    cb = RAGTruthLangChainCallback()
+    cb = RAGEvalLangChainCallback()
     cb.on_chain_start({}, {"query": "What is the margin?"})
     
     class MockDoc:
@@ -44,7 +44,7 @@ def test_langchain_callback():
 
 
 def test_llamaindex_handler():
-    handler = RAGTruthLlamaIndexHandler()
+    handler = RAGEvalLlamaIndexHandler()
 
     class MockNode:
         def get_content(self):

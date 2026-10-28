@@ -1,7 +1,7 @@
 """Unit tests for multi-hop evidence fusion."""
 
-from ragtruth.core.schemas import AtomicClaim, Chunk, RetrievedChunk, ClaimVerification, VerificationLabel
-from ragtruth.evaluator.multi_hop import MultiHopEvidenceFusion
+from rageval.core.schemas import AtomicClaim, Chunk, RetrievedChunk, ClaimVerification, VerificationLabel
+from rageval.evaluator.multi_hop import MultiHopEvidenceFusion
 
 
 def test_multi_hop_chunk_pair_discovery():
@@ -40,9 +40,9 @@ def test_multi_hop_evaluation_fallback():
     fusion = MultiHopEvidenceFusion()
     claim = AtomicClaim(claim_id="cm2", text="Simple single claim", raw_sentence="Simple single claim.")
     dummy_verif = ClaimVerification(
-        claim_id="cm2", claim_text="Simple single claim", label=VerificationLabel.ENTAILEMENT,
+        claim_id="cm2", claim_text="Simple single claim", label=VerificationLabel.SUPPORTED,
         confidence=1.0, entailment_prob=1.0, neutral_prob=0.0, contradiction_prob=0.0,
     )
-    # Already entailed claims should pass through immediately
+    # Already supported claims should pass through immediately
     res = fusion.evaluate_multi_hop_claim(claim, [], dummy_verif)
-    assert res.label == VerificationLabel.ENTAILEMENT
+    assert res.label == VerificationLabel.SUPPORTED

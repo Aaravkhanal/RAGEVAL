@@ -1,7 +1,7 @@
 """Unit tests for streaming token verification and guardrail triggering."""
 
-from ragtruth.core.schemas import Chunk, RetrievedChunk
-from ragtruth.server.streaming import StreamingVerificationSession
+from rageval.core.schemas import Chunk, RetrievedChunk
+from rageval.server.streaming import StreamingVerificationSession
 
 
 def test_streaming_session_sentence_assembly_and_guardrail():

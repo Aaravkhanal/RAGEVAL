@@ -1,7 +1,7 @@
 """Unit tests for semantic sentence-distance chunking."""
 
-from ragtruth.core.schemas import Document
-from ragtruth.pipeline.semantic_chunker import SemanticChunker
+from rageval.core.schemas import Document
+from rageval.pipeline.semantic_chunker import SemanticChunker
 
 
 def test_semantic_chunker():

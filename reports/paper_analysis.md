@@ -1,4 +1,4 @@
-# RAGTruth: A Claim-Level Faithfulness & Hallucination Benchmark for RAG Systems
+# RAGeval: A Claim-Level Faithfulness & Hallucination Benchmark for RAG Systems
 
 **Technical Report & Empirical Baseline Analysis**  
 *Framework Version: 0.1.0*
@@ -6,14 +6,14 @@
 ---
 
 ## Abstract
-Retrieval-Augmented Generation (RAG) applications frequently suffer from unfaithful extrapolations, missed citations, and direct contradictions of retrieved source material. Conventional evaluation paradigms assess responses holistically, obscuring fine-grained factual errors. We introduce **RAGTruth**, a research benchmark that decomposes answers into atomic propositions and performs hypothesis-premise Natural Language Inference (NLI) with citation attribution auditing. We benchmarked six architectural configurations across chunk sizes (128, 256, 512 tokens), lexical BM25 search, dense sentence-transformers, and neural cross-encoder rerankers. Our findings reveal that hybrid retrieval with reciprocal rank fusion (RRF) and cross-encoder reranking yields a 16.4% higher Recall@5 while reducing hallucinated claim generation. Furthermore, adversarial queries uncover significant vulnerabilities when models fail to abstain on unanswerable topics.
+Retrieval-Augmented Generation (RAG) applications frequently suffer from unfaithful extrapolations, missed citations, and direct contradictions of retrieved source material. Conventional evaluation paradigms assess responses holistically, obscuring fine-grained factual errors. We introduce **RAGeval**, a research benchmark that decomposes answers into atomic propositions and performs hypothesis-premise Natural Language Inference (NLI) with citation attribution auditing. We benchmarked six architectural configurations across chunk sizes (128, 256, 512 tokens), lexical BM25 search, dense sentence-transformers, and neural cross-encoder rerankers. Our findings reveal that hybrid retrieval with reciprocal rank fusion (RRF) and cross-encoder reranking yields a 16.4% higher Recall@5 while reducing hallucinated claim generation. Furthermore, adversarial queries uncover significant vulnerabilities when models fail to abstain on unanswerable topics.
 
 ---
 
 ## 1. Introduction & Motivation
 Production RAG systems commonly mask hallucinations behind fluent prose and superficial bracketed citations. Existing benchmarks (such as RAGAS or TruLens) often rely heavily on zero-shot LLM-as-a-judge prompts, introducing high evaluation variance, vulnerability to length bias, and lack of deterministic sentence-level traceability.
 
-RAGTruth addresses this with three core contributions:
+RAGeval addresses this with three core contributions:
 1. **Atomic Claim Attribution**: Answers are segmented into discrete factual propositions, each checked against cited passages using PyTorch NLI models.
 2. **Citation Integrity Auditing**: Separates true citations from hallucinated citations (citing out-of-pool chunks) and ungrounded statements.
 3. **Adversarial Resilience Testing**: Systematically probes model behavior when presented with conflicting source documents and unanswerable questions.
@@ -66,4 +66,4 @@ Unanswerable questions test whether the pipeline gracefully abstains or fabricat
 - Summary CSV: `reports/benchmark_summary.csv`
 - Detailed JSON: `reports/benchmark_detailed.json`
 - Publication LaTeX Table: `reports/benchmark_table.tex`
-- Evaluation API: Start with `uvicorn ragtruth.server.app:app --port 8000`
+- Evaluation API: Start with `uvicorn rageval.server.app:app --port 8000`

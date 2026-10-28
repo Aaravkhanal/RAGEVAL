@@ -1,8 +1,8 @@
 """Unit tests for text chunking algorithms."""
 
 import pytest
-from ragtruth.core.schemas import Document
-from ragtruth.pipeline.chunkers import FixedTokenChunker, SentenceWindowChunker
+from rageval.core.schemas import Document
+from rageval.pipeline.chunkers import FixedTokenChunker, SentenceWindowChunker
 
 
 def test_fixed_token_chunker():

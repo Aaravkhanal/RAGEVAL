@@ -1,4 +1,4 @@
-name: RAGTruth CI/CD
+name: RAGeval CI
 
 on:
   push:
@@ -34,4 +34,4 @@ jobs:
 
     - name: Validate CLI & report generation
       run: |
-        python ragtruth/cli.py evaluate --question "What is the test question?" --answer "The test is valid [1]." --context "The test is valid."
+        python rageval/cli.py evaluate --question "What is the test question?" --answer "The test is valid [1]." --context "The test is valid."

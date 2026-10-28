@@ -1,7 +1,7 @@
 """Unit tests for FastAPI endpoints."""
 
 from fastapi.testclient import TestClient
-from ragtruth.server.app import app
+from rageval.server.app import app
 
 client = TestClient(app)
 
@@ -9,7 +9,7 @@ client = TestClient(app)
 def test_health_check():
     res = client.get("/health")
     assert res.status_code == 200
-    assert res.json() == {"status": "ok", "service": "ragtruth"}
+    assert res.json() == {"status": "ok", "service": "rageval"}
 
 
 def test_evaluate_answer_api():
@@ -26,4 +26,4 @@ def test_evaluate_answer_api():
     assert "faithfulness_score" in data
     assert data["faithfulness_score"] == 1.0
     assert len(data["claims"]) >= 1
-    assert data["verifications"][0]["label"] == "ENTAILEMENT"
+    assert data["verifications"][0]["label"] == "supported"

@@ -1,72 +1,57 @@
-# RAGTruth: Research-Grade RAG Faithfulness & Claim Attribution Benchmark
+# RAGeval
 
-> A scientific evaluation and benchmarking framework for detecting unreliable AI answers, hallucinated statements, and citation misattributions in Retrieval-Augmented Generation (RAG) applications.
+Research-oriented benchmark and software for measuring whether RAG answers are **supported by retrieved evidence** at the **claim** level.
 
----
+This project was previously prototyped under the name RAGTruth. It is **not** the RAGTruth corpus of Niu et al. (2024). See `docs/RELATED_WORK.md`.
 
-## 🌟 Standout Twist: Atomic Claim-Level Verification
+## What is implemented
 
-Conventional RAG evaluations produce a single, vague binary score for an entire response (e.g. "answer is 70% helpful"). This fails to pinpoint *which* specific sentence or proposition is an unsupported fabrication or a direct contradiction.
+- Configurable retrieval baselines (dense MiniLM, BM25, hybrid RRF, optional cross-encoder rerank).
+- Atomic claim decomposition and NLI verification (`supported` / `unsupported` / `contradicted`, plus `partially_supported` and `ambiguous` in the schema).
+- Citation existence and support-conditioned citation metrics.
+- A **synthetic smoke dataset** (8 documents, 8 questions). It is author-written fiction, not SEC/NEJM/OSDI source text.
+- CLI, FastAPI live claim audit, and pytest suite.
 
-**RAGTruth** decomposes answers into fine-grained atomic propositions and evaluates them against retrieved context using Natural Language Inference (NLI):
-- **Entailment (Supported)**: The claim is strictly supported by source evidence.
-- **Contradiction (Factual Conflict)**: The claim directly contradicts retrieved facts.
-- **Neutral (Hallucination / Unsupported)**: The claim is extrapolated or fabricated without supporting evidence in the corpus.
+Official generation for smoke tests is a **blinded mock** that cannot read gold `test_type` labels.
 
-In addition, RAGTruth audits **Citation Precision and Recall**, flagging hallucinated references (citing non-existent chunk tags) and missing citations.
+## Status of results
 
----
+Committed tables under `reports/` are historical smoke runs. `reports/paper.tex` is a **draft** and must not be cited as experimental evidence. New benchmark runs write unique folders under `experiments/runs/` and do not overwrite previous runs.
 
-## 🚀 Key Features
-1. **Curated Multi-Domain Benchmark**: Finance (10-Q SEC reports), Biomedical clinical trials (NEJM), and Distributed Systems (OSDI).
-2. **Adversarial Test Suite**: Conflicting document pairs (temporal or source conflict) and unanswerable questions measuring model abstention accuracy.
-3. **Combinatorial Ablation Matrix**:
-   - Chunk sizes: 128, 256, 512 tokens.
-   - Retrieval models: Dense FAISS cosine search (`sentence-transformers/all-MiniLM-L6-v2`), BM25 lexical search, and Hybrid Reciprocal Rank Fusion (RRF).
-   - Neural Cross-Encoder Rerankers (`cross-encoder/ms-marco-MiniLM-L-6-v2`).
-4. **Metrics**:
-   - Retrieval: Recall@1, Recall@3, Recall@5, MRR, NDCG@k, Noise Ratio.
-   - Generation: Claim Faithfulness Rate, Hallucination Rate, Contradiction Rate, Citation Precision, Citation Recall.
-   - Efficiency: Latency profiling (mean & p95 ms) and estimated inference cost.
-5. **Research Paper Analysis & Visualizations**:
-   - Automated Pareto frontier curves (Latency vs. Faithfulness).
-   - Publication-ready LaTeX tables (`\begin{table}`) and Markdown empirical reports.
-6. **FastAPI Service & Web Dashboard**: Interactive real-time UI for claim auditing and benchmark inspection.
+## Install
 
----
+Python 3.10+ with PyTorch, sentence-transformers, and FAISS. Prefer a dedicated environment:
 
-## 🛠️ Quickstart
-
-### 1. Installation
 ```bash
 pip install -e .
 ```
 
-### 2. Run the Benchmark Suite
-```bash
-ragtruth benchmark --data-dir data --output-dir reports
-```
+First NLI/embedding calls download Hugging Face weights unless they are already cached.
 
-### 3. Generate Paper Analysis & Scientific Figures
-```bash
-ragtruth report --output-dir reports
-```
-This produces:
-- `reports/paper_analysis.md`
-- `reports/benchmark_summary.csv`
-- `reports/benchmark_table.tex`
-- `reports/figures/fig1_pareto_latency_faithfulness.png`
-- `reports/figures/fig2_claim_attribution_breakdown.png`
-- `reports/figures/fig3_retrieval_recall_mrr.png`
-- `reports/figures/fig4_adversarial_abstention.png`
+## Commands
 
-### 4. Launch the Interactive Dashboard
 ```bash
-ragtruth serve --port 8000
-```
-Open your browser to `http://localhost:8000` to interactively audit claims with visual green/yellow/red status pills.
+# Claim-level evaluation of one answer against supplied context
+rageval evaluate --question "What is the test question?" --answer "The test is valid [1]." --context "The test is valid."
 
-### 5. Run Unit Tests
-```bash
+# Unit tests
 pytest -v
+
+# Optional: full smoke ablation (loads MiniLM + DeBERTa; writes experiments/runs/<id>/)
+rageval benchmark --data-dir data --output-dir experiments/runs
+
+# Dashboard
+rageval serve --port 8000
 ```
+
+## Documentation
+
+- `docs/PROJECT_AUDIT.md` — Phase 0 audit
+- `docs/ARCHITECTURE_PROPOSAL.md`
+- `docs/RESEARCH_GAPS.md`
+- `docs/IMPLEMENTATION_ROADMAP.md`
+- `docs/RESEARCH_SPEC.md` — research questions
+- `docs/TERMINOLOGY.md`
+- `docs/METRIC_DEFINITIONS.md`
+- `docs/RELATED_WORK.md`
+- `data/cards/smoke_v1.md` — smoke corpus card

@@ -1,7 +1,7 @@
 """Unit tests for atomic claim decomposition."""
 
-from ragtruth.core.schemas import Chunk, RetrievedChunk
-from ragtruth.evaluator.decomposer import AtomicClaimDecomposer
+from rageval.core.schemas import Chunk, RetrievedChunk
+from rageval.evaluator.decomposer import AtomicClaimDecomposer
 
 
 def test_atomic_claim_decomposition():

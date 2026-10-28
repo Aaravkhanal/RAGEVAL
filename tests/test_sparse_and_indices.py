@@ -1,10 +1,10 @@
 """Unit tests for FAISS dense indexing and BM25 hybrid search."""
 
-from ragtruth.core.schemas import Document, Chunk
-from ragtruth.pipeline.chunkers import FixedTokenChunker
-from ragtruth.pipeline.embedders import SentenceTransformerEmbedder
-from ragtruth.pipeline.indices import FAISSIndex
-from ragtruth.pipeline.sparse import BM25Retriever, HybridRetriever
+from rageval.core.schemas import Document, Chunk
+from rageval.pipeline.chunkers import FixedTokenChunker
+from rageval.pipeline.embedders import SentenceTransformerEmbedder
+from rageval.pipeline.indices import FAISSIndex
+from rageval.pipeline.sparse import BM25Retriever, HybridRetriever
 
 
 def test_faiss_and_hybrid_retrieval():

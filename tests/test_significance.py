@@ -1,7 +1,7 @@
 """Unit tests for statistical significance calculations."""
 
-from ragtruth.core.schemas import BenchmarkRunSummary, QueryEvaluationResult, CitationMetric, RetrievalMetrics, TestType
-from ragtruth.analysis.significance import SignificanceAnalyzer
+from rageval.core.schemas import BenchmarkRunSummary, QueryEvaluationResult, CitationMetric, RetrievalMetrics, TestType
+from rageval.analysis.significance import SignificanceAnalyzer
 
 
 def _mock_summary(name: str, faiths: list[float], recalls: list[float]) -> BenchmarkRunSummary:

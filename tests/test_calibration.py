@@ -1,7 +1,7 @@
 """Unit tests for confidence calibration (ECE) and temperature scaling."""
 
 import numpy as np
-from ragtruth.analysis.calibration import ConfidenceCalibrator
+from rageval.analysis.calibration import ConfidenceCalibrator
 
 
 def test_ece_computation():

@@ -1,4 +1,4 @@
-# RAGTruth Ablation Benchmark Results
+# RAGeval Ablation Benchmark Results
 
 | Configuration           |   Faithfulness |   Hallucination Rate |   Contradiction Rate |   Citation Precision |   Recall@5 |   MRR |   Abstention Acc |   Latency (ms) |   P95 Latency (ms) |   Est. Cost ($) |
 |:------------------------|---------------:|---------------------:|---------------------:|---------------------:|-----------:|------:|-----------------:|---------------:|-------------------:|----------------:|

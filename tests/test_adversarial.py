@@ -1,11 +1,11 @@
 """Unit tests for adversarial evaluations: unanswerable queries and conflicting contexts."""
 
-from ragtruth.core.schemas import BenchmarkItem, TestType, Chunk, RetrievedChunk
-from ragtruth.evaluator.evaluator import RAGTruthEvaluator
+from rageval.core.schemas import BenchmarkItem, TestType, Chunk, RetrievedChunk
+from rageval.evaluator.evaluator import RAGEvalEvaluator
 
 
 def test_unanswerable_abstention():
-    evaluator = RAGTruthEvaluator()
+    evaluator = RAGEvalEvaluator()
     item = BenchmarkItem(
         id="adv_unans",
         question="What is the Japanese market share of ApexCloud?",

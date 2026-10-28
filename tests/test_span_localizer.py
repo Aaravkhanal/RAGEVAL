@@ -1,7 +1,7 @@
 """Unit tests for evidence span localization."""
 
-from ragtruth.core.schemas import Chunk
-from ragtruth.evaluator.span_localizer import SpanLocalizer
+from rageval.core.schemas import Chunk
+from rageval.evaluator.span_localizer import SpanLocalizer
 
 
 def test_span_localization_exact_sentence():

@@ -1,7 +1,7 @@
 """Unit tests for adversarial perturbation mutations."""
 
-from ragtruth.core.schemas import Document
-from ragtruth.dataset.perturbations import PerturbationEngine
+from rageval.core.schemas import Document
+from rageval.dataset.perturbations import PerturbationEngine
 
 
 def test_perturbation_contradiction_and_hallucination():

@@ -8,12 +8,15 @@
 \usepackage{geometry}
 \geometry{margin=0.75in}
 
-\title{\textbf{RAGTruth: A Fine-Grained Benchmark for Claim-Level Evidence Attribution and Faithfulness in Retrieval-Augmented Generation}}
+\title{\textbf{RAGeval: A Fine-Grained Benchmark for Claim-Level Evidence Attribution and Faithfulness in Retrieval-Augmented Generation}}
+% DRAFT / QUARANTINE: numerical claims in this file previously did not match
+% reports/benchmark_summary.csv. Do not cite this table as experimental evidence
+% until a Phase 8 analysis is generated from a named experiments/runs/<id> folder.
 
 \author{
   \textbf{Aarav Khanal} \\
   Department of Computer Science \\
-  \texttt{ragtruth@benchmark.internal}
+  \texttt{rageval@benchmark.internal}
 }
 \date{\today}
 
@@ -21,7 +24,7 @@
 \maketitle
 
 \begin{abstract}
-While Retrieval-Augmented Generation (RAG) significantly mitigates parametric hallucination in large language models, deployed pipelines routinely output answers that sound authoritative yet contain subtle factual extrapolations, direct contradictions, or hallucinated citation markers. Holistic evaluation paradigms (such as traditional LLM-as-a-judge approaches) output coarse scalar ratings that fail to identify which individual assertions lack supporting context. We introduce \textbf{RAGTruth}, a research-grade evaluation and benchmarking framework that evaluates RAG outputs at the \textit{atomic claim level}. RAGTruth decomposes complex model generations into discrete factual propositions, maps inline citation markers to candidate passages, and performs Natural Language Inference (NLI) using a PyTorch DeBERTa-v3 model to classify propositions into Entailment, Contradiction, and Neutrality. Across combinatorial ablations evaluating chunk sizes (128--512 tokens), dense vectors, lexical BM25, Reciprocal Rank Fusion (RRF), and cross-encoder rerankers, we demonstrate that hybrid retrieval with cross-encoder reranking yields a 16.4\% boost in Recall@5 while sharply minimizing unsupported assertions. Furthermore, adversarial evaluations expose systematic failure modes where models fail to abstain on unanswerable queries.
+While Retrieval-Augmented Generation (RAG) significantly mitigates parametric hallucination in large language models, deployed pipelines routinely output answers that sound authoritative yet contain subtle factual extrapolations, direct contradictions, or hallucinated citation markers. Holistic evaluation paradigms (such as traditional LLM-as-a-judge approaches) output coarse scalar ratings that fail to identify which individual assertions lack supporting context. We introduce \textbf{RAGeval}, a research-grade evaluation and benchmarking framework that evaluates RAG outputs at the \textit{atomic claim level}. RAGeval decomposes complex model generations into discrete factual propositions, maps inline citation markers to candidate passages, and performs Natural Language Inference (NLI) using a PyTorch DeBERTa-v3 model to classify propositions into Entailment, Contradiction, and Neutrality. Across combinatorial ablations evaluating chunk sizes (128--512 tokens), dense vectors, lexical BM25, Reciprocal Rank Fusion (RRF), and cross-encoder rerankers, we demonstrate that hybrid retrieval with cross-encoder reranking yields a 16.4\% boost in Recall@5 while sharply minimizing unsupported assertions. Furthermore, adversarial evaluations expose systematic failure modes where models fail to abstain on unanswerable queries.
 \end{abstract}
 
 \section{Introduction}
@@ -33,7 +36,7 @@ Retrieval-Augmented Generation (RAG) has emerged as the de facto paradigm for gr
     \item \textbf{Failure to Abstain}: When questions cannot be answered from the corpus, the model fabricates plausible falsehoods instead of abstaining.
 \end{enumerate}
 
-Existing benchmarks (e.g., RAGAS \cite{es2023ragas}) predominantly utilize prompt-based LLM judges. These suffer from prompt sensitivity, self-enhancement bias, non-deterministic scoring, and high API costs. RAGTruth establishes a deterministic, reproducible alternative operating directly at the claim level.
+Existing benchmarks (e.g., RAGAS \cite{es2023ragas}) predominantly utilize prompt-based LLM judges. These suffer from prompt sensitivity, self-enhancement bias, non-deterministic scoring, and high API costs. RAGeval establishes a deterministic, reproducible alternative operating directly at the claim level.
 
 \section{System Architecture \& Methodology}
 
@@ -65,7 +68,7 @@ with default smoothing constant $\kappa = 60$.
 \begin{table*}[t]
 \centering
 \small
-\caption{Empirical RAGTruth Benchmark Ablation across 6 architectural configurations.}
+\caption{Empirical RAGeval Benchmark Ablation across 6 architectural configurations.}
 \label{tab:ablation}
 \begin{tabular}{lccccccr}
 \toprule
@@ -92,7 +95,7 @@ The benchmark corpus covers four rigorous technical domains: SEC corporate finan
 \end{itemize}
 
 \section{Conclusion}
-RAGTruth demonstrates that fine-grained atomic claim decomposition and NLI attribution auditing expose critical vulnerabilities in RAG applications that holistic scoring misses entirely. We provide our complete codebase, benchmark dataset, and API server as an open-source evaluation suite for reliable LLM engineering.
+RAGeval demonstrates that fine-grained atomic claim decomposition and NLI attribution auditing expose critical vulnerabilities in RAG applications that holistic scoring misses entirely. We provide our complete codebase, benchmark dataset, and API server as an open-source evaluation suite for reliable LLM engineering.
 
 \bibliographystyle{plain}
 \bibliography{references}

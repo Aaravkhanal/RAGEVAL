@@ -1,7 +1,7 @@
 """Unit tests for citation extraction and precision/recall auditing."""
 
-from ragtruth.core.schemas import Chunk, RetrievedChunk
-from ragtruth.evaluator.citation_parser import CitationParser
+from rageval.core.schemas import Chunk, RetrievedChunk
+from rageval.evaluator.citation_parser import CitationParser
 
 
 def test_citation_extraction():

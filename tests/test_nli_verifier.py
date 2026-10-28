@@ -1,7 +1,7 @@
 """Unit tests for NLI entailment, contradiction, and neutral classification."""
 
-from ragtruth.core.schemas import AtomicClaim, Chunk, RetrievedChunk, VerificationLabel
-from ragtruth.evaluator.nli_verifier import NLIVerifier
+from rageval.core.schemas import AtomicClaim, Chunk, RetrievedChunk, VerificationLabel
+from rageval.evaluator.nli_verifier import NLIVerifier
 
 
 def test_nli_verification_entailed_and_contradiction():
@@ -28,7 +28,7 @@ def test_nli_verification_entailed_and_contradiction():
         cited_chunk_ids=["c_fin"],
     )
     v_ent = verifier.verify_claim(claim_entailed, [premise_chunk])
-    assert v_ent.label == VerificationLabel.ENTAILEMENT
+    assert v_ent.label == VerificationLabel.SUPPORTED
 
     # 2. Contradictory claim
     claim_contra = AtomicClaim(
@@ -38,7 +38,7 @@ def test_nli_verification_entailed_and_contradiction():
         cited_chunk_ids=["c_fin"],
     )
     v_contra = verifier.verify_claim(claim_contra, [premise_chunk])
-    assert v_contra.label == VerificationLabel.CONTRADICTION
+    assert v_contra.label == VerificationLabel.CONTRADICTED
 
     # 3. Unsupported (Neutral) claim
     claim_neutral = AtomicClaim(
@@ -48,4 +48,4 @@ def test_nli_verification_entailed_and_contradiction():
         cited_chunk_ids=["c_fin"],
     )
     v_neu = verifier.verify_claim(claim_neutral, [premise_chunk])
-    assert v_neu.label == VerificationLabel.NEUTRAL
+    assert v_neu.label == VerificationLabel.UNSUPPORTED

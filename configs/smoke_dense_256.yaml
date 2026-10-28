@@ -1,0 +1,22 @@
+name: Dense_Chunk256_Baseline
+seed: 0
+chunker:
+  strategy: fixed
+  chunk_size: 256
+  chunk_overlap: 32
+embedder:
+  model_name: sentence-transformers/all-MiniLM-L6-v2
+  device: cpu
+retriever:
+  method: dense
+  top_k: 5
+reranker:
+  enabled: false
+generator:
+  backend: mock
+  mock_mode: faithful
+  abstention_policy: empty_context
+evaluator:
+  method: nli
+  allow_heuristic_fallback: false
+  enable_multi_hop: false

@@ -1,0 +1,14 @@
+{
+  "dataset_id": "smoke_v1",
+  "version": "1.0.0",
+  "synthetic": true,
+  "license": "original-synthetic-in-repo",
+  "documents": "data/raw/corpus.json",
+  "items_all": "data/gold/benchmark_all.json",
+  "items_standard": "data/gold/benchmark_standard.json",
+  "items_adversarial": "data/adversarial/benchmark_adversarial.json",
+  "n_documents": 8,
+  "n_items": 8,
+  "split_policy": "entire set is smoke; not a publication test split",
+  "notes": "Fictional entities (ApexCloud, Veloceptin, HydraKV, NovaDrive). Gold claim status strings may use historical ENTAILEMENT aliases; loaders map them to supported."
+}
