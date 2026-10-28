@@ -107,7 +107,10 @@ class SentenceWindowChunker(BaseChunker):
         return chunks
 
 
-def get_chunker(config: ChunkerConfig) -> BaseChunker:
+def get_chunker(config: ChunkerConfig, embedder=None) -> BaseChunker:
     if config.strategy == "sentence_window":
         return SentenceWindowChunker(window_size=config.window_size)
+    elif config.strategy == "semantic":
+        from ragtruth.pipeline.semantic_chunker import SemanticChunker
+        return SemanticChunker(embedder=embedder)
     return FixedTokenChunker(chunk_size=config.chunk_size, chunk_overlap=config.chunk_overlap)

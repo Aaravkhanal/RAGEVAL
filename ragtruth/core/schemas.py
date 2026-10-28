@@ -91,6 +91,9 @@ class ClaimVerification(BaseModel):
     contradicting_chunk_ids: List[str] = Field(default_factory=list)
     best_matching_chunk_id: Optional[str] = None
     best_matching_chunk_text: Optional[str] = None
+    evidence_span_start: Optional[int] = None
+    evidence_span_end: Optional[int] = None
+    evidence_exact_text: Optional[str] = None
     explanation: Optional[str] = None
 
 
@@ -98,6 +101,7 @@ class CitationMetric(BaseModel):
     total_citations: int
     valid_citations: int
     hallucinated_citations: List[str] = Field(default_factory=list)
+    misattributed_citations: List[str] = Field(default_factory=list)
     citation_precision: float
     citation_recall: float
 

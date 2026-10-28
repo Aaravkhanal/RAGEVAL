@@ -214,6 +214,25 @@ class NLIVerifier:
             confidence = 1.0 - max(best_entailment_score, best_contradiction_score)
             explanation = "Claim lacks supporting evidence in the retrieved context (hallucination / unverified extrapolation)."
 
+        # Localize exact character span in best matching chunk if available
+        span_start = None
+        span_end = None
+        exact_span_text = None
+
+        if best_chunk_id and label in (VerificationLabel.ENTAILEMENT, VerificationLabel.CONTRADICTION):
+            from ragtruth.evaluator.span_localizer import SpanLocalizer
+            matching_chunk_obj = next((r.chunk for r in candidate_chunks if r.chunk.id == best_chunk_id), None)
+            if matching_chunk_obj:
+                span_match = SpanLocalizer.find_best_evidence_span(
+                    claim_text=claim.text,
+                    chunk=matching_chunk_obj,
+                    is_supporting=(label == VerificationLabel.ENTAILEMENT),
+                )
+                if span_match:
+                    span_start = span_match.start_char
+                    span_end = span_match.end_char
+                    exact_span_text = span_match.exact_span
+
         return ClaimVerification(
             claim_id=claim.claim_id,
             claim_text=claim.text,
@@ -226,5 +245,8 @@ class NLIVerifier:
             contradicting_chunk_ids=contradicting_ids,
             best_matching_chunk_id=best_chunk_id,
             best_matching_chunk_text=best_chunk_text,
+            evidence_span_start=span_start,
+            evidence_span_end=span_end,
+            evidence_exact_text=exact_span_text,
             explanation=explanation,
         )
