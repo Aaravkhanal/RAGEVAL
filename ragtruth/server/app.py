@@ -58,6 +58,65 @@ def health_check():
     return {"status": "ok", "service": "ragtruth"}
 
 
+from ragtruth.server.metrics import global_metrics_collector
+from ragtruth.server.streaming import StreamingVerificationSession
+from fastapi.responses import PlainTextResponse
+
+
+@app.get("/metrics", response_class=PlainTextResponse)
+def prometheus_metrics():
+    """Prometheus exposition endpoint for production monitoring."""
+    return global_metrics_collector.generate_prometheus_metrics()
+
+
+class StreamEvaluationRequest(BaseModel):
+    question: str
+    tokens: List[str]
+    context_chunks: List[str] = Field(default_factory=list)
+
+
+@app.post("/evaluate/stream")
+def evaluate_stream(req: StreamEvaluationRequest):
+    """Simulates token streaming and yields sentence verification events with guardrail alerts."""
+    retrieved_chunks = [
+        RetrievedChunk(
+            chunk=Chunk(
+                id=f"chk_{i}",
+                doc_id=f"doc_{i}",
+                text=c,
+                chunk_index=i-1,
+                token_count=len(c.split()),
+                start_char=0,
+                end_char=len(c),
+            ),
+            score=1.0,
+            rank=i,
+            retrieval_method="stream_context",
+        )
+        for i, c in enumerate(req.context_chunks, start=1)
+    ]
+
+    session = StreamingVerificationSession(
+        question=req.question,
+        retrieved_chunks=retrieved_chunks,
+        verifier=evaluator.nli_verifier,
+    )
+
+    events = []
+    for tok in req.tokens:
+        ev = session.process_token(tok)
+        if ev:
+            events.append(ev)
+            if ev.get("guardrail_triggered"):
+                break
+
+    final_ev = session.flush()
+    if final_ev:
+        events.append(final_ev)
+
+    return {"events": events, "total_verified_sentences": len(session.verified_sentences)}
+
+
 @app.post("/evaluate/answer", response_model=LiveEvaluationResponse)
 def evaluate_answer(req: LiveEvaluationRequest):
     """Decomposes an answer into atomic claims and verifies them against the provided context chunks."""
@@ -86,6 +145,7 @@ def evaluate_answer(req: LiveEvaluationRequest):
         generated_answer=req.answer,
         retrieved_chunks=retrieved_chunks,
     )
+    global_metrics_collector.record_evaluation(res)
     return LiveEvaluationResponse(evaluation=res)
 
 
