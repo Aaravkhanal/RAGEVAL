@@ -1,0 +1,258 @@
+[
+  {
+    "id": "bench_001",
+    "domain": "finance",
+    "question": "What was ApexCloud's Q3 2024 gross margin, and what drove the margin expansion?",
+    "gold_answer": "ApexCloud's non-GAAP gross margin was 78.2%, expanding by 180 basis points. This margin expansion was driven by custom ASIC silicon deployment across edge datacenters.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_fin_01",
+        "span": "Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters.",
+        "chunk_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "ApexCloud Q3 2024 gross margin was 78.2%",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_fin_01"
+        ]
+      },
+      {
+        "claim": "Gross margin expanded by 180 basis points",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_fin_01"
+        ]
+      },
+      {
+        "claim": "Margin expansion was driven by custom ASIC silicon deployment",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_fin_01"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "metadata": {}
+  },
+  {
+    "id": "bench_002",
+    "domain": "biomedical",
+    "question": "What was the median progression-free survival and objective response rate for Veloceptin plus nivolumab?",
+    "gold_answer": "In the Phase 3 RADIANT-4 trial, Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months and a confirmed objective response rate (ORR) of 58.4%.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_bio_01",
+        "span": "Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy... The confirmed objective response rate (ORR) was 58.4%",
+        "chunk_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Median progression-free survival was 14.8 months",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_bio_01"
+        ]
+      },
+      {
+        "claim": "Objective response rate was 58.4%",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_bio_01"
+        ]
+      },
+      {
+        "claim": "Trial was the Phase 3 RADIANT-4 trial",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_bio_01"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "metadata": {}
+  },
+  {
+    "id": "bench_003",
+    "domain": "systems",
+    "question": "What are the median and 99th percentile read latencies of HydraKV, and how are local reads serviced?",
+    "gold_answer": "HydraKV achieved a median read latency of 1.4 ms and a 99th percentile read latency of 4.8 ms. Reads are serviced locally via monotonic read lease grants.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cs_01",
+        "span": "HydraKV achieved a median read latency of 1.4 ms and a 99th percentile (p99) read latency of 4.8 ms by servicing reads locally via monotonic read lease grants.",
+        "chunk_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Median read latency of HydraKV is 1.4 ms",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_cs_01"
+        ]
+      },
+      {
+        "claim": "p99 read latency of HydraKV is 4.8 ms",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_cs_01"
+        ]
+      },
+      {
+        "claim": "Reads are serviced locally via monotonic read lease grants",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_cs_01"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "metadata": {}
+  },
+  {
+    "id": "bench_004_unanswerable",
+    "domain": "finance",
+    "question": "What specific percentage of ApexCloud's Q3 2024 revenue came from Japanese enterprise clients?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "metadata": {
+      "adversarial_reason": "ApexCloud reports total revenue and EMEA budget scrutiny, but Japanese revenue split is never mentioned."
+    }
+  },
+  {
+    "id": "bench_005_unanswerable",
+    "domain": "biomedical",
+    "question": "What was the overall 5-year survival rate of pediatric patients treated with Veloceptin?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "metadata": {
+      "adversarial_reason": "The trial only evaluates adult metastatic melanoma progression-free survival (14.8 months); 5-year pediatric data does not exist."
+    }
+  },
+  {
+    "id": "bench_006_conflicting",
+    "domain": "autonomous_vehicles",
+    "question": "Did NovaDrive operate its Phoenix robotaxi fleet without safety drivers?",
+    "gold_answer": "There is conflicting evidence in the sources: NovaDrive's press release claims they operated 250 fully autonomous vehicles 24/7 without safety drivers, whereas the State Transportation Safety Board audit states backup safety operators were mandated behind the wheel after collisions and only 85 vehicles were active.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_conflict_a",
+        "span": "deploying an initial fleet of 250 fully autonomous electric vehicles operating 24 hours a day without safety drivers.",
+        "chunk_id": null
+      },
+      {
+        "doc_id": "doc_conflict_b",
+        "span": "mandated that all vehicles maintain licensed backup safety operators behind the wheel following two non-fatal intersection collisions",
+        "chunk_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "NovaDrive PR claimed 250 vehicles operated without safety drivers",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_conflict_a"
+        ]
+      },
+      {
+        "claim": "State Safety Board mandated licensed backup safety operators behind the wheel",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_conflict_b"
+        ]
+      }
+    ],
+    "test_type": "conflicting",
+    "expected_abstention": false,
+    "metadata": {
+      "conflict_docs": [
+        "doc_conflict_a",
+        "doc_conflict_b"
+      ]
+    }
+  },
+  {
+    "id": "bench_007",
+    "domain": "systems",
+    "question": "What is the crash recovery time of HydraKV, and what is its heartbeat failure detection threshold?",
+    "gold_answer": "HydraKV's node recovery time averaged 3.2 seconds for a 500 GB partition state, and its failure detection uses heartbeats calibrated with a 450 ms timeout threshold.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cs_02",
+        "span": "node recovery times averaged 3.2 seconds for a 500 GB partition state. Node failure detection utilizes heartbeats calibrated with a 450 ms timeout threshold",
+        "chunk_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Node recovery times averaged 3.2 seconds for 500 GB partition",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_cs_02"
+        ]
+      },
+      {
+        "claim": "Heartbeat failure detection has a 450 ms timeout threshold",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_cs_02"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "metadata": {}
+  },
+  {
+    "id": "bench_008",
+    "domain": "finance",
+    "question": "How much senior unsecured debt does ApexCloud hold, when does it mature, and what was the share repurchase in August 2024?",
+    "gold_answer": "ApexCloud holds $1.20 billion in total senior unsecured notes maturing in October 2029 with a 3.875% coupon rate. In August 2024, the company repurchased $150 million of Class A common stock.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_fin_02",
+        "span": "total senior unsecured notes of $1.20 billion maturing in October 2029... repurchased $150 million in Class A common stock under its existing $500 million share repurchase authorization.",
+        "chunk_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "ApexCloud holds $1.20 billion in senior unsecured notes",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_fin_02"
+        ]
+      },
+      {
+        "claim": "Senior notes mature in October 2029",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_fin_02"
+        ]
+      },
+      {
+        "claim": "ApexCloud repurchased $150 million in common stock in August 2024",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_fin_02"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "metadata": {}
+  }
+]

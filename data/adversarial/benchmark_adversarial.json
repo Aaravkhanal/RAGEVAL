@@ -1,0 +1,70 @@
+[
+  {
+    "id": "bench_004_unanswerable",
+    "domain": "finance",
+    "question": "What specific percentage of ApexCloud's Q3 2024 revenue came from Japanese enterprise clients?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "metadata": {
+      "adversarial_reason": "ApexCloud reports total revenue and EMEA budget scrutiny, but Japanese revenue split is never mentioned."
+    }
+  },
+  {
+    "id": "bench_005_unanswerable",
+    "domain": "biomedical",
+    "question": "What was the overall 5-year survival rate of pediatric patients treated with Veloceptin?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "metadata": {
+      "adversarial_reason": "The trial only evaluates adult metastatic melanoma progression-free survival (14.8 months); 5-year pediatric data does not exist."
+    }
+  },
+  {
+    "id": "bench_006_conflicting",
+    "domain": "autonomous_vehicles",
+    "question": "Did NovaDrive operate its Phoenix robotaxi fleet without safety drivers?",
+    "gold_answer": "There is conflicting evidence in the sources: NovaDrive's press release claims they operated 250 fully autonomous vehicles 24/7 without safety drivers, whereas the State Transportation Safety Board audit states backup safety operators were mandated behind the wheel after collisions and only 85 vehicles were active.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_conflict_a",
+        "span": "deploying an initial fleet of 250 fully autonomous electric vehicles operating 24 hours a day without safety drivers.",
+        "chunk_id": null
+      },
+      {
+        "doc_id": "doc_conflict_b",
+        "span": "mandated that all vehicles maintain licensed backup safety operators behind the wheel following two non-fatal intersection collisions",
+        "chunk_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "NovaDrive PR claimed 250 vehicles operated without safety drivers",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_conflict_a"
+        ]
+      },
+      {
+        "claim": "State Safety Board mandated licensed backup safety operators behind the wheel",
+        "status": "ENTAILEMENT",
+        "gold_doc_ids": [
+          "doc_conflict_b"
+        ]
+      }
+    ],
+    "test_type": "conflicting",
+    "expected_abstention": false,
+    "metadata": {
+      "conflict_docs": [
+        "doc_conflict_a",
+        "doc_conflict_b"
+      ]
+    }
+  }
+]

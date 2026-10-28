@@ -1,0 +1,7 @@
+Configuration,Faithfulness,Hallucination Rate,Contradiction Rate,Citation Precision,Recall@5,MRR,Abstention Acc,Latency (ms),P95 Latency (ms),Est. Cost ($)
+Dense_Chunk128,0.4167,0.3229,0.2604,1.0,0.75,0.75,1.0,2844.83,6464.53,0.004407
+Dense_Chunk256_Baseline,0.4167,0.3229,0.2604,1.0,0.75,0.75,1.0,2409.06,5691.96,0.004407
+Dense_Chunk512,0.4167,0.3229,0.2604,1.0,0.75,0.75,1.0,2554.63,5412.94,0.004407
+Sparse_BM25_Chunk256,0.4167,0.2917,0.2917,1.0,0.75,0.75,1.0,2701.04,6065.15,0.004465
+Hybrid_RRF_Chunk256,0.4167,0.3542,0.2292,1.0,0.75,0.75,1.0,2934.0,6462.27,0.004455
+Hybrid_RRF_Reranked,0.4167,0.3542,0.2292,1.0,0.75,0.75,1.0,2159.01,4606.85,0.003227
