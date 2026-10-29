@@ -90,6 +90,8 @@ def main():
     serve_parser.add_argument("--host", default="127.0.0.1", help="Host address")
     serve_parser.add_argument("--port", type=int, default=8000, help="Port number")
     serve_parser.add_argument("--reload", action="store_true", help="Enable hot reload")
+    serve_parser.add_argument("--runs-dir", default="experiments/runs", help="Experiment run root for GET /experiments")
+    serve_parser.add_argument("--data-dir", default="data", help="Dataset root for GET /datasets")
 
     args = parser.parse_args()
 
@@ -228,6 +230,8 @@ def main():
         print(json.dumps(result.model_dump(), indent=2))
 
     elif args.command == "serve":
+        os.environ["RAGEVAL_RUNS_DIR"] = args.runs_dir
+        os.environ["RAGEVAL_DATA_DIR"] = args.data_dir
         uvicorn.run("rageval.server.app:app", host=args.host, port=args.port, reload=args.reload)
 
 

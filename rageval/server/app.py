@@ -1,32 +1,38 @@
-"""FastAPI application entrypoint for RAGeval live evaluation and benchmark reporting."""
+"""FastAPI application: live claim audit plus read-only experiment/dataset catalog."""
 
 from __future__ import annotations
+
 import os
-from typing import List, Optional, Dict, Any
-from fastapi import FastAPI, HTTPException
+from typing import Any, Dict, List, Optional
+
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse, FileResponse
 from pydantic import BaseModel, Field
 
-from rageval.core.schemas import (
-    Document,
-    Chunk,
-    RetrievedChunk,
-    BenchmarkItem,
-    QueryEvaluationResult,
-    BenchmarkRunSummary,
-)
-from rageval.core.config import EvaluatorConfig, PipelineConfig
+from rageval.core.config import EvaluatorConfig
+from rageval.core.schemas import Chunk, QueryEvaluationResult, RetrievedChunk
 from rageval.evaluator.evaluator import RAGEvalEvaluator
-from rageval.dataset.loader import DatasetLoader
-from rageval.benchmark.suite import BenchmarkSuite
-from rageval.benchmark.reporter import BenchmarkReporter
+from rageval.server.catalog import (
+    get_dataset,
+    get_experiment,
+    get_experiment_results,
+    list_datasets,
+    list_experiments,
+    table_from_metrics,
+)
+from rageval.server.metrics import global_metrics_collector
+from rageval.server.streaming import StreamingVerificationSession
 
 app = FastAPI(
     title="RAGeval Evaluation API",
-    description="Research-grade benchmark and claim-level faithfulness evaluation service for RAG.",
-    version="0.1.0",
+    description=(
+        "Claim-level faithfulness evaluation and read-only access to datasets "
+        "and experiment run folders. Full ablations are started from the CLI, "
+        "not from HTTP. This project is not Niu et al. 2024 RAGTruth."
+    ),
+    version="0.2.0",
 )
 
 app.add_middleware(
@@ -37,10 +43,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Persistent evaluator instance
-evaluator = RAGEvalEvaluator(EvaluatorConfig())
-dataset_loader = DatasetLoader("data")
-latest_benchmark_summaries: List[BenchmarkRunSummary] = []
+_evaluator: Optional[RAGEvalEvaluator] = None
+CLI_START = (
+    "rageval experiment --config configs/experiments/C_retrieve.yaml "
+    "--output-dir experiments/runs"
+)
+BENCHMARK_GONE = (
+    "POST /benchmark/run is removed because it blocked the HTTP worker on a full "
+    "ablation. Start a run with the CLI, then GET /experiments/{id}/results. "
+    f"Example: {CLI_START}"
+)
+
+
+def get_evaluator() -> RAGEvalEvaluator:
+    global _evaluator
+    if _evaluator is None:
+        _evaluator = RAGEvalEvaluator(EvaluatorConfig())
+    return _evaluator
 
 
 class LiveEvaluationRequest(BaseModel):
@@ -53,75 +72,104 @@ class LiveEvaluationResponse(BaseModel):
     evaluation: QueryEvaluationResult
 
 
-@app.get("/health")
-def health_check():
-    return {"status": "ok", "service": "rageval"}
-
-
-from rageval.server.metrics import global_metrics_collector
-from rageval.server.streaming import StreamingVerificationSession
-from fastapi.responses import PlainTextResponse
-
-
-@app.get("/metrics", response_class=PlainTextResponse)
-def prometheus_metrics():
-    """Prometheus exposition endpoint for production monitoring."""
-    return global_metrics_collector.generate_prometheus_metrics()
-
-
 class StreamEvaluationRequest(BaseModel):
     question: str
     tokens: List[str]
     context_chunks: List[str] = Field(default_factory=list)
 
 
-@app.post("/evaluate/stream")
-def evaluate_stream(req: StreamEvaluationRequest):
-    """Simulates token streaming and yields sentence verification events with guardrail alerts."""
-    retrieved_chunks = [
-        RetrievedChunk(
-            chunk=Chunk(
-                id=f"chk_{i}",
-                doc_id=f"doc_{i}",
-                text=c,
-                chunk_index=i-1,
-                token_count=len(c.split()),
-                start_char=0,
-                end_char=len(c),
-            ),
-            score=1.0,
-            rank=i,
-            retrieval_method="stream_context",
-        )
-        for i, c in enumerate(req.context_chunks, start=1)
-    ]
+@app.get("/health", tags=["meta"])
+def health_check():
+    return {"status": "ok", "service": "rageval"}
 
-    session = StreamingVerificationSession(
-        question=req.question,
-        retrieved_chunks=retrieved_chunks,
-        verifier=evaluator.nli_verifier,
+
+@app.get("/metrics", response_class=PlainTextResponse, tags=["meta"])
+def prometheus_metrics():
+    return global_metrics_collector.generate_prometheus_metrics()
+
+
+@app.get("/datasets", tags=["datasets"])
+def datasets_index():
+    return {"datasets": list_datasets()}
+
+
+@app.get("/datasets/{dataset_id}", tags=["datasets"])
+def dataset_detail(dataset_id: str, include_items: bool = Query(default=True)):
+    try:
+        return get_dataset(dataset_id, include_items=include_items)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail=f"Unknown dataset {dataset_id!r}")
+
+
+@app.get("/experiments", tags=["experiments"])
+def experiments_index():
+    return {"experiments": list_experiments()}
+
+
+@app.get("/experiments/{run_id}", tags=["experiments"])
+def experiment_detail(run_id: str):
+    try:
+        return get_experiment(run_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail=f"Unknown experiment {run_id!r}")
+
+
+@app.get("/experiments/{run_id}/results", tags=["experiments"])
+def experiment_results(run_id: str):
+    try:
+        return get_experiment_results(run_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No metrics.json for experiment {run_id!r}",
+        )
+
+
+@app.post("/experiments", tags=["experiments"])
+def start_experiment_cli_only():
+    raise HTTPException(
+        status_code=501,
+        detail=(
+            "Experiments are started from the CLI, not from HTTP. "
+            f"Example: {CLI_START}"
+        ),
     )
 
-    events = []
-    for tok in req.tokens:
-        ev = session.process_token(tok)
-        if ev:
-            events.append(ev)
-            if ev.get("guardrail_triggered"):
-                break
 
-    final_ev = session.flush()
-    if final_ev:
-        events.append(final_ev)
-
-    return {"events": events, "total_verified_sentences": len(session.verified_sentences)}
+@app.post("/benchmark/run", tags=["experiments"], deprecated=True)
+def run_benchmark_removed():
+    raise HTTPException(status_code=410, detail=BENCHMARK_GONE)
 
 
-@app.post("/evaluate/answer", response_model=LiveEvaluationResponse)
-def evaluate_answer(req: LiveEvaluationRequest):
-    """Decomposes an answer into atomic claims and verifies them against the provided context chunks."""
-    retrieved_chunks: List[RetrievedChunk] = []
-    for idx, text in enumerate(req.context_chunks, start=1):
+@app.get("/metrics/summary", tags=["experiments"])
+def get_metrics_summary() -> List[Dict[str, Any]]:
+    """Table rows from the newest listed experiment. Empty if none exist."""
+    experiments = list_experiments()
+    for record in reversed(experiments):
+        if not record.get("has_metrics"):
+            continue
+        try:
+            payload = get_experiment_results(record["id"])
+        except FileNotFoundError:
+            continue
+        return payload["table"]
+    snapshot = os.path.join("reports", "phase7", "v1_matrix", "metrics.json")
+    if os.path.isfile(snapshot):
+        from rageval.benchmark.reporter import BenchmarkReporter
+
+        return table_from_metrics(BenchmarkReporter.load_metrics(snapshot))
+    return []
+
+
+def _chunks_from_texts(texts: List[str], method: str) -> List[RetrievedChunk]:
+    retrieved: List[RetrievedChunk] = []
+    for idx, text in enumerate(texts, start=1):
         chunk = Chunk(
             id=f"chunk_{idx}",
             doc_id=f"doc_{idx}",
@@ -131,63 +179,59 @@ def evaluate_answer(req: LiveEvaluationRequest):
             start_char=0,
             end_char=len(text),
         )
-        retrieved_chunks.append(
+        retrieved.append(
             RetrievedChunk(
                 chunk=chunk,
                 score=1.0,
                 rank=idx,
-                retrieval_method="user_provided",
+                retrieval_method=method,
             )
         )
+    return retrieved
 
-    res = evaluator.evaluate_query(
+
+@app.post("/evaluate/stream", tags=["evaluate"])
+def evaluate_stream(req: StreamEvaluationRequest):
+    retrieved_chunks = _chunks_from_texts(req.context_chunks, "stream_context")
+    session = StreamingVerificationSession(
+        question=req.question,
+        retrieved_chunks=retrieved_chunks,
+        verifier=get_evaluator().nli_verifier,
+    )
+    events = []
+    for tok in req.tokens:
+        ev = session.process_token(tok)
+        if ev:
+            events.append(ev)
+            if ev.get("guardrail_triggered"):
+                break
+    final_ev = session.flush()
+    if final_ev:
+        events.append(final_ev)
+    return {"events": events, "total_verified_sentences": len(session.verified_sentences)}
+
+
+@app.post("/evaluate/answer", response_model=LiveEvaluationResponse, tags=["evaluate"])
+def evaluate_answer(req: LiveEvaluationRequest):
+    """Decompose an answer and verify claims against caller-supplied context. Sync."""
+    res = get_evaluator().evaluate_query(
         question=req.question,
         generated_answer=req.answer,
-        retrieved_chunks=retrieved_chunks,
+        retrieved_chunks=_chunks_from_texts(req.context_chunks, "user_provided"),
     )
     global_metrics_collector.record_evaluation(res)
     return LiveEvaluationResponse(evaluation=res)
 
 
-@app.post("/benchmark/run", response_model=List[BenchmarkRunSummary])
-def run_benchmark():
-    """Runs the full ablation benchmark suite and updates cached summaries."""
-    global latest_benchmark_summaries
-    corpus = dataset_loader.load_corpus()
-    benchmark_items = dataset_loader.load_benchmark("all")
-
-    suite = BenchmarkSuite()
-    latest_benchmark_summaries = suite.run_suite(corpus, benchmark_items)
-    BenchmarkReporter.export(latest_benchmark_summaries, output_dir="reports")
-    return latest_benchmark_summaries
-
-
-@app.get("/metrics/summary")
-def get_metrics_summary():
-    """Returns the latest ablation run metrics as tabular records."""
-    global latest_benchmark_summaries
-    if not latest_benchmark_summaries:
-        # Check if saved json exists
-        summary_path = os.path.join("reports", "benchmark_detailed.json")
-        if os.path.exists(summary_path):
-            import json
-            with open(summary_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            return data
-        return []
-    return [s.model_dump() for s in latest_benchmark_summaries]
-
-
-# Mount static assets directory
 static_dir = os.path.join(os.path.dirname(__file__), "static")
 if os.path.exists(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse, tags=["meta"])
 def index_page():
     index_html = os.path.join(static_dir, "index.html")
     if os.path.exists(index_html):
         with open(index_html, "r", encoding="utf-8") as f:
             return f.read()
-    return "<h1>RAGeval API Server</h1><p>Visit /docs for OpenAPI swagger documentation.</p>"
+    return "<h1>RAGeval API Server</h1><p>Visit /docs for OpenAPI documentation.</p>"

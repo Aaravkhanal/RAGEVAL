@@ -306,6 +306,8 @@ Embeddings beyond MiniLM and any paid LLM are **opt-in** after a resource note.
 
 ## Phase 9 — API, interface, developer experience
 
+**Status:** Complete for read-only dataset/experiment HTTP plus dashboard wiring. Phase 10 is not authorized by this increment. Full ablations stay on the CLI (`rageval experiment` / `rageval benchmark`). `POST /benchmark/run` returns 410.
+
 **Objective:** Inspect experiments; do not block HTTP on training-sized jobs.
 
 **Prerequisites:** Core metrics trusted (Phase 5+). Existing FastAPI kept.

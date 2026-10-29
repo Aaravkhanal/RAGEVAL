@@ -65,9 +65,16 @@ rageval report --metrics reports/phase7/v1_matrix/metrics.json --output-dir /tmp
 # Honest findings + figures from a completed metrics.json (Phase 8)
 rageval findings --metrics reports/phase7/v1_matrix/metrics.json --output-dir reports/20261028T183042Z_a97ad68f --run-id 20261028T183042Z_a97ad68f --case-studies reports/20261028T183042Z_a97ad68f/case_studies.json
 
-# Dashboard
-rageval serve --port 8000
+# Dashboard (live /evaluate/answer stays sync; ablations are CLI-only)
+rageval serve --port 8000 --runs-dir experiments/runs --data-dir data
 ```
+
+Read-only HTTP after `rageval serve`:
+
+- `GET /datasets`, `GET /datasets/{id}`
+- `GET /experiments`, `GET /experiments/{id}`, `GET /experiments/{id}/results`
+- `POST /evaluate/answer` (caller-supplied context)
+- `POST /benchmark/run` is removed (HTTP 410). OpenAPI: `/docs`
 
 ## Documentation
 

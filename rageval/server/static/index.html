@@ -227,7 +227,7 @@
             letter-spacing: 0.04em;
         }
 
-        input[type="text"], textarea {
+        input[type="text"], textarea, select {
             background: #0d121c;
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
@@ -239,7 +239,7 @@
             width: 100%;
         }
 
-        input[type="text"]:focus, textarea:focus {
+        input[type="text"]:focus, textarea:focus, select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px var(--accent-glow);
@@ -569,34 +569,39 @@
             </div>
         </div>
 
-        <!-- Tab 2: Benchmark Ablation Results -->
+        <!-- Tab 2: Experiment results (read-only) -->
         <div id="section-benchmark" style="display: none; margin-top: 1rem;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap;">
                 <div>
-                    <h2 style="font-size: 1.5rem; font-weight: 800;">Ablation Benchmark Matrix</h2>
-                    <p style="color: var(--text-muted); font-size: 0.95rem;">Evaluating chunk sizes, dense models, BM25 sparse search, and cross-encoder rerankers.</p>
+                    <h2 style="font-size: 1.5rem; font-weight: 800;">Experiment results</h2>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">Reads <code>experiments/runs/</code> and the committed Phase 7 snapshot. Full ablations start from the CLI, not this page.</p>
                 </div>
-                <button class="btn-primary" id="btn-run-full-benchmark">
-                    <span>Execute Full Ablation Run</span>
-                </button>
+                <div class="input-group" style="min-width: 280px;">
+                    <label for="experiment-select">Run</label>
+                    <select id="experiment-select"></select>
+                </div>
             </div>
+            <p id="experiment-cli-hint" style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1rem; font-family: var(--font-mono);">
+                rageval experiment --config configs/experiments/C_retrieve.yaml --output-dir experiments/runs
+            </p>
+            <p id="experiment-meta" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;"></p>
 
             <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
                             <th>Configuration</th>
-                            <th>Faithfulness</th>
-                            <th>Hallucination</th>
+                            <th>Claim support</th>
+                            <th>Unsupported</th>
                             <th>Contradiction</th>
                             <th>Recall@5</th>
                             <th>MRR</th>
-                            <th>Abstention Acc</th>
+                            <th>Abstention</th>
                             <th>Latency (ms)</th>
                         </tr>
                     </thead>
                     <tbody id="benchmark-tbody">
-                        <tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-dim);">Click to load benchmark data.</td></tr>
+                        <tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-dim);">Open this tab to load GET /experiments.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -604,12 +609,19 @@
 
         <!-- Tab 3: Dataset Explorer -->
         <div id="section-dataset" style="display: none; margin-top: 1rem;">
-            <div style="margin-bottom: 1.5rem;">
-                <h2 style="font-size: 1.5rem; font-weight: 800;">Corpus & Benchmark Explorer</h2>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">Browse multi-domain evaluation tuples and adversarial edge cases.</p>
+            <div style="margin-bottom: 1.5rem; display:flex; justify-content:space-between; align-items:flex-end; gap:1rem; flex-wrap:wrap;">
+                <div>
+                    <h2 style="font-size: 1.5rem; font-weight: 800;">Dataset explorer</h2>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">Loaded from <code>GET /datasets</code>. Smoke is synthetic fiction; v1 is licensed public-domain + CC-BY excerpts.</p>
+                </div>
+                <div class="input-group" style="min-width: 240px;">
+                    <label for="dataset-select">Dataset</label>
+                    <select id="dataset-select"></select>
+                </div>
             </div>
+            <p id="dataset-meta" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;"></p>
             <div class="table-wrapper" id="dataset-items-container" style="padding:1.5rem; display:flex; flex-direction:column; gap:1rem;">
-                <p style="color:var(--text-dim);">Loading benchmark corpus...</p>
+                <p style="color:var(--text-dim);">Open this tab to load datasets from the API.</p>
             </div>
         </div>
     </main>
@@ -784,96 +796,181 @@
             highlightBox.innerHTML = highlightedHtml;
         }
 
-        // Benchmark Table
+        function fmtPct(v) {
+            if (v === null || v === undefined || Number.isNaN(Number(v))) return "—";
+            return (Number(v) * 100).toFixed(1) + "%";
+        }
+        function fmtNum(v, digits) {
+            if (v === null || v === undefined || Number.isNaN(Number(v))) return "—";
+            return Number(v).toFixed(digits);
+        }
+        function escapeHtml(s) {
+            return String(s ?? "").replace(/[&<>"']/g, ch => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+            }[ch]));
+        }
+
         async function loadCachedBenchmark() {
+            const select = document.getElementById("experiment-select");
+            const tbody = document.getElementById("benchmark-tbody");
+            const meta = document.getElementById("experiment-meta");
             try {
-                const resp = await fetch("/metrics/summary");
-                const data = await resp.json();
-                if (data && data.length > 0) renderBenchmarkTable(data);
+                const resp = await fetch("/experiments");
+                if (!resp.ok) throw new Error("GET /experiments failed");
+                const payload = await resp.json();
+                const experiments = payload.experiments || [];
+                const previous = select.value;
+                select.innerHTML = "";
+                if (!experiments.length) {
+                    meta.textContent = "No runs found. Start one with the CLI command above.";
+                    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-dim);">No experiments.</td></tr>`;
+                    return;
+                }
+                experiments.forEach(exp => {
+                    const opt = document.createElement("option");
+                    opt.value = exp.id;
+                    opt.textContent = `${exp.id} (${exp.source || "runs"}${exp.has_metrics ? "" : ", no metrics"})`;
+                    select.appendChild(opt);
+                });
+                const pick = experiments.some(e => e.id === previous) ? previous : experiments[0].id;
+                select.value = pick;
+                await loadExperimentResults(pick);
             } catch (err) {
-                console.error("Could not load cached metrics", err);
+                meta.textContent = "Could not load GET /experiments: " + err.message;
             }
         }
 
-        document.getElementById('btn-run-full-benchmark').addEventListener('click', async () => {
-            const btn = document.getElementById('btn-run-full-benchmark');
-            btn.disabled = true;
-            btn.innerHTML = `<span class="spinner"></span><span>Executing Benchmark Ablation...</span>`;
+        async function loadExperimentResults(runId) {
+            const tbody = document.getElementById("benchmark-tbody");
+            const meta = document.getElementById("experiment-meta");
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-dim);">Loading ${escapeHtml(runId)}…</td></tr>`;
             try {
-                const resp = await fetch("/benchmark/run", { method: "POST" });
-                const summaries = await resp.json();
-                renderBenchmarkTable(summaries);
+                const [infoRes, resultRes] = await Promise.all([
+                    fetch("/experiments/" + encodeURIComponent(runId)),
+                    fetch("/experiments/" + encodeURIComponent(runId) + "/results"),
+                ]);
+                if (!infoRes.ok) throw new Error("GET /experiments/" + runId + " failed");
+                const info = await infoRes.json();
+                meta.textContent = [
+                    info.dataset_id ? `dataset ${info.dataset_id} ${info.dataset_version || ""}` : null,
+                    info.n_items != null ? `n=${info.n_items}` : null,
+                    info.state ? `state=${info.state}` : null,
+                    info.source ? `source=${info.source}` : null,
+                    "no overall score",
+                ].filter(Boolean).join(" · ");
+                if (resultRes.status === 404) {
+                    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-dim);">This run has no metrics.json.</td></tr>`;
+                    return;
+                }
+                if (!resultRes.ok) throw new Error("GET results failed");
+                const payload = await resultRes.json();
+                renderBenchmarkTable(payload.table || []);
             } catch (err) {
-                alert("Error running benchmark: " + err.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `<span>Execute Full Ablation Run</span>`;
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--status-contra);">${escapeHtml(err.message)}</td></tr>`;
             }
+        }
+
+        document.getElementById("experiment-select").addEventListener("change", (ev) => {
+            if (ev.target.value) loadExperimentResults(ev.target.value);
         });
 
         function renderBenchmarkTable(summaries) {
-            const tbody = document.getElementById('benchmark-tbody');
-            tbody.innerHTML = '';
+            const tbody = document.getElementById("benchmark-tbody");
+            tbody.innerHTML = "";
+            if (!summaries.length) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-dim);">No config rows.</td></tr>`;
+                return;
+            }
             summaries.forEach(s => {
-                const row = document.createElement('tr');
+                const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td><strong>${s.config_name}</strong></td>
-                    <td style="color:var(--status-entail); font-weight:700;">${(s.mean_faithfulness * 100).toFixed(1)}%</td>
-                    <td style="color:var(--status-neutral);">${(s.mean_hallucination_rate * 100).toFixed(1)}%</td>
-                    <td style="color:var(--status-contra);">${(s.mean_contradiction_rate * 100).toFixed(1)}%</td>
-                    <td>${s.mean_recall_at_5.toFixed(3)}</td>
-                    <td>${s.mean_mrr.toFixed(3)}</td>
-                    <td>${(s.abstention_accuracy * 100).toFixed(1)}%</td>
-                    <td>${s.mean_latency_ms.toFixed(1)} ms</td>
+                    <td><strong>${escapeHtml(s.config_name)}</strong></td>
+                    <td style="color:var(--status-entail); font-weight:700;">${fmtPct(s.mean_faithfulness)}</td>
+                    <td style="color:var(--status-neutral);">${fmtPct(s.mean_hallucination_rate)}</td>
+                    <td style="color:var(--status-contra);">${fmtPct(s.mean_contradiction_rate)}</td>
+                    <td>${fmtNum(s.mean_recall_at_5, 4)}</td>
+                    <td>${fmtNum(s.mean_mrr, 4)}</td>
+                    <td>${fmtPct(s.abstention_accuracy)}</td>
+                    <td>${fmtNum(s.mean_latency_ms, 1)}</td>
                 `;
                 tbody.appendChild(row);
             });
         }
 
-        // Dataset Explorer
         async function loadDatasetExplorer() {
-            const container = document.getElementById('dataset-items-container');
-            container.innerHTML = `
-                <div style="background:#0d121c; padding:1.25rem; border-radius:8px; border:1px solid var(--border-subtle);">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
-                        <span style="font-weight:700; color:var(--primary);">[Finance] Form 10-Q SEC Filing</span>
-                        <span class="status-pill entailed">Standard</span>
-                    </div>
-                    <div style="font-size:0.95rem; margin-bottom:0.4rem;"><strong>Question:</strong> What was ApexCloud's Q3 2024 gross margin, and what drove margin expansion?</div>
-                    <div style="font-size:0.85rem; color:var(--text-muted);"><strong>Gold Evidence:</strong> Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters.</div>
-                </div>
-
-                <div style="background:#0d121c; padding:1.25rem; border-radius:8px; border:1px solid var(--border-subtle);">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
-                        <span style="font-weight:700; color:#38bdf8;">[Biomedical] Phase 3 Oncology Trial</span>
-                        <span class="status-pill entailed">Standard</span>
-                    </div>
-                    <div style="font-size:0.95rem; margin-bottom:0.4rem;"><strong>Question:</strong> What was the median progression-free survival and objective response rate for Veloceptin plus nivolumab?</div>
-                    <div style="font-size:0.85rem; color:var(--text-muted);"><strong>Gold Evidence:</strong> Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months and confirmed ORR of 58.4%.</div>
-                </div>
-
-                <div style="background:#0d121c; padding:1.25rem; border-radius:8px; border:1px solid var(--border-subtle);">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
-                        <span style="font-weight:700; color:#f59e0b;">[Adversarial] Unanswerable Query</span>
-                        <span class="status-pill neutral">Expected Abstention</span>
-                    </div>
-                    <div style="font-size:0.95rem; margin-bottom:0.4rem;"><strong>Question:</strong> What specific percentage of ApexCloud's Q3 2024 revenue came from Japanese enterprise clients?</div>
-                    <div style="font-size:0.85rem; color:var(--text-muted);"><strong>Adversarial Target:</strong> High lexical similarity to ApexCloud Q3 2024 filing, but geographical Japanese segment breakdown is completely absent. Model must abstain.</div>
-                </div>
-
-                <div style="background:#0d121c; padding:1.25rem; border-radius:8px; border:1px solid var(--border-subtle);">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
-                        <span style="font-weight:700; color:#ef4444;">[Adversarial] Conflicting Sources</span>
-                        <span class="status-pill contradiction">Conflict Resolution</span>
-                    </div>
-                    <div style="font-size:0.95rem; margin-bottom:0.4rem;"><strong>Question:</strong> Did NovaDrive operate its Phoenix robotaxi fleet without safety drivers?</div>
-                    <div style="font-size:0.85rem; color:var(--text-muted);"><strong>Adversarial Target:</strong> PR release asserts 250 fully autonomous vehicles with zero drivers; State Safety Board audit reports only 85 vehicles and mandated backup safety drivers after collisions.</div>
-                </div>
-            `;
+            const select = document.getElementById("dataset-select");
+            const container = document.getElementById("dataset-items-container");
+            const meta = document.getElementById("dataset-meta");
+            try {
+                const resp = await fetch("/datasets");
+                if (!resp.ok) throw new Error("GET /datasets failed");
+                const payload = await resp.json();
+                const datasets = payload.datasets || [];
+                const previous = select.value;
+                select.innerHTML = "";
+                if (!datasets.length) {
+                    meta.textContent = "No dataset manifests under data/manifests.";
+                    container.innerHTML = "";
+                    return;
+                }
+                datasets.forEach(ds => {
+                    const opt = document.createElement("option");
+                    opt.value = ds.dataset_id;
+                    opt.textContent = `${ds.dataset_id} v${ds.version || "?"} (${ds.n_items || "?"} items)`;
+                    select.appendChild(opt);
+                });
+                const pick = datasets.some(d => d.dataset_id === previous)
+                    ? previous
+                    : (datasets.find(d => d.dataset_id === "benchmark_v1") || datasets[0]).dataset_id;
+                select.value = pick;
+                await renderDataset(pick);
+            } catch (err) {
+                meta.textContent = "Could not load GET /datasets: " + err.message;
+            }
         }
 
-        // Initialize on load
-        triggerEvaluation();
+        async function renderDataset(datasetId) {
+            const container = document.getElementById("dataset-items-container");
+            const meta = document.getElementById("dataset-meta");
+            container.innerHTML = `<p style="color:var(--text-dim);">Loading ${escapeHtml(datasetId)}…</p>`;
+            try {
+                const resp = await fetch("/datasets/" + encodeURIComponent(datasetId) + "?include_items=true");
+                if (!resp.ok) throw new Error("GET /datasets/" + datasetId + " failed");
+                const ds = await resp.json();
+                meta.textContent = [
+                    ds.license,
+                    ds.synthetic ? "synthetic smoke" : "licensed pilot",
+                    ds.n_documents != null ? `${ds.n_documents} docs` : null,
+                    ds.n_items != null ? `${ds.n_items} items` : null,
+                    ds.split_policy,
+                ].filter(Boolean).join(" · ");
+                const items = ds.items || [];
+                if (!items.length) {
+                    container.innerHTML = `<p style="color:var(--text-dim);">No items.</p>`;
+                    return;
+                }
+                container.innerHTML = items.map(item => {
+                    const gold = item.gold_answer
+                        ? escapeHtml(item.gold_answer)
+                        : "<em>null (expected abstention)</em>";
+                    return `
+                    <div style="background:#0d121c; padding:1.25rem; border-radius:8px; border:1px solid var(--border-subtle);">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; gap:0.75rem; flex-wrap:wrap;">
+                            <span style="font-weight:700; color:var(--primary);">${escapeHtml(item.id)} · ${escapeHtml(item.domain)}</span>
+                            <span class="status-pill ${item.expected_abstention ? "neutral" : "entailed"}">${escapeHtml(item.scenario_type)} / ${escapeHtml(item.split)}</span>
+                        </div>
+                        <div style="font-size:0.95rem; margin-bottom:0.4rem;"><strong>Question:</strong> ${escapeHtml(item.question)}</div>
+                        <div style="font-size:0.85rem; color:var(--text-muted);"><strong>Gold:</strong> ${gold}</div>
+                    </div>`;
+                }).join("");
+            } catch (err) {
+                container.innerHTML = `<p style="color:var(--status-contra);">${escapeHtml(err.message)}</p>`;
+            }
+        }
+
+        document.getElementById("dataset-select").addEventListener("change", (ev) => {
+            if (ev.target.value) renderDataset(ev.target.value);
+        });
     </script>
 </body>
 </html>
