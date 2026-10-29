@@ -172,6 +172,8 @@ Existing `rageval` modules are the implementation surface. New files are added o
 
 ## Phase 5 — Metrics and evaluation framework
 
+**Status:** Complete: `rageval/metrics/registry.py`, hand-computed tests, per-example/aggregate JSON, bootstrap CIs gated on n≥30 and independence, cost null without a pricing source, no overall score.
+
 **Objective:** Central registry with tested formulas.
 
 **Prerequisites:** Phase 1 metric definitions; Phase 4 label outputs.

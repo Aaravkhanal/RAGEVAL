@@ -8,6 +8,7 @@ from rageval.core.labels import VerificationLabel
 from rageval.metrics.citation import (
     citation_completeness,
     citation_existence_precision,
+    citation_marker_recall,
     citation_support_precision,
 )
 
@@ -89,10 +90,9 @@ class CitationParser:
                     hallucinated_citations.append(f"[{c}] (not found in retrieved chunks)")
 
         precision = citation_existence_precision(valid_count, total_citations)
-        # Marker recall: fraction of sentences that contain at least one citation token.
         sentences = [s.strip() for s in re.split(r"(?<=[.!?])\s+", text) if s.strip()]
         sentences_with_citation = sum(1 for s in sentences if cls.extract_citations(s))
-        recall = (sentences_with_citation / len(sentences)) if sentences else 1.0
+        recall = citation_marker_recall(sentences_with_citation, len(sentences))
 
         return CitationMetric(
             total_citations=total_citations,

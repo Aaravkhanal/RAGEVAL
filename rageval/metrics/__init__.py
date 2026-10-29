@@ -14,7 +14,21 @@ from rageval.metrics.claims import (
     unsupported_claim_rate,
 )
 from rageval.metrics.retrieval import mrr, ndcg_at_k, noise_ratio, recall_at_k
-from rageval.metrics.citation import citation_completeness, citation_existence_precision
+from rageval.metrics.abstention import abstention_accuracy
+from rageval.metrics.bootstrap import MIN_N_CONFIRMATORY, bootstrap_mean_ci
+from rageval.metrics.citation import (
+    citation_completeness,
+    citation_existence_precision,
+    citation_marker_recall,
+    citation_support_precision,
+)
+from rageval.metrics.registry import (
+    REGISTRY,
+    get_metric,
+    has_overall_score,
+    official_metrics,
+)
+from rageval.metrics.system import estimated_cost_usd
 from rageval.metrics.classification import (
     accuracy,
     confusion_matrix,
@@ -32,7 +46,17 @@ __all__ = [
     "ndcg_at_k",
     "noise_ratio",
     "citation_existence_precision",
+    "citation_support_precision",
     "citation_completeness",
+    "citation_marker_recall",
+    "abstention_accuracy",
+    "estimated_cost_usd",
+    "bootstrap_mean_ci",
+    "MIN_N_CONFIRMATORY",
+    "REGISTRY",
+    "get_metric",
+    "official_metrics",
+    "has_overall_score",
     "normalize_answer",
     "exact_match",
     "token_f1",

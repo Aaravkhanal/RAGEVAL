@@ -61,6 +61,25 @@ Abstention accuracy = fraction of unanswerable items with `abstained=True`.
 
 Stage latencies from `perf_counter`. `estimated_cost_usd` is **null** unless `prompt_usd_per_million` and `completion_usd_per_million` are set on `EvaluatorConfig`, with `pricing_source` recorded.
 
+## Empty-set and abstention denominators
+
+| Metric | Empty / edge policy |
+| --- | --- |
+| recall_at_k / MRR / nDCG (pure) | Empty gold → 0 |
+| recall_at_k on unanswerable items | 1 if nothing retrieved, else 0 |
+| noise_ratio | Empty retrieval → 0 |
+| claim support / unsupported / contradiction (pure) | Empty assessable → 0. Caller drops abstention claims. |
+| claim support in the evaluator | 1 if the answer is empty or an abstention and there are no factual claims |
+| claim coverage | No generated claims → 1 |
+| citation existence / support precision / completeness / marker recall | Empty denominator → 1 |
+| abstention accuracy | No unanswerable items → 1 |
+| answer EM/F1 | Unanswerable, no gold string: 1 if abstained else 0 |
+| estimated_cost_usd | Null unless both USD/million prices **and** `pricing_source` are set |
+
 ## Aggregation
 
-Means over examples. Significance tests exist in `analysis/significance.py` but require adequate \(n\); the smoke set (\(n=8\)) is underpowered.
+Means over examples. There is **no official composite / overall score**. Compare named metrics from `rageval.metrics.registry`.
+
+Bootstrap percentile CIs (`rageval/metrics/bootstrap.py`) are **confirmatory** only when \(n \ge 30\) **and** items are treated as i.i.d. Items that share documents are not independent. Smaller \(n\) still emits an interval labeled `assumptions_met=false`. Significance p-values in `analysis/significance.py` are uncorrected; `confirmatory` is false when \(n < 30\).
+
+The smoke set (\(n=8\)) and `benchmark_v1` (\(n=24\)) are underpowered for confirmatory inference.

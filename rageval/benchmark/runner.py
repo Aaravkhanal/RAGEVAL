@@ -79,7 +79,7 @@ class BenchmarkRunner:
                 mixed_support_n=0,
                 mixed_support_mean_answer_f1=None,
                 mixed_support_mean_faithfulness=None,
-                total_estimated_cost_usd=0.0,
+                total_estimated_cost_usd=None,
                 dataset_id=dataset_id,
                 dataset_version=dataset_version,
                 results=[],

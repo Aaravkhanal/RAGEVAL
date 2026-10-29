@@ -558,7 +558,10 @@
                     </div>
 
                     <div id="citation-summary" style="background:#0d121c; padding:0.75rem 1rem; border-radius:8px; border:1px solid var(--border-subtle); font-size:0.85rem; color:var(--text-muted);">
-                        Citation Precision: <strong style="color:#f8fafc;" id="cite-precision">100%</strong> | Valid citations: <strong id="cite-valid">2</strong> / <strong id="cite-total">2</strong>
+                        Existence precision: <strong style="color:#f8fafc;" id="cite-precision">100%</strong>
+                        | Support precision: <strong id="cite-support">100%</strong>
+                        | Valid citations: <strong id="cite-valid">2</strong> / <strong id="cite-total">2</strong>
+                        | Marker recall (legacy): <strong id="cite-marker">100%</strong>
                     </div>
 
                     <div class="claims-container" id="claims-list"></div>
@@ -708,6 +711,8 @@
 
             const cm = res.citation_metrics;
             document.getElementById('cite-precision').textContent = Math.round(cm.citation_precision * 100) + "%";
+            document.getElementById('cite-support').textContent = Math.round((cm.citation_support_precision || 0) * 100) + "%";
+            document.getElementById('cite-marker').textContent = Math.round((cm.citation_recall || 0) * 100) + "%";
             document.getElementById('cite-valid').textContent = cm.valid_citations;
             document.getElementById('cite-total').textContent = cm.total_citations;
 

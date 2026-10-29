@@ -41,14 +41,18 @@ class SignificanceAnalyzer:
 
         # If identical values across all queries, p-value is 1.0
         if np.all(diffs == 0):
+            from rageval.metrics.bootstrap import MIN_N_CONFIRMATORY
+
             return {
                 "metric": metric,
                 "baseline_name": baseline.config_name,
                 "treatment_name": treatment.config_name,
+                "n": int(len(diffs)),
                 "mean_diff": 0.0,
                 "p_value_ttest": 1.0,
                 "p_value_wilcoxon": 1.0,
                 "is_significant": False,
+                "confirmatory": len(diffs) >= MIN_N_CONFIRMATORY,
             }
 
         # 1. Paired t-test
@@ -60,10 +64,14 @@ class SignificanceAnalyzer:
         except Exception:
             p_wilcoxon = p_ttest
 
+        from rageval.metrics.bootstrap import MIN_N_CONFIRMATORY, bootstrap_mean_ci
+
+        n = len(diffs)
         return {
             "metric": metric,
             "baseline_name": baseline.config_name,
             "treatment_name": treatment.config_name,
+            "n": n,
             "mean_baseline": round(float(np.mean(vals_a)), 4),
             "mean_treatment": round(float(np.mean(vals_b)), 4),
             "mean_diff": round(mean_diff, 4),
@@ -71,4 +79,6 @@ class SignificanceAnalyzer:
             "p_value_ttest": round(float(p_ttest), 4),
             "p_value_wilcoxon": round(float(p_wilcoxon), 4),
             "is_significant": bool(p_ttest < 0.05),
+            "confirmatory": n >= MIN_N_CONFIRMATORY,
+            "bootstrap_mean_diff": bootstrap_mean_ci(diffs, independent=False),
         }

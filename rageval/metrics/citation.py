@@ -29,3 +29,10 @@ def citation_support_precision(n_citations_that_support: int, n_evaluated_citati
     if n_evaluated_citations <= 0:
         return 1.0
     return n_citations_that_support / n_evaluated_citations
+
+
+def citation_marker_recall(n_sentences_with_citation: int, n_sentences: int) -> float:
+    """Legacy marker recall: sentences with a citation token / sentences. No sentences → 1.0."""
+    if n_sentences <= 0:
+        return 1.0
+    return n_sentences_with_citation / n_sentences

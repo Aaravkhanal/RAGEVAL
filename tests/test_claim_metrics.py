@@ -25,6 +25,15 @@ def test_claim_rates_mixed_labels():
 
 def test_empty_labels_and_coverage():
     assert claim_support_rate([]) == 0.0
+    assert unsupported_claim_rate([]) == 0.0
+    assert contradiction_rate([]) == 0.0
     assert claim_coverage(0, 0) == 1.0
     assert claim_coverage(4, 4) == 1.0
     assert claim_coverage(4, 2) == 0.5
+
+
+def test_all_supported_hand_computed():
+    labels = [VerificationLabel.SUPPORTED, VerificationLabel.SUPPORTED]
+    assert claim_support_rate(labels) == 1.0
+    assert unsupported_claim_rate(labels) == 0.0
+    assert contradiction_rate(labels) == 0.0

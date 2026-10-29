@@ -87,3 +87,7 @@ def save_run(
             safe_name = "".join(ch if ch.isalnum() or ch in "-_" else "_" for ch in cfg.name)
             with open(os.path.join(cfg_dir, f"{safe_name}.yaml"), "w", encoding="utf-8") as f:
                 yaml.safe_dump(cfg.model_dump(), f, sort_keys=False)
+
+    from rageval.metrics.aggregate import write_metrics_bundle
+
+    write_metrics_bundle(run_dir, summaries, independent=False)

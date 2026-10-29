@@ -19,6 +19,7 @@ from rageval.evaluator.nli_verifier import NLIVerifier
 from rageval.evaluator.retrieval_metrics import RetrievalMetricsCalculator
 from rageval.metrics.answer import answer_em_f1
 from rageval.metrics.claims import claim_coverage, claim_support_rate, contradiction_rate, unsupported_claim_rate
+from rageval.metrics.system import estimated_cost_usd
 
 
 ABSTENTION_MARKERS = (
@@ -120,17 +121,13 @@ class RAGEvalEvaluator:
         verif_latency_ms = (time.perf_counter() - t0) * 1000.0
         total_latency_ms = retrieval_latency_ms + generation_latency_ms + verif_latency_ms
 
-        cost_usd = None
-        pricing_source = None
-        if (
-            self.config.prompt_usd_per_million is not None
-            and self.config.completion_usd_per_million is not None
-        ):
-            cost_usd = (
-                (prompt_tokens * self.config.prompt_usd_per_million)
-                + (completion_tokens * self.config.completion_usd_per_million)
-            ) / 1_000_000.0
-            pricing_source = self.config.pricing_source or "EvaluatorConfig prices"
+        cost_usd, pricing_source = estimated_cost_usd(
+            prompt_tokens,
+            completion_tokens,
+            self.config.prompt_usd_per_million,
+            self.config.completion_usd_per_million,
+            self.config.pricing_source,
+        )
 
         return QueryEvaluationResult(
             query_id=query_id,

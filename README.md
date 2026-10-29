@@ -12,6 +12,7 @@ This project was previously prototyped under the name RAGTruth. It is **not** th
 - A **synthetic smoke dataset** (8 documents, 8 questions). It is author-written fiction, not SEC/NEJM/OSDI source text.
 - A **licensed benchmark_v1** (16 documents, 24 questions): short U.S. government public-domain excerpts plus original CC-BY-4.0 fiction. See `data/cards/benchmark_v1.md`.
 - Answer-level EM / token F1 alongside claim-level support (RQ3).
+- Official metric registry (`rageval.metrics.registry`) with no composite overall score.
 - CLI, FastAPI live claim audit, and pytest suite.
 
 Official generation for smoke tests is a **blinded mock** that cannot read gold `test_type` labels.
