@@ -10,7 +10,8 @@ Use before tagging. Version on this branch: **0.2.1** (tag `v0.2.1`). This is a 
 - [x] `pytest -m "not hf"` (run locally before tag; GitHub `ci.yml` on the tag commit)
 - [x] `python -m rageval.cli experiment --config configs/experiments/smoke.yaml --max-items 2` writes `metrics.json` (P1 job tests plus CLI smoke)
 - [x] `python -m rageval.cli evaluate --method heuristic --question ...` does not download models
-- [x] Committed `reports/phase7/v1_matrix/metrics.json` matches FINDINGS / paper.tex (no canned 16.4%)
+- [x] `python -m rageval.cli score --method heuristic --input configs/examples/external_score.jsonl --output /tmp/scores.jsonl` scores caller-supplied answers
+- [x] Committed `reports/phase7/v1_matrix/metrics.json` matches FINDINGS / paper.tex (no canned 16.4%). Companions `v1_1_matrix/`, `v1_2_matrix/`, and `A_chunk_overlap32/` do not replace it.
 - [x] No API keys or `.env` files in git (`pytest tests/test_release.py`)
 - [x] Generator YAML has no `api_key` field; openai/ollama/local_hf tests use mocks/stubs only
 - [x] README extras and corpus description match `data/cards/`

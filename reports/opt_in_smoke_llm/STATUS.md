@@ -26,4 +26,4 @@ export OPENAI_API_KEY=...   # or point pipeline_paths at ollama_http.yaml / loca
 rageval experiment --config configs/opt_in/smoke_llm.yaml --allow-opt-in --output-dir experiments/runs
 ```
 
-Official published tables remain blinded-mock run `20261028T183042Z_a97ad68f`. Companion mock+NLI remains `20261029T165024Z_657c8089`.
+Official published tables remain blinded-mock run `20261028T183042Z_a97ad68f`. Companion mock+NLI: `20261029T165024Z_657c8089` (v1.1.0), `20261029T173408Z_de870a29` (v1.2.0), `20261029T173515Z_7e2b94a3` (A_chunk overlap-32).
