@@ -137,3 +137,12 @@ def test_dashboard_html_is_api_backed():
     assert "/benchmark/run" not in html
     assert "GET /datasets" in html
     assert "/experiments/" in html
+    assert 'fetch("/experiments"' in html
+    assert 'fetch("/experiment-configs")' in html
+    assert 'method: "POST"' in html
+    assert "allow_heavy" in html
+    assert "Allow heavy (NLI / full v1)" in html
+    assert "btn-start-experiment" in html
+    assert "api_key" not in html
+    assert "OPENAI_API_KEY" not in html
+    assert "2000" in html

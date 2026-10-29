@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Software versions do not replace the recorded ablation.** Official tables under `reports/` are from blinded-mock run [`20261028T183042Z_a97ad68f`](reports/20261028T183042Z_a97ad68f/FINDINGS.md) on `benchmark_v1` **1.0.0** (16 documents, 24 items). $n=24$ is underpowered. This changelog is a packaging history, not a confirmatory RAG ranking.
 
+## [Unreleased]
+
+### Added
+
+- Dashboard experiment tab: config dropdown from `GET /experiment-configs`, `max_items`, Start → `POST /experiments`, poll `GET /experiments/{id}` every 2 s, results table on complete. Heavy configs stay hidden until “Allow heavy (NLI / full v1)”. No API keys in the form. Live `/evaluate/answer` stays sync.
+
 ## [0.2.0] - 2026-10-29
 
 Installable software release after `0.2.0rc1`: HTTP jobs, opt-in LLM backends, hashed locks, a CPU Docker image, and proven Hugging Face CI.

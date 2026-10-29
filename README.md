@@ -74,7 +74,7 @@ rageval report --metrics reports/phase7/v1_matrix/metrics.json --output-dir /tmp
 # Honest findings + figures from a completed metrics.json (Phase 8)
 rageval findings --metrics reports/phase7/v1_matrix/metrics.json --output-dir reports/20261028T183042Z_a97ad68f --run-id 20261028T183042Z_a97ad68f --case-studies reports/20261028T183042Z_a97ad68f/case_studies.json
 
-# Dashboard (live /evaluate/answer stays sync; POST /experiments queues a job)
+# Dashboard (Start queues POST /experiments; live /evaluate/answer stays sync)
 rageval serve --port 8000 --runs-dir experiments/runs --data-dir data
 ```
 

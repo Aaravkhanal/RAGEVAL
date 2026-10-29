@@ -227,7 +227,7 @@
             letter-spacing: 0.04em;
         }
 
-        input[type="text"], textarea, select {
+        input[type="text"], input[type="number"], textarea, select {
             background: #0d121c;
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
@@ -239,10 +239,44 @@
             width: 100%;
         }
 
-        input[type="text"]:focus, textarea:focus, select:focus {
+        input[type="text"]:focus, input[type="number"]:focus, textarea:focus, select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .job-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-end;
+            margin-bottom: 1rem;
+        }
+
+        .job-form .input-group {
+            min-width: 160px;
+            flex: 1;
+        }
+
+        .job-form .input-group.tight {
+            flex: 0 0 120px;
+            min-width: 120px;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            min-height: 46px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 1rem;
+            height: 1rem;
+            accent-color: var(--primary);
         }
 
         .btn-primary {
@@ -263,9 +297,15 @@
             box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-1px);
             box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            box-shadow: none;
         }
 
         .metric-cards-row {
@@ -569,12 +609,39 @@
             </div>
         </div>
 
-        <!-- Tab 2: Experiment results (read-only) -->
+        <!-- Tab 2: Experiment jobs + results -->
         <div id="section-benchmark" style="display: none; margin-top: 1rem;">
+            <div style="margin-bottom: 1.25rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 800;">Experiment jobs</h2>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Queues <code>POST /experiments</code> (allowlisted YAML from <code>GET /experiment-configs</code>). Live claim audit stays on the Claim Verifier tab. Heavy NLI / full v1 names stay hidden until you check allow heavy.</p>
+            </div>
+            <div class="panel" style="margin-bottom: 1.5rem;">
+                <div class="job-form">
+                    <div class="input-group">
+                        <label for="config-select">Config</label>
+                        <select id="config-select"></select>
+                    </div>
+                    <div class="input-group tight">
+                        <label for="max-items">max_items</label>
+                        <input type="number" id="max-items" min="1" max="28" value="2" step="1">
+                    </div>
+                    <div class="input-group">
+                        <label for="allow-heavy">Heavy jobs</label>
+                        <label class="checkbox-row" for="allow-heavy">
+                            <input type="checkbox" id="allow-heavy">
+                            Allow heavy (NLI / full v1)
+                        </label>
+                    </div>
+                    <button class="btn-primary" id="btn-start-experiment" type="button">
+                        <span>Start</span>
+                    </button>
+                </div>
+                <p id="job-status" style="color: var(--text-dim); font-size: 0.85rem; font-family: var(--font-mono);">Idle. Default config is smoke.</p>
+            </div>
             <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap;">
                 <div>
-                    <h2 style="font-size: 1.5rem; font-weight: 800;">Experiment results</h2>
-                    <p style="color: var(--text-muted); font-size: 0.95rem;">Reads <code>experiments/runs/</code> and the committed Phase 7 snapshot. Full ablations start from the CLI, not this page.</p>
+                    <h3 style="font-size: 1.15rem; font-weight: 700;">Results</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Reads <code>experiments/runs/</code> and the committed Phase 7 snapshot.</p>
                 </div>
                 <div class="input-group" style="min-width: 280px;">
                     <label for="experiment-select">Run</label>
@@ -582,7 +649,7 @@
                 </div>
             </div>
             <p id="experiment-cli-hint" style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1rem; font-family: var(--font-mono);">
-                rageval experiment --config configs/experiments/C_retrieve.yaml --output-dir experiments/runs
+                CLI: rageval experiment --config configs/experiments/C_retrieve.yaml --output-dir experiments/runs
             </p>
             <p id="experiment-meta" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;"></p>
 
@@ -646,11 +713,14 @@
         };
 
         let currentVerifications = [];
+        let namedConfigs = [];
+        let jobPollTimer = null;
+        let jobBusy = false;
 
         // Tab Navigation
         const tabs = [
             { btn: 'btn-tab-live', sec: 'section-live-eval' },
-            { btn: 'btn-tab-benchmark', sec: 'section-benchmark', onShow: loadCachedBenchmark },
+            { btn: 'btn-tab-benchmark', sec: 'section-benchmark', onShow: loadExperimentTab },
             { btn: 'btn-tab-dataset', sec: 'section-dataset', onShow: loadDatasetExplorer }
         ];
 
@@ -810,7 +880,144 @@
             }[ch]));
         }
 
-        async function loadCachedBenchmark() {
+        async function loadExperimentTab() {
+            await loadNamedConfigs();
+            await loadCachedBenchmark();
+        }
+
+        async function loadNamedConfigs() {
+            const status = document.getElementById("job-status");
+            try {
+                const resp = await fetch("/experiment-configs");
+                if (!resp.ok) throw new Error("GET /experiment-configs failed");
+                const payload = await resp.json();
+                namedConfigs = payload.configs || [];
+                fillConfigSelect();
+            } catch (err) {
+                status.textContent = "Could not load GET /experiment-configs: " + err.message;
+            }
+        }
+
+        function fillConfigSelect() {
+            const select = document.getElementById("config-select");
+            const allowHeavy = document.getElementById("allow-heavy").checked;
+            const previous = select.value;
+            const visible = namedConfigs.filter(row => allowHeavy || !row.heavy);
+            select.innerHTML = "";
+            visible.forEach(row => {
+                const opt = document.createElement("option");
+                opt.value = row.name;
+                opt.textContent = row.heavy ? `${row.name} (heavy)` : row.name;
+                select.appendChild(opt);
+            });
+            if (visible.some(row => row.name === previous)) {
+                select.value = previous;
+            } else if (visible.some(row => row.name === "smoke")) {
+                select.value = "smoke";
+            }
+        }
+
+        function setJobBusy(busy) {
+            jobBusy = busy;
+            const btn = document.getElementById("btn-start-experiment");
+            btn.disabled = busy;
+            btn.innerHTML = busy
+                ? `<span class="spinner"></span><span>Running…</span>`
+                : `<span>Start</span>`;
+        }
+
+        function stopJobPoll() {
+            if (jobPollTimer) {
+                clearTimeout(jobPollTimer);
+                jobPollTimer = null;
+            }
+        }
+
+        function jobState(info) {
+            if (!info) return "";
+            return info.state || (info.status && info.status.state) || "";
+        }
+
+        function renderJobStatus(info, fallback) {
+            const el = document.getElementById("job-status");
+            if (!info) {
+                el.textContent = fallback || "Idle. Default config is smoke.";
+                return;
+            }
+            const state = jobState(info);
+            const err = (info.status && info.status.error) || info.error;
+            const bits = [
+                state || "unknown",
+                info.id ? `id=${info.id}` : null,
+                info.experiment_id ? `experiment=${info.experiment_id}` : null,
+                info.n_items != null ? `n=${info.n_items}` : null,
+            ].filter(Boolean);
+            el.textContent = bits.join(" · ") + (err ? ` · ${err}` : "");
+        }
+
+        async function startExperiment() {
+            const status = document.getElementById("job-status");
+            const config = document.getElementById("config-select").value;
+            const maxItems = Number(document.getElementById("max-items").value);
+            const allowHeavy = document.getElementById("allow-heavy").checked;
+            if (!config) {
+                status.textContent = "Choose a config from GET /experiment-configs.";
+                return;
+            }
+            stopJobPoll();
+            setJobBusy(true);
+            status.textContent = "POST /experiments …";
+            try {
+                const resp = await fetch("/experiments", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        config: config,
+                        max_items: maxItems,
+                        allow_heavy: allowHeavy
+                    })
+                });
+                const body = await resp.json().catch(() => ({}));
+                if (!resp.ok) {
+                    const detail = body.detail || resp.statusText;
+                    status.textContent = `POST /experiments ${resp.status}: ${detail}`;
+                    setJobBusy(false);
+                    return;
+                }
+                const runId = body.id;
+                status.textContent = `${body.status || "queued"} · id=${runId} · poll ${body.poll || "/experiments/" + runId}`;
+                await loadCachedBenchmark(runId);
+                pollJobOnce(runId);
+            } catch (err) {
+                status.textContent = "POST /experiments failed: " + err.message;
+                setJobBusy(false);
+            }
+        }
+
+        async function pollJobOnce(runId) {
+            try {
+                const resp = await fetch("/experiments/" + encodeURIComponent(runId));
+                if (resp.ok) {
+                    const info = await resp.json();
+                    renderJobStatus(info);
+                    const state = jobState(info);
+                    if (state === "complete" || state === "failed") {
+                        stopJobPoll();
+                        setJobBusy(false);
+                        await loadCachedBenchmark(runId);
+                        return;
+                    }
+                }
+            } catch (err) {
+                document.getElementById("job-status").textContent = "poll error: " + err.message;
+            }
+            jobPollTimer = setTimeout(() => pollJobOnce(runId), 2000);
+        }
+
+        document.getElementById("allow-heavy").addEventListener("change", fillConfigSelect);
+        document.getElementById("btn-start-experiment").addEventListener("click", startExperiment);
+
+        async function loadCachedBenchmark(preferredId) {
             const select = document.getElementById("experiment-select");
             const tbody = document.getElementById("benchmark-tbody");
             const meta = document.getElementById("experiment-meta");
@@ -819,10 +1026,10 @@
                 if (!resp.ok) throw new Error("GET /experiments failed");
                 const payload = await resp.json();
                 const experiments = payload.experiments || [];
-                const previous = select.value;
+                const previous = preferredId || select.value;
                 select.innerHTML = "";
                 if (!experiments.length) {
-                    meta.textContent = "No runs found. Start one with the CLI command above.";
+                    meta.textContent = "No runs found. Start smoke from the form above.";
                     tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-dim);">No experiments.</td></tr>`;
                     return;
                 }
