@@ -61,6 +61,17 @@ docker run --rm -p 8000:8000 rageval:0.2.0rc1
 
 This job is not in GitHub Actions (torch wheels blow the fast-CI minute budget).
 
+## Hugging Face CI
+
+Fast CI is `pytest -m "not hf"`. The slow job is `.github/workflows/nightly.yml` (Python 3.12, hashed `requirements-lock-all.txt`, CPU torch). It caches `${{ github.workspace }}/.cache/huggingface` keyed on `pyproject.toml`, the all-lock, and the workflow file. NLI tests and embed/FAISS tests run as **separate pytest processes** so DeBERTa and MiniLM do not sit in RAM together. There is **no** `continue-on-error`.
+
+```bash
+gh workflow run nightly.yml --repo Aaravkhanal/RAGEVAL
+# Actions tab: https://github.com/Aaravkhanal/RAGEVAL/actions/workflows/nightly.yml
+```
+
+First proven green run (fill after `workflow_dispatch` succeeds): _pending this phase’s dispatch._
+
 ## Smoke (CI / extra-env)
 
 ```bash

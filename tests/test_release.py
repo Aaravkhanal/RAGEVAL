@@ -46,6 +46,19 @@ def test_hashed_lockfiles():
     assert (ROOT / "scripts" / "compile_locks.sh").is_file()
 
 
+def test_hf_workflow_is_strict():
+    nightly = (ROOT / ".github" / "workflows" / "nightly.yml").read_text(encoding="utf-8")
+    assert "continue-on-error:" not in nightly
+    assert "actions/cache@v4" in nightly
+    assert ".cache/huggingface" in nightly
+    assert "timeout-minutes: 90" in nightly
+    assert 'python-version: "3.12"' in nightly
+    assert "requirements-lock-all.txt" in nightly
+    assert "pytest -m hf" in nightly
+    assert "workflow_dispatch" in nightly
+    assert "0 6 * * 1" in nightly
+
+
 def test_smoke_experiment_yaml():
     spec = load_experiment(str(ROOT / "configs" / "experiments" / "smoke.yaml"))
     assert spec.experiment_id == "smoke"

@@ -46,6 +46,7 @@ htmlcov/
 # Large checkpoints / model downloads (if any)
 *.pt
 *.bin
+.cache/
 
 # Experiment run artifacts (keep directory via gitkeep)
 experiments/runs/*/
