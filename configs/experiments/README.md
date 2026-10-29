@@ -11,9 +11,11 @@ Named YAML under this directory. `label` is `v1` or `pilot`.
 | `E_verifier.yaml` | verifier | DeBERTa NLI vs lexical heuristic (diagnostic) |
 | `F_ablate.yaml` | ablate | sparse / dense / hybrid+rerank |
 | `G_claim_vs_answer.yaml` | analysis | no pipelines; table from `metrics.json` mixed-support slice |
+| `smoke.yaml` | smoke | BM25 + lexical heuristic on `smoke_v1` (CI; not a publication result) |
 
 ```bash
-rageval experiment --config configs/experiments/C_retrieve.yaml --dataset benchmark_v1
+rageval experiment --config configs/experiments/smoke.yaml
+rageval experiment --config configs/experiments/C_retrieve.yaml
 rageval report --metrics experiments/runs/<id>/metrics.json --output-dir reports/phase7
 ```
 

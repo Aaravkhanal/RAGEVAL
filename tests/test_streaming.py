@@ -1,5 +1,11 @@
 """Unit tests for streaming token verification and guardrail triggering."""
 
+import pytest
+
+pytest.importorskip("torch")
+pytest.importorskip("transformers")
+pytestmark = pytest.mark.hf
+
 from rageval.core.schemas import Chunk, RetrievedChunk
 from rageval.server.streaming import StreamingVerificationSession
 

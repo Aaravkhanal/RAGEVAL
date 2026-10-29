@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  fast:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -20,18 +20,27 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-        cache: 'pip'
+        cache: pip
 
-    - name: Install dependencies
+    - name: Install fast extras (no torch / Hugging Face)
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install -e .
+        pip install -e ".[dev,api]"
 
-    - name: Run Pytest test suite
-      run: |
-        pytest -v --durations=10
+    - name: Fast tests
+      run: pytest -m "not hf" --durations=15
 
-    - name: Validate CLI & report generation
+    - name: Smoke CLI evaluate (heuristic)
       run: |
-        python rageval/cli.py evaluate --question "What is the test question?" --answer "The test is valid [1]." --context "The test is valid."
+        python -m rageval.cli evaluate --method heuristic \
+          --question "What is the test question?" \
+          --answer "The test is valid [1]." \
+          --context "The test is valid."
+
+    - name: Smoke experiment (sparse + heuristic)
+      run: |
+        python -m rageval.cli experiment \
+          --config configs/experiments/smoke.yaml \
+          --data-dir data \
+          --output-dir /tmp/rageval-ci-runs \
+          --max-items 2

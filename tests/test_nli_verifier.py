@@ -1,5 +1,11 @@
 """Unit tests for NLI entailment, contradiction, and neutral classification."""
 
+import pytest
+
+pytest.importorskip("torch")
+pytest.importorskip("transformers")
+pytestmark = pytest.mark.hf
+
 from rageval.core.schemas import AtomicClaim, Chunk, RetrievedChunk, VerificationLabel
 from rageval.evaluator.nli_verifier import NLIVerifier
 

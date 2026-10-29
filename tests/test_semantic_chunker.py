@@ -1,5 +1,11 @@
 """Unit tests for semantic sentence-distance chunking."""
 
+import pytest
+
+pytest.importorskip("torch")
+pytest.importorskip("sentence_transformers")
+pytestmark = pytest.mark.hf
+
 from rageval.core.schemas import Document
 from rageval.pipeline.semantic_chunker import SemanticChunker
 

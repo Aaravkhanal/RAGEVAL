@@ -1,6 +1,11 @@
 """Unit tests for ecosystem adapters: decorator, LangChain callback, and LlamaIndex handler."""
 
 import pytest
+
+pytest.importorskip("torch")
+pytest.importorskip("transformers")
+pytestmark = pytest.mark.hf
+
 from rageval.integrations import monitor_rag, RAGEvalLangChainCallback, RAGEvalLlamaIndexHandler
 
 

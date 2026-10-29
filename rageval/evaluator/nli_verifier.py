@@ -5,8 +5,6 @@ import math
 import re
 from typing import List, Tuple, Dict, Optional
 import numpy as np
-import torch
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from rageval.core.schemas import (
     AtomicClaim,
     RetrievedChunk,
@@ -29,7 +27,6 @@ class NLIVerifier:
 
     def __init__(self, config: Optional[EvaluatorConfig] = None):
         self.config = config or EvaluatorConfig()
-        self.device = self._resolve_device(self.config.device)
         self.model_name = self.config.nli_model_name
         self.tokenizer = None
         self.model = None
@@ -37,9 +34,12 @@ class NLIVerifier:
         self.method = (self.config.method or "nli").lower()
         if self.method not in {"nli", "heuristic"}:
             raise ValueError(f"Unknown evaluator method {self.method!r}. Use 'nli' or 'heuristic'.")
+        self.device = "cpu" if self.method == "heuristic" else self._resolve_device(self.config.device)
         self._load_model()
 
     def _resolve_device(self, req_device: str) -> str:
+        import torch
+
         if req_device == "auto":
             if torch.cuda.is_available():
                 return "cuda"
@@ -54,6 +54,8 @@ class NLIVerifier:
             self.tokenizer = None
             return
         try:
+            from transformers import AutoModelForSequenceClassification, AutoTokenizer
+
             self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
             self.model = AutoModelForSequenceClassification.from_pretrained(self.model_name)
             self.model.to(self.device)
@@ -85,6 +87,8 @@ class NLIVerifier:
             return self._heuristic_nli_batch(premise_hypothesis_pairs)
 
     def _predict_transformer(self, pairs: List[Tuple[str, str]]) -> List[Dict[str, float]]:
+        import torch
+
         results = []
         batch_size = self.config.batch_size
 

@@ -24,28 +24,33 @@ Committed tables under `reports/` are from run `20261028T183042Z_a97ad68f` on `b
 
 ## Install
 
-Python 3.10+ with PyTorch, sentence-transformers, and FAISS. Prefer a dedicated environment:
+Python 3.10+. Prefer a dedicated environment. Version **0.2.0rc1**.
 
 ```bash
-pip install -e .
+# Fast tests and smoke (no torch / Hugging Face)
+pip install -e ".[dev,api]"
+pytest -m "not hf"
+
+# Research install (MiniLM, DeBERTa, FAISS, dashboard, figures)
+pip install -e ".[all]"
 ```
 
-First NLI/embedding calls download Hugging Face weights unless they are already cached.
+First NLI/embedding calls download Hugging Face weights unless they are already cached. There are no paid APIs in the default path. See `docs/QUICKSTART.md`.
 
 ## Commands
 
 ```bash
 # Claim-level evaluation of one answer against supplied context
-rageval evaluate --question "What is the test question?" --answer "The test is valid [1]." --context "The test is valid."
+rageval evaluate --method heuristic --question "What is the test question?" --answer "The test is valid [1]." --context "The test is valid."
 
-# Unit tests
-pytest -v
+# Fast tests (skip Hugging Face)
+pytest -m "not hf"
 
 # Optional: licensed v1 ablation (loads MiniLM + DeBERTa; writes experiments/runs/<id>/)
 rageval benchmark --dataset benchmark_v1 --data-dir data --output-dir experiments/runs
 
-# CI smoke fixture
-rageval benchmark --dataset smoke_v1 --data-dir data --output-dir experiments/runs
+# CI smoke fixture (BM25 + heuristic; no MiniLM/DeBERTa)
+rageval experiment --config configs/experiments/smoke.yaml --output-dir experiments/runs
 
 # Validate a dataset
 rageval validate --dataset benchmark_v1
@@ -78,6 +83,10 @@ Read-only HTTP after `rageval serve`:
 
 ## Documentation
 
+- `docs/QUICKSTART.md`
+- `docs/REPRODUCIBILITY.md`
+- `docs/RELEASE_CHECKLIST.md`
+- `docs/KNOWN_LIMITATIONS.md`
 - `docs/PROJECT_AUDIT.md` — Phase 0 audit
 - `docs/ARCHITECTURE_PROPOSAL.md`
 - `docs/RESEARCH_GAPS.md`

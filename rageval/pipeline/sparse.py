@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 import re
+from typing import Any, Dict, List
+
 from rank_bm25 import BM25Plus
 from rageval.core.schemas import Chunk, RetrievedChunk
-from rageval.pipeline.indices import FAISSIndex
 
 
 def tokenize_text(text: str) -> List[str]:
@@ -48,7 +49,7 @@ class BM25Retriever:
 class HybridRetriever:
     """Combines dense (FAISS) and sparse (BM25) search using Reciprocal Rank Fusion (RRF)."""
 
-    def __init__(self, faiss_index: FAISSIndex, bm25_retriever: BM25Retriever, rrf_k: int = 60):
+    def __init__(self, faiss_index: Any, bm25_retriever: BM25Retriever, rrf_k: int = 60):
         self.faiss_index = faiss_index
         self.bm25_retriever = bm25_retriever
         self.rrf_k = rrf_k

@@ -5,12 +5,12 @@ import argparse
 import os
 import sys
 import json
-import uvicorn
 from rageval.dataset.loader import DatasetLoader
 from rageval.benchmark.suite import BenchmarkSuite
 from rageval.benchmark.reporter import BenchmarkReporter
 from rageval.analysis.generate_paper_report import run_and_generate_paper_analysis
 from rageval.evaluator.evaluator import RAGEvalEvaluator
+from rageval.core.config import EvaluatorConfig
 from rageval.core.schemas import Chunk, RetrievedChunk
 
 
@@ -84,6 +84,7 @@ def main():
     eval_parser.add_argument("--question", required=True, help="Question text")
     eval_parser.add_argument("--answer", required=True, help="Generated answer text")
     eval_parser.add_argument("--context", action="append", required=True, help="Context chunk text (can specify multiple)")
+    eval_parser.add_argument("--method", default="nli", choices=["nli", "heuristic"], help="Verifier method")
 
     # Subcommand: serve
     serve_parser = subparsers.add_parser("serve", help="Launch FastAPI web server and interactive dashboard")
@@ -204,7 +205,7 @@ def main():
         print(f"Wrote {path}")
 
     elif args.command == "evaluate":
-        evaluator = RAGEvalEvaluator()
+        evaluator = RAGEvalEvaluator(EvaluatorConfig(method=args.method))
         retrieved_chunks = [
             RetrievedChunk(
                 chunk=Chunk(
@@ -230,6 +231,8 @@ def main():
         print(json.dumps(result.model_dump(), indent=2))
 
     elif args.command == "serve":
+        import uvicorn
+
         os.environ["RAGEVAL_RUNS_DIR"] = args.runs_dir
         os.environ["RAGEVAL_DATA_DIR"] = args.data_dir
         uvicorn.run("rageval.server.app:app", host=args.host, port=args.port, reload=args.reload)

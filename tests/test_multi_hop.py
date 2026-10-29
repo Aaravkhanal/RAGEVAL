@@ -1,7 +1,13 @@
 """Unit tests for multi-hop evidence fusion."""
 
+from rageval.core.config import EvaluatorConfig
 from rageval.core.schemas import AtomicClaim, Chunk, RetrievedChunk, ClaimVerification, VerificationLabel
 from rageval.evaluator.multi_hop import MultiHopEvidenceFusion
+from rageval.evaluator.nli_verifier import NLIVerifier
+
+
+def _heuristic_fusion() -> MultiHopEvidenceFusion:
+    return MultiHopEvidenceFusion(nli_verifier=NLIVerifier(EvaluatorConfig(method="heuristic")))
 
 
 def test_multi_hop_chunk_pair_discovery():
@@ -28,7 +34,7 @@ def test_multi_hop_chunk_pair_discovery():
         raw_sentence="ApexCloud expanded subscription revenue from $680 million in 2023 to $842 million in 2024.",
     )
 
-    fusion = MultiHopEvidenceFusion()
+    fusion = _heuristic_fusion()
     pairs = fusion.find_complementary_chunk_pairs(claim, [chunk1, chunk2])
 
     assert len(pairs) >= 1
@@ -37,7 +43,7 @@ def test_multi_hop_chunk_pair_discovery():
 
 
 def test_multi_hop_evaluation_fallback():
-    fusion = MultiHopEvidenceFusion()
+    fusion = _heuristic_fusion()
     claim = AtomicClaim(claim_id="cm2", text="Simple single claim", raw_sentence="Simple single claim.")
     dummy_verif = ClaimVerification(
         claim_id="cm2", claim_text="Simple single claim", label=VerificationLabel.SUPPORTED,

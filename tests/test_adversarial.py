@@ -1,5 +1,11 @@
 """Unit tests for adversarial evaluations: unanswerable queries and conflicting contexts."""
 
+import pytest
+
+pytest.importorskip("torch")
+pytest.importorskip("transformers")
+pytestmark = pytest.mark.hf
+
 from rageval.core.schemas import BenchmarkItem, TestType, Chunk, RetrievedChunk
 from rageval.evaluator.evaluator import RAGEvalEvaluator
 

@@ -7,10 +7,7 @@ from rageval.analysis.failure_taxonomy import apply_retrieval_protocol
 from rageval.core.schemas import Document, Chunk, RetrievedChunk, BenchmarkItem
 from rageval.core.config import PipelineConfig
 from rageval.pipeline.chunkers import get_chunker
-from rageval.pipeline.embedders import SentenceTransformerEmbedder
-from rageval.pipeline.indices import FAISSIndex
 from rageval.pipeline.sparse import BM25Retriever, HybridRetriever
-from rageval.pipeline.rerankers import CrossEncoderReranker
 from rageval.pipeline.generator import get_generator, BaseGenerator
 
 
@@ -20,11 +17,11 @@ class RAGPipeline:
     def __init__(self, config: Optional[PipelineConfig] = None):
         self.config = config or PipelineConfig()
         self.chunker = get_chunker(self.config.chunker)
-        self.embedder: Optional[SentenceTransformerEmbedder] = None
-        self.faiss_index: Optional[FAISSIndex] = None
+        self.embedder = None
+        self.faiss_index = None
         self.bm25_retriever: Optional[BM25Retriever] = None
         self.hybrid_retriever: Optional[HybridRetriever] = None
-        self.reranker = CrossEncoderReranker(self.config.reranker)
+        self.reranker = None
         self.generator: BaseGenerator = get_generator(self.config.generator)
         self.documents: List[Document] = []
         self.chunks: List[Chunk] = []
@@ -41,6 +38,9 @@ class RAGPipeline:
         self.chunks = self.chunker.chunk_documents(documents)
 
         if self._needs_dense():
+            from rageval.pipeline.embedders import SentenceTransformerEmbedder
+            from rageval.pipeline.indices import FAISSIndex
+
             self.embedder = SentenceTransformerEmbedder(self.config.embedder)
             self.faiss_index = FAISSIndex(
                 embedder=self.embedder,
@@ -77,6 +77,10 @@ class RAGPipeline:
 
         # Apply reranking if configured
         if self.config.reranker.enabled:
+            if self.reranker is None:
+                from rageval.pipeline.rerankers import CrossEncoderReranker
+
+                self.reranker = CrossEncoderReranker(self.config.reranker)
             candidates = self.reranker.rerank(query, candidates, top_k=self.config.reranker.top_k)
 
         return candidates

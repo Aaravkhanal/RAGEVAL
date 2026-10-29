@@ -2,6 +2,7 @@
 
 import json
 
+import pytest
 from fastapi.testclient import TestClient
 
 from rageval.server.app import app
@@ -15,7 +16,10 @@ def test_health_check():
     assert res.json() == {"status": "ok", "service": "rageval"}
 
 
+@pytest.mark.hf
 def test_evaluate_answer_api():
+    pytest.importorskip("torch")
+    pytest.importorskip("transformers")
     payload = {
         "question": "What was ApexCloud gross margin?",
         "answer": "ApexCloud reached a 78.2% gross margin [1].",

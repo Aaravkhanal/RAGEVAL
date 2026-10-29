@@ -329,6 +329,8 @@ Embeddings beyond MiniLM and any paid LLM are **opt-in** after a resource note.
 
 ## Phase 10 — QA and release candidate
 
+**Status:** Complete for 0.2.0rc1 (`v0.2.0-rc1`). Fast CI is `pytest -m "not hf"`. Hugging Face tests are a manual/weekly workflow. Later phases are not defined.
+
 **Objective:** Another researcher can reproduce smoke + documented baseline.
 
 **Prerequisites:** At least one complete pilot run with honest reporting.

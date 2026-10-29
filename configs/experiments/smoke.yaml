@@ -1,0 +1,9 @@
+experiment_id: smoke
+label: pilot
+title: Sparse BM25 + lexical heuristic on smoke_v1
+family: smoke
+dataset_id: smoke_v1
+split: all
+resource_note: "No MiniLM or DeBERTa. rank-bm25 plus the lexical heuristic. Not a publication result."
+pipeline_paths:
+  - ../smoke_sparse_heuristic.yaml

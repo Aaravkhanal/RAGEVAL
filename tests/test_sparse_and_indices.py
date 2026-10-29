@@ -1,5 +1,12 @@
 """Unit tests for FAISS dense indexing and BM25 hybrid search."""
 
+import pytest
+
+pytest.importorskip("torch")
+pytest.importorskip("sentence_transformers")
+pytest.importorskip("faiss")
+pytestmark = pytest.mark.hf
+
 from rageval.core.schemas import Document, Chunk
 from rageval.pipeline.chunkers import FixedTokenChunker
 from rageval.pipeline.embedders import SentenceTransformerEmbedder
