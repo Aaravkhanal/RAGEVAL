@@ -85,3 +85,5 @@ Bootstrap percentile CIs (`rageval/metrics/bootstrap.py`) are **confirmatory** o
 The smoke set (\(n=8\)) and `benchmark_v1` (v1.0.0 \(n=24\); v1.1.0 \(n=28\)) are underpowered for confirmatory inference.
 
 Robustness tables are **named-metric means sliced by `scenario_type`** (`rageval.metrics.aggregate.robustness_by_scenario_type`). They are not an overall score.
+
+Official run tables are generated from `metrics.json` (`rageval.benchmark.reporter.markdown_from_metrics`). Significance tests with \(n < 30\) are diagnostic (`underpowered=true`).

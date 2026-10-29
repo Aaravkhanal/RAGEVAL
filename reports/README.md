@@ -10,6 +10,8 @@ The unique run folder is local (`experiments/runs/` is gitignored). This directo
 
 Phase 6 error analysis for this run’s adversarial slice: `reports/error_analysis_phase6.md`. It does not invent scores for v1.1.0 items.
 
+Phase 7 labeled tables generated from this run’s summaries: `reports/phase7/`.
+
 The process started from git commit `3f8d3a3` with **uncommitted** `benchmark_v1` files in the working tree. Re-run after this commit to pin the same data to a commit hash.
 
 `paper.tex` remains a draft and is not evidence.

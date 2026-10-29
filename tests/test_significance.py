@@ -46,4 +46,7 @@ def test_significance_analyzer():
     res = SignificanceAnalyzer.compare_runs(baseline, treatment, metric="faithfulness")
     assert res["mean_diff"] > 0
     assert "p_value_ttest" in res
-    assert res["is_significant"] is True
+    assert res["n"] == 5
+    assert res["underpowered"] is True
+    assert res["confirmatory"] is False
+    assert res["is_significant"] is False

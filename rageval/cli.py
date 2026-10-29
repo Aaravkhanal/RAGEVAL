@@ -59,10 +59,18 @@ def main():
     ver_parser.add_argument("--output", default="reports/verifier_eval_v1.md")
 
     # Subcommand: report
-    report_parser = subparsers.add_parser("report", help="Generate paper-style analysis report and figures")
+    report_parser = subparsers.add_parser("report", help="Write tables from metrics.json (does not re-run the suite)")
     report_parser.add_argument("--output-dir", default="reports", help="Output directory for paper analysis")
     report_parser.add_argument("--dataset", default="benchmark_v1", help="Dataset id")
     report_parser.add_argument("--data-dir", default="data", help="Directory containing corpus and benchmark data")
+    report_parser.add_argument("--metrics", default=None, help="Path to metrics.json")
+    report_parser.add_argument("--run-dir", default=None, help="Run directory containing metrics.json")
+
+    exp_parser = subparsers.add_parser("experiment", help="Run a named Phase 7 experiment YAML")
+    exp_parser.add_argument("--config", required=True, help="configs/experiments/*.yaml")
+    exp_parser.add_argument("--data-dir", default="data")
+    exp_parser.add_argument("--output-dir", default="experiments/runs")
+    exp_parser.add_argument("--max-items", type=int, default=None, help="Optional cap for dry runs")
 
     # Subcommand: evaluate
     eval_parser = subparsers.add_parser("evaluate", help="Perform claim-level evaluation on a specific answer")
@@ -147,11 +155,25 @@ def main():
         print(f"Wrote {path} (macro-F1={result['macro_f1']}, n={result['n']}, method={result['method']})")
         print(f"Failures: {len(result['failures'])}/{result['n']}")
 
+    elif args.command == "experiment":
+        from rageval.benchmark.experiments import load_experiment, run_experiment
+
+        spec = load_experiment(args.config)
+        run_dir = run_experiment(
+            spec,
+            data_dir=args.data_dir,
+            output_root=args.output_dir,
+            max_items=args.max_items,
+        )
+        print(f"Experiment {spec.experiment_id} ({spec.label}) wrote {run_dir}")
+
     elif args.command == "report":
         report_path = run_and_generate_paper_analysis(
             output_dir=args.output_dir,
             dataset_id=args.dataset,
             data_dir=args.data_dir,
+            metrics_path=args.metrics,
+            run_dir=args.run_dir,
         )
         print(f"Successfully generated paper analysis at: {report_path}")
 

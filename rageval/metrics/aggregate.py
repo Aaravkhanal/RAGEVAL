@@ -96,8 +96,9 @@ def write_metrics_bundle(
     summaries: List[BenchmarkRunSummary],
     *,
     independent: bool = False,
+    extra: Optional[Dict[str, Any]] = None,
 ) -> str:
-    """Write metrics/aggregate.json and metrics/per_example.jsonl under run_dir."""
+    """Write metrics.json (canonical), metrics/aggregate.json, and per_example.jsonl."""
     metrics_dir = os.path.join(run_dir, "metrics")
     os.makedirs(metrics_dir, exist_ok=True)
     by_config = {}
@@ -132,13 +133,22 @@ def write_metrics_bundle(
                 }
                 f.write(json.dumps(record) + "\n")
     aggregate = {
+        "schema": "rageval.metrics.v1",
         "overall_score": None,
         "note": "No official composite ranking score. Compare named metrics only.",
         "independent_items_assumed": independent,
         "by_config": by_config,
     }
+    if extra:
+        for key, value in extra.items():
+            if key not in aggregate:
+                aggregate[key] = value
     agg_path = os.path.join(metrics_dir, "aggregate.json")
     with open(agg_path, "w", encoding="utf-8") as f:
         json.dump(aggregate, f, indent=2)
         f.write("\n")
-    return agg_path
+    root_path = os.path.join(run_dir, "metrics.json")
+    with open(root_path, "w", encoding="utf-8") as f:
+        json.dump(aggregate, f, indent=2)
+        f.write("\n")
+    return root_path

@@ -56,6 +56,12 @@ rageval verifier-eval --gold data/gold/verifier_eval_v1.json --method nli --outp
 # Single YAML config (repeat --config for a custom matrix)
 rageval benchmark --dataset smoke_v1 --config configs/ablation/sparse_bm25_256.yaml
 
+# Named Phase 7 experiment (writes experiments/runs/<id>/metrics.json)
+rageval experiment --config configs/experiments/C_retrieve.yaml
+
+# Tables from metrics.json (does not re-run the suite)
+rageval report --metrics reports/phase7/v1_matrix/metrics.json --output-dir /tmp/rageval-report
+
 # Dashboard
 rageval serve --port 8000
 ```
@@ -70,6 +76,8 @@ rageval serve --port 8000
 - `docs/TERMINOLOGY.md`
 - `docs/METRIC_DEFINITIONS.md`
 - `docs/FAILURE_TAXONOMY.md`
+- `configs/experiments/` — Phase 7 named matrix slices
+- `reports/phase7/` — v1-labeled tables from `metrics.json`
 - `reports/error_analysis_phase6.md`
 - `docs/RELATED_WORK.md`
 - `data/cards/smoke_v1.md` — smoke corpus card

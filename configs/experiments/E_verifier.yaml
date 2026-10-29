@@ -1,0 +1,10 @@
+experiment_id: E_verifier
+label: v1
+title: Verifier NLI vs lexical heuristic (diagnostic)
+family: verifier
+dataset_id: benchmark_v1
+split: all
+resource_note: "Heuristic is diagnostic only. Official claim labels use DeBERTa NLI with allow_heuristic_fallback=false."
+pipeline_paths:
+  - ../ablation/dense_chunk256.yaml
+  - ../smoke_heuristic_eval.yaml

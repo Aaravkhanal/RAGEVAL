@@ -1,0 +1,10 @@
+experiment_id: G_claim_vs_answer
+label: v1
+title: Claim-level support vs answer-level F1 on mixed-support items
+family: claim_vs_answer
+dataset_id: benchmark_v1
+split: all
+analysis: claim_vs_answer
+slice: mixed_support
+resource_note: "Analysis-only. Build the table from metrics.json of a completed matrix run. Do not re-score."
+pipelines: []

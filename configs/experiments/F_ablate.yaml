@@ -1,0 +1,11 @@
+experiment_id: F_ablate
+label: v1
+title: Stack ablation — sparse only, dense only, hybrid+rerank
+family: ablate
+dataset_id: benchmark_v1
+split: all
+resource_note: "Not a full factorial. Hybrid+rerank is the heaviest CPU config in this matrix."
+pipeline_paths:
+  - ../ablation/sparse_bm25_256.yaml
+  - ../ablation/dense_chunk256.yaml
+  - ../ablation/hybrid_rrf_reranked.yaml

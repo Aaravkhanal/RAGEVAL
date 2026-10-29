@@ -2,7 +2,7 @@
 
 ## Baseline matrix (smoke, CPU)
 
-Configs in `rageval/benchmark/suite.py` and `configs/`:
+Configs in `rageval/benchmark/suite.py`, `configs/ablation/`, and named slices in `configs/experiments/` (A_chunk … G_claim_vs_answer).
 
 1. Dense chunk 128  
 2. Dense chunk 256 (baseline)  

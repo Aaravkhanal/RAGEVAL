@@ -1,0 +1,10 @@
+experiment_id: D_rerank
+label: v1
+title: Hybrid RRF rerank on vs off
+family: rerank
+dataset_id: benchmark_v1
+split: all
+resource_note: "Rerank loads cross-encoder/ms-marco-MiniLM-L-6-v2 in addition to MiniLM. CPU. Heavier than C_retrieve."
+pipeline_paths:
+  - ../ablation/hybrid_rrf_256.yaml
+  - ../ablation/hybrid_rrf_reranked.yaml

@@ -235,6 +235,8 @@ Existing `rageval` modules are the implementation surface. New files are added o
 
 ## Phase 7 — Experimental matrix and ablations
 
+**Status:** Complete for the named A–G YAML matrix, `metrics.json` tables, and v1.0.0 recorded-run export. Phase 8 is not authorized by this increment. `A_chunk` overlap-fixed protocol has not been re-run; committed numbers remain the historical 6-config v1.0.0 snapshot.
+
 **Objective:** A **small** matrix on the frozen set, not a full factorial.
 
 **Prerequisites:** Phases 3–5; dataset v1 or an approved “pilot on smoke” with that limitation in the report title.

@@ -1,0 +1,14 @@
+experiment_id: B_embed
+label: v1
+title: Embedder — MiniLM only
+family: embed
+dataset_id: benchmark_v1
+split: all
+resource_note: "Official matrix uses sentence-transformers/all-MiniLM-L6-v2 on CPU. Larger embedders are opt-in."
+opt_in: false
+opt_in_embedders:
+  - model_name: sentence-transformers/all-mpnet-base-v2
+    approved: false
+    note: Do not run without a separate resource note.
+pipeline_paths:
+  - ../ablation/dense_chunk256.yaml

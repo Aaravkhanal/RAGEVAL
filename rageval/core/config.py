@@ -78,6 +78,27 @@ class BenchmarkSuiteConfig(BaseModel):
     pipelines: List[PipelineConfig] = Field(default_factory=list)
 
 
+class ExperimentSpec(BaseModel):
+    """Named Phase 7 matrix slice. `label` is `v1` or `pilot`."""
+
+    experiment_id: str
+    label: str = "pilot"
+    title: str = ""
+    family: str = ""
+    dataset_id: str = "benchmark_v1"
+    split: str = "all"
+    resource_note: str = ""
+    opt_in: bool = False
+    analysis: Optional[str] = None
+    slice: Optional[str] = None
+    pipeline_paths: List[str] = Field(default_factory=list)
+    pipelines: List[PipelineConfig] = Field(default_factory=list)
+    opt_in_embedders: List[dict] = Field(default_factory=list)
+
+    def resolved_pipelines(self) -> List[PipelineConfig]:
+        return list(self.pipelines)
+
+
 def load_yaml_config(path: str) -> dict:
     if not os.path.exists(path):
         raise FileNotFoundError(f"Config file not found at: {path}")
@@ -88,3 +109,28 @@ def load_yaml_config(path: str) -> dict:
 def pipeline_config_from_yaml(path: str) -> PipelineConfig:
     data = load_yaml_config(path)
     return PipelineConfig.model_validate(data)
+
+
+def experiment_spec_from_yaml(path: str) -> ExperimentSpec:
+    data = load_yaml_config(path)
+    raw_paths = list(data.pop("pipeline_paths", []) or [])
+    spec = ExperimentSpec.model_validate(data)
+    configs = list(spec.pipelines)
+    base_dir = os.path.dirname(os.path.abspath(path))
+    cwd = os.getcwd()
+    for rel in raw_paths:
+        candidates = [
+            rel,
+            os.path.join(cwd, rel),
+            os.path.join(base_dir, rel),
+            os.path.normpath(os.path.join(base_dir, rel)),
+        ]
+        resolved = next((c for c in candidates if os.path.isfile(c)), None)
+        if resolved is None:
+            raise FileNotFoundError(f"Pipeline YAML not found for {rel!r} (experiment {path})")
+        configs.append(pipeline_config_from_yaml(resolved))
+    spec.pipelines = configs
+    spec.pipeline_paths = raw_paths
+    if spec.label not in {"v1", "pilot"}:
+        raise ValueError(f"experiment label must be 'v1' or 'pilot', got {spec.label!r}")
+    return spec

@@ -38,21 +38,29 @@ class SignificanceAnalyzer:
 
         diffs = np.array(vals_b) - np.array(vals_a)
         mean_diff = float(np.mean(diffs))
+        from rageval.metrics.bootstrap import MIN_N_CONFIRMATORY, bootstrap_mean_ci
+
+        n = int(len(diffs))
+        underpowered = n < MIN_N_CONFIRMATORY
 
         # If identical values across all queries, p-value is 1.0
         if np.all(diffs == 0):
-            from rageval.metrics.bootstrap import MIN_N_CONFIRMATORY
-
             return {
                 "metric": metric,
                 "baseline_name": baseline.config_name,
                 "treatment_name": treatment.config_name,
-                "n": int(len(diffs)),
+                "n": n,
                 "mean_diff": 0.0,
                 "p_value_ttest": 1.0,
                 "p_value_wilcoxon": 1.0,
                 "is_significant": False,
-                "confirmatory": len(diffs) >= MIN_N_CONFIRMATORY,
+                "underpowered": underpowered,
+                "confirmatory": not underpowered,
+                "note": (
+                    f"n={n} < {MIN_N_CONFIRMATORY}: significance tests are diagnostic only."
+                    if underpowered
+                    else None
+                ),
             }
 
         # 1. Paired t-test
@@ -64,9 +72,6 @@ class SignificanceAnalyzer:
         except Exception:
             p_wilcoxon = p_ttest
 
-        from rageval.metrics.bootstrap import MIN_N_CONFIRMATORY, bootstrap_mean_ci
-
-        n = len(diffs)
         return {
             "metric": metric,
             "baseline_name": baseline.config_name,
@@ -78,7 +83,27 @@ class SignificanceAnalyzer:
             "t_statistic": round(float(t_stat), 4),
             "p_value_ttest": round(float(p_ttest), 4),
             "p_value_wilcoxon": round(float(p_wilcoxon), 4),
-            "is_significant": bool(p_ttest < 0.05),
-            "confirmatory": n >= MIN_N_CONFIRMATORY,
+            "is_significant": (not underpowered) and bool(p_ttest < 0.05),
+            "underpowered": underpowered,
+            "confirmatory": not underpowered,
             "bootstrap_mean_diff": bootstrap_mean_ci(diffs, independent=False),
+            "note": (
+                f"n={n} < {MIN_N_CONFIRMATORY}: tests are diagnostic; is_significant stays false."
+                if underpowered
+                else None
+            ),
         }
+
+
+def compare_summaries_by_name(
+    summaries: List[BenchmarkRunSummary],
+    baseline_name: str,
+    treatment_name: str,
+    metric: str = "faithfulness",
+) -> Dict[str, Any]:
+    by_name = {s.config_name: s for s in summaries}
+    if baseline_name not in by_name or treatment_name not in by_name:
+        raise KeyError(f"Need {baseline_name!r} and {treatment_name!r} in run summaries")
+    return SignificanceAnalyzer.compare_runs(
+        by_name[baseline_name], by_name[treatment_name], metric=metric
+    )

@@ -1,0 +1,11 @@
+experiment_id: C_retrieve
+label: v1
+title: Retriever family at chunk 256, rerank off
+family: retrieve
+dataset_id: benchmark_v1
+split: all
+resource_note: "Dense MiniLM vs BM25 vs hybrid RRF. CPU. Blinded mock generator."
+pipeline_paths:
+  - ../ablation/dense_chunk256.yaml
+  - ../ablation/sparse_bm25_256.yaml
+  - ../ablation/hybrid_rrf_256.yaml

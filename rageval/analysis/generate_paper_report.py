@@ -1,81 +1,90 @@
-"""Scientific benchmark execution and formal paper-style report generator."""
+"""Write paper-style tables from metrics.json. Does not invent findings."""
 
 from __future__ import annotations
-import os
+
 import json
-from rageval.dataset.loader import DatasetLoader
-from rageval.benchmark.suite import BenchmarkSuite
+import os
+from typing import Optional
+
 from rageval.benchmark.reporter import BenchmarkReporter
-from rageval.analysis.paper_plots import generate_all_paper_figures
+from rageval.dataset.loader import DatasetLoader
 
 
 def run_and_generate_paper_analysis(
     output_dir: str = "reports",
     dataset_id: str = "benchmark_v1",
     data_dir: str = "data",
+    metrics_path: Optional[str] = None,
+    run_dir: Optional[str] = None,
 ) -> str:
+    """Prefer an existing metrics.json. Re-running the suite is opt-in via no metrics path.
+
+    Passing metrics_path or run_dir writes tables only. That is the Phase 7 path.
+    """
     os.makedirs(output_dir, exist_ok=True)
+    if run_dir and not metrics_path:
+        metrics_path = os.path.join(run_dir, "metrics.json")
+    if metrics_path:
+        metrics = BenchmarkReporter.load_metrics(metrics_path)
+        return write_report_from_metrics(metrics, output_dir)
+
     loader = DatasetLoader(data_dir, dataset_id=dataset_id)
     corpus = loader.load_corpus()
     items = loader.load_benchmark("all")
-    manifest = loader.load_manifest() or {}
-
-    print(f"Loaded {len(corpus)} corpus documents and {len(items)} benchmark evaluation items.")
-    suite = BenchmarkSuite()
-    summaries = suite.run_suite(
-        corpus,
-        items,
-        dataset_id=dataset_id,
-        dataset_version=manifest.get("version"),
+    raise RuntimeError(
+        "rageval report no longer re-runs the ablation suite. Pass --metrics "
+        "path/to/metrics.json or --run-dir experiments/runs/<id>. "
+        f"Loaded {len(corpus)} docs / {len(items)} items for dataset {dataset_id!r} "
+        "only to confirm the dataset exists."
     )
 
-    # 1. Export tables (CSV, JSON, LaTeX)
-    BenchmarkReporter.export(summaries, output_dir=output_dir)
 
-    # 2. Generate scientific figures
-    figures_dir = os.path.join(output_dir, "figures")
-    fig_paths = generate_all_paper_figures(summaries, output_dir=figures_dir)
-
-    # 3. Compile full paper analysis markdown
-    df = BenchmarkReporter.to_dataframe(summaries)
-    table_md = df.to_markdown(index=False)
-
+def write_report_from_metrics(metrics: dict, output_dir: str) -> str:
+    os.makedirs(output_dir, exist_ok=True)
+    table_md = BenchmarkReporter.markdown_from_metrics(metrics)
+    gap_md = BenchmarkReporter.claim_vs_answer_markdown(metrics)
     report_content = f"""# RAGeval run report
 
-**Status:** auto-generated tables only. Narrative scientific findings are **pending** until a named experiment run is analyzed in Phase 8.
+**Status:** tables generated from `metrics.json`. Narrative scientific findings are **pending** until Phase 8.
 
-This report must not claim retrieval or faithfulness improvements unless those differences appear in the table below.
+**Label:** `{metrics.get("label")}`. **Experiment:** `{metrics.get("experiment_id")}`.
+
+This report must not claim retrieval or faithfulness improvements unless those differences appear in the table below and n is large enough for confirmatory tests (n≥30 i.i.d.).
 
 ---
-
-## Ablation table
 
 {table_md}
 
 ---
 
+{gap_md}
+
+---
+
 ## Notes
 
-- Default generation is a **blinded mock** that copies retrieved sentences. It is not a production LLM.
-- Dataset: `{dataset_id}` ({len(corpus)} documents, {len(items)} items).
+- Default generation is a blinded mock that copies retrieved sentences.
 - Cost is omitted unless explicit pricing is configured.
-- Compare configurations using the table, not canned commentary.
-
-## Figures
-
-- Figure 1: `figures/fig1_pareto_latency_faithfulness.png`
-- Figure 2: `figures/fig2_claim_attribution_breakdown.png`
-- Figure 3: `figures/fig3_retrieval_recall_mrr.png`
-- Figure 4: `figures/fig4_adversarial_abstention.png`
+- Compare named metrics only. There is no overall score.
+- Significance tests with n<30 are diagnostic (`underpowered=true`).
 """
-
     report_path = os.path.join(output_dir, "paper_analysis.md")
     with open(report_path, "w", encoding="utf-8") as f:
         f.write(report_content)
-
-    print(f"[RAGeval] Paper report generated at: {report_path}")
+    BenchmarkReporter.export_from_metrics(metrics, output_dir, stem="benchmark_summary")
     return report_path
 
 
+def load_metrics_file(path: str) -> dict:
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
 if __name__ == "__main__":
-    run_and_generate_paper_analysis("reports")
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Write tables from metrics.json")
+    parser.add_argument("--metrics", required=True)
+    parser.add_argument("--output-dir", default="reports")
+    args = parser.parse_args()
+    print(run_and_generate_paper_analysis(output_dir=args.output_dir, metrics_path=args.metrics))

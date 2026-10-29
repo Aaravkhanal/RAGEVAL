@@ -6,11 +6,8 @@ from rageval.core.schemas import Document, BenchmarkItem, BenchmarkRunSummary
 from rageval.core.config import (
     PipelineConfig,
     ChunkerConfig,
-    EmbedderConfig,
     RetrieverConfig,
     RerankerConfig,
-    GeneratorConfig,
-    EvaluatorConfig,
 )
 from rageval.pipeline.rag import RAGPipeline
 from rageval.evaluator.evaluator import RAGEvalEvaluator
@@ -88,13 +85,11 @@ class BenchmarkSuite:
         dataset_version: Optional[str] = None,
     ) -> List[BenchmarkRunSummary]:
         summaries: List[BenchmarkRunSummary] = []
-        
-        # Share a single evaluator instance across runs for memory efficiency
-        evaluator = RAGEvalEvaluator(EvaluatorConfig())
 
         for cfg in self.configs:
             print(f"--> Running ablation configuration: {cfg.name}")
             pipeline = RAGPipeline(cfg)
+            evaluator = RAGEvalEvaluator(cfg.evaluator)
             runner = BenchmarkRunner(pipeline, evaluator=evaluator)
             summary = runner.run(
                 documents,

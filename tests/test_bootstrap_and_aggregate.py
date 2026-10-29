@@ -76,7 +76,8 @@ def test_write_metrics_bundle(tmp_path):
         results=[_result("a", 0.5), _result("b", 1.0)],
     )
     path = write_metrics_bundle(str(tmp_path), [run], independent=False)
-    assert path.endswith("aggregate.json")
+    assert path.endswith("metrics.json")
+    assert (tmp_path / "metrics" / "aggregate.json").is_file()
     text = (tmp_path / "metrics" / "aggregate.json").read_text()
     assert '"overall_score": null' in text
     assert '"by_scenario"' in text
