@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 import argparse
+import os
 import sys
 import json
 import uvicorn
@@ -71,6 +72,12 @@ def main():
     exp_parser.add_argument("--data-dir", default="data")
     exp_parser.add_argument("--output-dir", default="experiments/runs")
     exp_parser.add_argument("--max-items", type=int, default=None, help="Optional cap for dry runs")
+
+    findings_parser = subparsers.add_parser("findings", help="Write FINDINGS.md from metrics.json")
+    findings_parser.add_argument("--metrics", default="reports/phase7/v1_matrix/metrics.json")
+    findings_parser.add_argument("--output-dir", default="reports/20261028T183042Z_a97ad68f")
+    findings_parser.add_argument("--run-id", default="20261028T183042Z_a97ad68f")
+    findings_parser.add_argument("--case-studies", default="reports/20261028T183042Z_a97ad68f/case_studies.json")
 
     # Subcommand: evaluate
     eval_parser = subparsers.add_parser("evaluate", help="Perform claim-level evaluation on a specific answer")
@@ -176,6 +183,23 @@ def main():
             run_dir=args.run_dir,
         )
         print(f"Successfully generated paper analysis at: {report_path}")
+
+    elif args.command == "findings":
+        from rageval.analysis.findings import load_case_studies, write_findings
+        from rageval.analysis.paper_plots import generate_figures_from_metrics
+        from rageval.benchmark.reporter import BenchmarkReporter
+
+        metrics = BenchmarkReporter.load_metrics(args.metrics)
+        cases = load_case_studies(args.case_studies) if args.case_studies else []
+        path = write_findings(
+            metrics,
+            args.output_dir,
+            run_id=args.run_id,
+            case_studies=cases,
+        )
+        fig_dir = os.path.join(args.output_dir, "figures")
+        generate_figures_from_metrics(metrics, fig_dir)
+        print(f"Wrote {path}")
 
     elif args.command == "evaluate":
         evaluator = RAGEvalEvaluator()

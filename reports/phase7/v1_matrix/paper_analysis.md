@@ -1,6 +1,6 @@
 # RAGeval run report
 
-**Status:** tables generated from `metrics.json`. Narrative scientific findings are **pending** until Phase 8.
+**Status:** tables generated from `metrics.json`. Narrative is `FINDINGS.md` for a named run, not this table file.
 
 **Label:** `v1`. **Experiment:** `recorded_v1_0_0_matrix`.
 

@@ -130,3 +130,100 @@ def generate_all_paper_figures(summaries: List[BenchmarkRunSummary], output_dir:
     generated_paths.append(p4)
 
     return generated_paths
+
+
+def generate_figures_from_metrics(metrics: dict, output_dir: str = "reports/figures") -> List[str]:
+    """Figures from metrics.json only. Titles do not claim ranking."""
+    os.makedirs(output_dir, exist_ok=True)
+    blocks = metrics.get("by_config") or {}
+    names = list(blocks)
+    if not names:
+        return []
+
+    def mean(name: str, key: str) -> float:
+        value = blocks[name].get(key)
+        if isinstance(value, dict):
+            return float(value.get("mean") or 0.0)
+        return float(value or 0.0)
+
+    configs = [n.replace("_", "\n") for n in names]
+    faiths = [mean(n, "claim_support_rate") * 100 for n in names]
+    hallucs = [mean(n, "unsupported_claim_rate") * 100 for n in names]
+    contras = [mean(n, "contradiction_rate") * 100 for n in names]
+    recalls = [mean(n, "recall_at_5") * 100 for n in names]
+    mrrs = [mean(n, "mrr") for n in names]
+    latencies = [float(blocks[n].get("mean_latency_ms") or 0.0) for n in names]
+    abstentions = [float(blocks[n].get("abstention_accuracy") or 0.0) * 100 for n in names]
+    n_items = metrics.get("n_items")
+    label = metrics.get("label") or "pilot"
+    subtitle = f"{label} n={n_items} (not confirmatory)"
+
+    generated_paths: List[str] = []
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    scatter = ax.scatter(
+        latencies, faiths, s=140, c=recalls, cmap="viridis", edgecolors="black", linewidth=1.2, zorder=4
+    )
+    cbar = plt.colorbar(scatter, ax=ax)
+    cbar.set_label("Recall@5 (%)")
+    for i, txt in enumerate(names):
+        ax.annotate(txt, (latencies[i], faiths[i]), xytext=(6, 5), textcoords="offset points", fontsize=8)
+    ax.set_title(f"Latency vs claim support ({subtitle})")
+    ax.set_xlabel("Mean latency (ms)")
+    ax.set_ylabel("Claim support rate (%)")
+    ax.set_ylim(-5, 105)
+    plt.tight_layout()
+    p1 = os.path.join(output_dir, "fig1_pareto_latency_faithfulness.png")
+    fig.savefig(p1, bbox_inches="tight")
+    plt.close(fig)
+    generated_paths.append(p1)
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    x = np.arange(len(configs))
+    width = 0.55
+    ax.bar(x, faiths, width, label="Supported", color="#10b981", edgecolor="black", linewidth=0.8)
+    ax.bar(x, hallucs, width, bottom=faiths, label="Unsupported", color="#f59e0b", edgecolor="black", linewidth=0.8)
+    bottom_contra = [f + h for f, h in zip(faiths, hallucs)]
+    ax.bar(x, contras, width, bottom=bottom_contra, label="Contradicted", color="#ef4444", edgecolor="black", linewidth=0.8)
+    ax.set_ylabel("Claim proportion (%)")
+    ax.set_title(f"Claim-label mix ({subtitle})")
+    ax.set_xticks(x)
+    ax.set_xticklabels(configs, rotation=0, ha="center")
+    ax.set_ylim(0, 105)
+    ax.legend(loc="upper right", frameon=True)
+    plt.tight_layout()
+    p2 = os.path.join(output_dir, "fig2_claim_attribution_breakdown.png")
+    fig.savefig(p2, bbox_inches="tight")
+    plt.close(fig)
+    generated_paths.append(p2)
+
+    fig, ax1 = plt.subplots(figsize=(9, 4.8))
+    x_indices = np.arange(len(configs))
+    bar_w = 0.35
+    ax1.bar(x_indices - bar_w / 2, recalls, bar_w, label="Recall@5 (%)", color="#4f46e5", edgecolor="black", linewidth=0.8)
+    ax2 = ax1.twinx()
+    ax2.bar(x_indices + bar_w / 2, mrrs, bar_w, label="MRR", color="#06b6d4", edgecolor="black", linewidth=0.8)
+    ax1.set_ylabel("Recall@5 (%)")
+    ax2.set_ylabel("MRR")
+    ax1.set_xticks(x_indices)
+    ax1.set_xticklabels(configs, rotation=0, ha="center")
+    ax1.set_ylim(0, 110)
+    ax2.set_ylim(0, 1.1)
+    ax1.set_title(f"Retrieval metrics ({subtitle})")
+    plt.tight_layout()
+    p3 = os.path.join(output_dir, "fig3_retrieval_recall_mrr.png")
+    fig.savefig(p3, bbox_inches="tight")
+    plt.close(fig)
+    generated_paths.append(p3)
+
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    ax.bar(configs, abstentions, color="#f97316", edgecolor="black", linewidth=0.8, width=0.5)
+    ax.set_ylabel("Abstention accuracy (%)")
+    ax.set_ylim(0, 115)
+    ax.set_title(f"Unanswerable abstention ({subtitle})")
+    plt.tight_layout()
+    p4 = os.path.join(output_dir, "fig4_adversarial_abstention.png")
+    fig.savefig(p4, bbox_inches="tight")
+    plt.close(fig)
+    generated_paths.append(p4)
+    return generated_paths

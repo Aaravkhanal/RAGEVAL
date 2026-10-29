@@ -1,6 +1,23 @@
 # Research Gaps and Threats to Validity
 
-This document asks whether the **current** implementation can support credible conclusions about RAG reliability. Engineering completeness is covered in `PROJECT_AUDIT.md`.
+## Status after Phase 8 (2026-10-29)
+
+The Phase 0 list below is **historical**. Closed for the licensed pilot: synthetic-as-SEC disclosure, generator blinding, metric registry, citation support vs existence, answer-level EM/F1, verifier gold set, unique run dirs, `metrics.json` tables, no overall score.
+
+**Still blocking confirmatory RAG claims**
+
+- $n=24$ items / 16 documents on the recorded run (`20261028T183042Z_a97ad68f`); items share documents.
+- Official generator is a blinded mock, not an LLM.
+- Single-author gold; no IAA.
+- RQ1 Recall@5/MRR identical across six configs — retrieval IVs are not identifiable here.
+- v1.1.0 items (`v1_025`–`v1_028`) have no scores in that run.
+- `paper.tex` is a draft whose table now matches `metrics.json`; it is still not a confirmatory paper.
+
+Honest write-up: `reports/20261028T183042Z_a97ad68f/FINDINGS.md`.
+
+---
+
+This document originally asked whether the **audit-time** implementation could support credible conclusions. Engineering completeness is covered in `PROJECT_AUDIT.md`.
 
 The intended central question (Phase 1 will refine it):
 

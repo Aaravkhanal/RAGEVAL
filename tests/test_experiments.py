@@ -101,5 +101,5 @@ def test_dry_run_one_item_two_configs(tmp_path):
     report = write_report_from_metrics(metrics, str(tmp_path / "out"))
     text = Path(report).read_text()
     assert "0.938" not in text
-    assert "pending" in text.lower()
+    assert "FINDINGS.md" in text
     assert "metrics.json" in text

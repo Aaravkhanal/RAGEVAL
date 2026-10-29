@@ -12,6 +12,8 @@ Phase 6 error analysis for this run’s adversarial slice: `reports/error_analys
 
 Phase 7 labeled tables generated from this run’s summaries: `reports/phase7/`.
 
+Phase 8 findings: `reports/20261028T183042Z_a97ad68f/FINDINGS.md`. `paper.tex` table matches this run and remains a draft.
+
 The process started from git commit `3f8d3a3` with **uncommitted** `benchmark_v1` files in the working tree. Re-run after this commit to pin the same data to a commit hash.
 
 `paper.tex` remains a draft and is not evidence.

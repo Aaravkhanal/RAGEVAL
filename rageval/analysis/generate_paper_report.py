@@ -45,7 +45,7 @@ def write_report_from_metrics(metrics: dict, output_dir: str) -> str:
     gap_md = BenchmarkReporter.claim_vs_answer_markdown(metrics)
     report_content = f"""# RAGeval run report
 
-**Status:** tables generated from `metrics.json`. Narrative scientific findings are **pending** until Phase 8.
+**Status:** tables generated from `metrics.json`. Narrative is `FINDINGS.md` for a named run, not this table file.
 
 **Label:** `{metrics.get("label")}`. **Experiment:** `{metrics.get("experiment_id")}`.
 

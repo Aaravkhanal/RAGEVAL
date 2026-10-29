@@ -1,0 +1,77 @@
+{
+  "run_id": "20261028T183042Z_a97ad68f",
+  "config_name": "Dense_Chunk256_Baseline",
+  "source": "experiments/runs/20261028T183042Z_a97ad68f/predictions.jsonl",
+  "cases": [
+    {
+      "query_id": "v1_001",
+      "scenario_type": "standard",
+      "question": "When did Apollo 11 launch, and who were the three crew members?",
+      "gold_answer": "Apollo 11 launched from Cape Kennedy on July 16, 1969, carrying Neil Armstrong, Michael Collins, and Edwin \"Buzz\" Aldrin.",
+      "answer_excerpt": "The primary objective of Apollo 11 was to complete a national goal set by President John F. [1] Kennedy on May 25, 1961: perform a crewed lunar landing and return to Earth. [2]",
+      "auto_labels": "claim1 contradicted; claim2 supported (NLI). Decomposition split \"John F. Kennedy\" across two claims.",
+      "claim_support": 0.5,
+      "answer_f1": 0.2041,
+      "abstained": false,
+      "recall_at_5": 1.0,
+      "primary_stage": "decomposition",
+      "why": "Gold launch/crew facts are in the retrieved NASA excerpt; the mock copied the objective sentence and the decomposer split a name, so NLI contradicted a fragment."
+    },
+    {
+      "query_id": "v1_013",
+      "scenario_type": "unanswerable",
+      "question": "What meals did the Apollo 11 crew eat during translunar coast?",
+      "gold_answer": null,
+      "answer_excerpt": "Partially piloted manually by Armstrong, the Eagle landed in the Sea of Tranquility...",
+      "auto_labels": "contradicted + supported on landing sentences; abstained=false",
+      "claim_support": 0.5,
+      "answer_f1": 0.0,
+      "abstained": false,
+      "recall_at_5": 0.0,
+      "primary_stage": "retrieval then generation",
+      "why": "No gold documents. Retriever returned landing text; blinded mock copied it instead of abstaining."
+    },
+    {
+      "query_id": "v1_017",
+      "scenario_type": "conflicting",
+      "question": "Did CedarRail operate unsupervised light-rail cars in Tacoma without licensed operators?",
+      "gold_answer": "Sources conflict. The press note says CedarRail opened unsupervised service with 40 driverless cars. The Pierce County audit required a licensed operator in every cab and suspended unsupervised service.",
+      "answer_excerpt": "CedarRail opened unsupervised light-rail service in Tacoma in March 2025 with 40 driverless cars running 20 hours per day and zero passenger injuries in the first 60 days. [1]",
+      "auto_labels": "single claim contradicted (NLI against the joint pool that includes the audit)",
+      "claim_support": 0.0,
+      "answer_f1": 0.3704,
+      "abstained": false,
+      "recall_at_5": 1.0,
+      "primary_stage": "generation",
+      "why": "Both conflict docs were retrieved. The mock copied only the press note and did not state the conflict."
+    },
+    {
+      "query_id": "v1_019",
+      "scenario_type": "mixed_support",
+      "question": "Which influenza virus types cause seasonal epidemics in people in the United States?",
+      "gold_answer": "Influenza A and B viruses cause seasonal epidemics of disease in people almost every winter in the United States.",
+      "answer_excerpt": "There are four types of influenza viruses: A, B, C, and D. [1] Influenza A and B viruses cause seasonal epidemics... [2]",
+      "auto_labels": "lead sentence contradicted; epidemic sentence supported",
+      "claim_support": 0.5,
+      "answer_f1": 0.6667,
+      "abstained": false,
+      "recall_at_5": 1.0,
+      "primary_stage": "generation",
+      "why": "RQ3: token F1 stays high (0.6667) while claim support is 0.5."
+    },
+    {
+      "query_id": "v1_023",
+      "scenario_type": "distractor",
+      "question": "What was HarborNet monthly churn in Q2 2025?",
+      "gold_answer": "Monthly churn was 1.8%.",
+      "answer_excerpt": "For Q3 2025 HarborNet expects subscription revenue of $420 million to $428 million and monthly churn at or below 1.9%. [1]",
+      "auto_labels": "both claims supported by the Q3 guidance chunk",
+      "claim_support": 1.0,
+      "answer_f1": 0.1111,
+      "abstained": false,
+      "recall_at_5": 1.0,
+      "primary_stage": "retrieval then generation",
+      "why": "Retriever ranked Q3 guidance above Q2 (MRR 0.5 on this item in Dense_Chunk128; here top doc is guidance). Claim support is 1.0 against retrieved text while answer F1 vs Q2 gold is 0.1111."
+    }
+  ]
+}

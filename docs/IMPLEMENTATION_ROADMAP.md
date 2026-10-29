@@ -275,6 +275,8 @@ Embeddings beyond MiniLM and any paid LLM are **opt-in** after a resource note.
 
 ## Phase 8 — Statistical analysis and findings
 
+**Status:** Complete for run `20261028T183042Z_a97ad68f`. Phase 9 is not authorized by this increment.
+
 **Objective:** Honest findings from **completed** runs only.
 
 **Prerequisites:** Phase 7 artifacts on disk.

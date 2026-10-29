@@ -20,7 +20,7 @@ Official generation for smoke tests is a **blinded mock** that cannot read gold 
 
 ## Status of results
 
-Committed tables under `reports/` are from run `20261028T183042Z_a97ad68f` on `benchmark_v1` (see `reports/README.md`). `reports/paper.tex` is a **draft** and must not be cited as experimental evidence. New benchmark runs write unique folders under `experiments/runs/` and do not overwrite previous runs.
+Committed tables under `reports/` are from run `20261028T183042Z_a97ad68f` on `benchmark_v1` 1.0.0 (16 documents, 24 items; US government public-domain excerpts plus CC-BY-4.0 fiction). Honest write-up: `reports/20261028T183042Z_a97ad68f/FINDINGS.md`. `reports/paper.tex` is a **draft** whose table matches that run; $n=24$ is underpowered. New runs write unique folders under `experiments/runs/`.
 
 ## Install
 
@@ -62,6 +62,9 @@ rageval experiment --config configs/experiments/C_retrieve.yaml
 # Tables from metrics.json (does not re-run the suite)
 rageval report --metrics reports/phase7/v1_matrix/metrics.json --output-dir /tmp/rageval-report
 
+# Honest findings + figures from a completed metrics.json (Phase 8)
+rageval findings --metrics reports/phase7/v1_matrix/metrics.json --output-dir reports/20261028T183042Z_a97ad68f --run-id 20261028T183042Z_a97ad68f --case-studies reports/20261028T183042Z_a97ad68f/case_studies.json
+
 # Dashboard
 rageval serve --port 8000
 ```
@@ -78,6 +81,7 @@ rageval serve --port 8000
 - `docs/FAILURE_TAXONOMY.md`
 - `configs/experiments/` — Phase 7 named matrix slices
 - `reports/phase7/` — v1-labeled tables from `metrics.json`
+- `reports/20261028T183042Z_a97ad68f/FINDINGS.md` — Phase 8 findings for the recorded run
 - `reports/error_analysis_phase6.md`
 - `docs/RELATED_WORK.md`
 - `data/cards/smoke_v1.md` — smoke corpus card
