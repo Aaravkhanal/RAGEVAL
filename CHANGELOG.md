@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Companion `benchmark_v1` **1.1.0** six-config mock + DeBERTa NLI ablation (`20261029T165024Z_657c8089`, 18 documents, 28 items). Tables: `reports/phase7/v1_1_matrix/`. Official published tables remain `20261028T183042Z_a97ad68f`. n=28 is still underpowered.
+- R3: `configs/opt_in/smoke_llm.yaml` plus CLI `--allow-opt-in` on `rageval experiment` and `rageval benchmark`. HTTP jobs still list only `configs/experiments/` and refuse `opt_in: true`. Live LLM smoke was **not** run (no API key, empty Ollama models); see `reports/opt_in_smoke_llm/STATUS.md`.
+- R4: `rageval iaa` (Cohen's kappa, `rageval.iaa.v1`). Rater B is still missing; kappa on the template is null. Files: `data/gold/iaa/`.
+- R4: `benchmark_v1` **1.2.0** — 21 documents, 32 items (24 dev / 8 test). New USGS Yellowstone FAQs and NASA ISS excerpt; new ids `v1_029`–`v1_032` are **dev** and **unscored** vs `657c8089`. Test ids remain frozen. HTTP `max_items` cap is 32.
 
 ### Fixed
 

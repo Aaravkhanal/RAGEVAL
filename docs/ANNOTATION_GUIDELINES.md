@@ -2,6 +2,8 @@
 
 Single-author annotation. Disclosed. Not a multi-rater gold standard.
 
+A second independent human is required for confirmatory IAA. Export rater A and a blank rater-B template live under `data/gold/iaa/`. `rageval iaa` reports Cohen's kappa on aligned 5-way labels; unfilled B yields `kappa=null`, not 0. A self-repeat is not a second annotator.
+
 ## Document rules
 
 - Every document has `license` and either `source_url` or `provenance`.

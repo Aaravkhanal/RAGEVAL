@@ -751,5 +751,170 @@
       "pair_role": "with_conflict",
       "reviewed": true
     }
+  },
+  {
+    "id": "v1_029",
+    "domain": "parks",
+    "question": "When was the most recent volcanic activity at Yellowstone, and which flow formed the Pitchstone Plateau?",
+    "gold_answer": "The most recent volcanic activity consisted of rhyolitic lava flows about 70,000 years ago. The largest of those flows formed the Pitchstone Plateau in southwestern Yellowstone National Park.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_usgs_yellowstone_last_eruption",
+        "span": "The most recent volcanic activity at Yellowstone consisted of rhyolitic lava flows that erupted approximately 70,000 years ago.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_usgs_yellowstone_last_eruption",
+        "span": "The largest of these flows formed the Pitchstone Plateau in southwestern Yellowstone National Park.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The most recent volcanic activity at Yellowstone was about 70,000 years ago",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_usgs_yellowstone_last_eruption"
+        ]
+      },
+      {
+        "claim": "The largest of those flows formed the Pitchstone Plateau",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_usgs_yellowstone_last_eruption"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked USGS last-eruption FAQ. Gold is the 70,000-year rhyolite flows and Pitchstone Plateau; not the 631,000-year caldera.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_030",
+    "domain": "parks",
+    "question": "About how many eruptions have occurred at Yellowstone since the most recent giant caldera-forming eruption, and how do they split by type?",
+    "gold_answer": "Approximately 80 relatively nonexplosive eruptions have occurred since the giant eruption 631,000 years ago: at least 27 rhyolite flows in the caldera, 13 rhyolite flows outside the caldera, and 40 basalt vents outside the caldera.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_usgs_yellowstone_post_caldera",
+        "span": "Since the most recent giant (caldera-forming) eruption 631,000 years ago, approximately 80 relatively nonexplosive eruptions have occurred.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_usgs_yellowstone_post_caldera",
+        "span": "at least 27 were rhyolite lava flows in the caldera, 13 were rhyolite lava flows outside the caldera, and 40 were basalt vents outside the caldera.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Approximately 80 relatively nonexplosive eruptions have occurred since the giant eruption 631,000 years ago",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_usgs_yellowstone_post_caldera"
+        ]
+      },
+      {
+        "claim": "At least 27 of those eruptions were rhyolite lava flows in the caldera",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_usgs_yellowstone_post_caldera"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "numerical_negation",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked numerical item on the USGS post-caldera FAQ counts (~80 / 27 / 13 / 40). Test split is unchanged.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_031",
+    "domain": "space",
+    "question": "When did the International Space Station mark 25 years of continuous human presence, and which space agencies are the program principals?",
+    "gold_answer": "November 2, 2025 marked 25 years of continuous human presence. The principals are the space agencies of the United States, Russia, Europe, Japan, and Canada.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nasa_iss",
+        "span": "November 2, 2025, marked a historic milestone: 25 years of continuous human presence aboard the International Space Station.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_nasa_iss",
+        "span": "The principals are the space agencies of the United States, Russia, Europe, Japan, and Canada.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "November 2, 2025 marked 25 years of continuous human presence on the ISS",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_iss"
+        ]
+      },
+      {
+        "claim": "The principal agencies are the United States, Russia, Europe, Japan, and Canada",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_iss"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NASA ISS page excerpt fetched 2026-10-29.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_032",
+    "domain": "space",
+    "question": "What did the Expedition 75 crew eat for Thanksgiving dinner aboard the International Space Station?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "answerability": "unanswerable",
+    "scenario_type": "unanswerable",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "adversarial_reason": "The ISS excerpt states the 25-year presence date, design years, and partner agencies. It does not describe Expedition 75 meals.",
+      "reviewer_notes": "Hand-checked unanswerable item. Thanksgiving dinner is absent from the stored NASA excerpt.",
+      "reviewed": true
+    }
   }
 ]

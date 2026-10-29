@@ -15,13 +15,16 @@ def test_benchmark_v1_integrity_and_licenses():
         docs, items, require_license=True, require_verbatim_spans=True, require_reviewed_scenarios=True
     )
     assert report["valid"] is True, report["errors"]
-    assert len(docs) == 18
-    assert len(items) == 28
+    assert len(docs) == 21
+    assert len(items) == 32
     assert all(doc.license for doc in docs)
     n_dev = sum(1 for item in items if item.split == "dev")
     n_test = sum(1 for item in items if item.split == "test")
-    assert n_dev == 20
+    assert n_dev == 24
     assert n_test == 8
+    ids = [item.id for item in items]
+    assert ids[-4:] == ["v1_029", "v1_030", "v1_031", "v1_032"]
+    assert all(item.split == "dev" for item in items if item.id in {"v1_029", "v1_030", "v1_031", "v1_032"})
 
 
 def test_benchmark_v1_builder_matches_files():
@@ -47,7 +50,7 @@ def test_validate_cli_benchmark_v1():
     assert proc.returncode == 0, proc.stderr
     report = json.loads(proc.stdout)
     assert report["valid"] is True
-    assert report["total_benchmark_items"] == 28
+    assert report["total_benchmark_items"] == 32
 
 
 def test_smoke_loader_still_defaults():

@@ -250,5 +250,47 @@
       "kind": "original_synthetic",
       "license_note": "CC-BY-4.0"
     }
+  },
+  {
+    "id": "doc_usgs_yellowstone_last_eruption",
+    "text": "The most recent volcanic activity at Yellowstone consisted of rhyolitic lava flows that erupted approximately 70,000 years ago. The largest of these flows formed the Pitchstone Plateau in southwestern Yellowstone National Park.",
+    "title": "Last Yellowstone volcanic activity (USGS FAQ)",
+    "domain": "parks",
+    "license": "US-government-work-public-domain-17USC105",
+    "source_url": "https://www.usgs.gov/faqs/when-was-last-time-yellowstone-erupted",
+    "provenance": "Excerpt from USGS FAQ \u201cWhen was the last time Yellowstone erupted?\u201d (page updated 2026-07-29). U.S. government work. FAQ HTML was not returned by a direct fetch in this environment; wording matches the USGS FAQ body in the agency search snippet.",
+    "retrieved_date": "2026-10-29",
+    "metadata": {
+      "text_normalization": "ascii-quotes",
+      "kind": "us_gov_excerpt"
+    }
+  },
+  {
+    "id": "doc_usgs_yellowstone_post_caldera",
+    "text": "Since the most recent giant (caldera-forming) eruption 631,000 years ago, approximately 80 relatively nonexplosive eruptions have occurred. Of these eruptions, at least 27 were rhyolite lava flows in the caldera, 13 were rhyolite lava flows outside the caldera, and 40 were basalt vents outside the caldera. The most recent volcanic eruption at Yellowstone, a lava flow on the Pitchstone Plateau, occurred 70,000 years ago.",
+    "title": "Yellowstone eruptions since the last giant caldera (USGS FAQ)",
+    "domain": "parks",
+    "license": "US-government-work-public-domain-17USC105",
+    "source_url": "https://www.usgs.gov/faqs/how-much-volcanic-activity-has-there-been-yellowstone-most-recent-giant-eruption",
+    "provenance": "Excerpt from USGS FAQ \u201cHow much volcanic activity has there been at Yellowstone since the most recent giant eruption?\u201d (page updated 2026-07-29). U.S. government work. Same FAQ-fetch caveat as the last-eruption excerpt. Parentheses around caldera-forming follow the FAQ, without extra HTML wrapping spaces.",
+    "retrieved_date": "2026-10-29",
+    "metadata": {
+      "text_normalization": "ascii-quotes",
+      "kind": "us_gov_excerpt"
+    }
+  },
+  {
+    "id": "doc_nasa_iss",
+    "text": "November 2, 2025, marked a historic milestone: 25 years of continuous human presence aboard the International Space Station. The station was designed between 1984 and 1993. Elements of the station were in construction throughout the US, Canada, Japan, and Europe beginning in the late 1980s. An international partnership of space agencies provides and operates the elements of the space station. The principals are the space agencies of the United States, Russia, Europe, Japan, and Canada.",
+    "title": "International Space Station 25-year presence and partners",
+    "domain": "space",
+    "license": "US-government-work-public-domain-17USC105",
+    "source_url": "https://www.nasa.gov/international-space-station/",
+    "provenance": "Excerpt from NASA International Space Station page (fetched 2026-10-29). U.S. government work. 25-year milestone, design years, and principal partner agencies. Expedition 75 meals are not in this excerpt.",
+    "retrieved_date": "2026-10-29",
+    "metadata": {
+      "text_normalization": "ascii-quotes",
+      "kind": "us_gov_excerpt"
+    }
   }
 ]

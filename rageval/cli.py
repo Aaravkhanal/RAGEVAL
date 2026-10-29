@@ -45,6 +45,11 @@ def main():
         default=None,
         help="Pipeline YAML (repeatable). Default is the 6-config ablation matrix.",
     )
+    bench_parser.add_argument(
+        "--allow-opt-in",
+        action="store_true",
+        help="Required to run pipeline YAML with opt_in: true (live LLM). HTTP jobs never set this.",
+    )
 
     validate_parser = subparsers.add_parser("validate", help="Validate corpus/item integrity for a dataset")
     validate_parser.add_argument("--data-dir", default="data")
@@ -72,6 +77,19 @@ def main():
     exp_parser.add_argument("--data-dir", default="data")
     exp_parser.add_argument("--output-dir", default="experiments/runs")
     exp_parser.add_argument("--max-items", type=int, default=None, help="Optional cap for dry runs")
+    exp_parser.add_argument(
+        "--allow-opt-in",
+        action="store_true",
+        help="Required for configs/opt_in/*.yaml. HTTP jobs never set this.",
+    )
+
+    iaa_parser = subparsers.add_parser(
+        "iaa",
+        help="Cohen's kappa between two rater files (does not invent a second human)",
+    )
+    iaa_parser.add_argument("--rater-a", required=True, help="Rater A JSON (verifier_eval or rageval.iaa.v1)")
+    iaa_parser.add_argument("--rater-b", required=True, help="Rater B JSON; unfilled labels yield kappa=null")
+    iaa_parser.add_argument("--output", default="reports/iaa/iaa.md")
 
     findings_parser = subparsers.add_parser("findings", help="Write FINDINGS.md from metrics.json")
     findings_parser.add_argument("--metrics", default="reports/phase7/v1_matrix/metrics.json")
@@ -109,9 +127,22 @@ def main():
             f"(dataset={args.dataset}, split={args.split})."
         )
         if args.config:
+            from rageval.benchmark.experiments import require_opt_in_permission
             from rageval.core.config import pipeline_config_from_yaml
 
-            suite = BenchmarkSuite([pipeline_config_from_yaml(path) for path in args.config])
+            pipeline_configs = [pipeline_config_from_yaml(path) for path in args.config]
+            for cfg, path in zip(pipeline_configs, args.config):
+                try:
+                    require_opt_in_permission(
+                        opt_in=cfg.opt_in,
+                        resource_note=cfg.resource_note,
+                        allow_opt_in=args.allow_opt_in,
+                        name=path,
+                    )
+                except RuntimeError as exc:
+                    print(exc, file=sys.stderr)
+                    sys.exit(2)
+            suite = BenchmarkSuite(pipeline_configs)
         else:
             suite = BenchmarkSuite()
         summaries = suite.run_suite(
@@ -169,13 +200,29 @@ def main():
         from rageval.benchmark.experiments import load_experiment, run_experiment
 
         spec = load_experiment(args.config)
-        run_dir = run_experiment(
-            spec,
-            data_dir=args.data_dir,
-            output_root=args.output_dir,
-            max_items=args.max_items,
-        )
+        try:
+            run_dir = run_experiment(
+                spec,
+                data_dir=args.data_dir,
+                output_root=args.output_dir,
+                max_items=args.max_items,
+                allow_opt_in=args.allow_opt_in,
+            )
+        except RuntimeError as exc:
+            print(exc, file=sys.stderr)
+            sys.exit(2)
         print(f"Experiment {spec.experiment_id} ({spec.label}) wrote {run_dir}")
+
+    elif args.command == "iaa":
+        from rageval.analysis.iaa import compare_raters, write_iaa_report
+
+        result = compare_raters(args.rater_a, args.rater_b)
+        path = write_iaa_report(result, args.output)
+        kappa = result.get("cohen_kappa")
+        print(
+            f"Wrote {path} (kappa={kappa}, n_labeled_both={result.get('n_labeled_both')}, "
+            f"complete={result.get('complete')})"
+        )
 
     elif args.command == "report":
         report_path = run_and_generate_paper_analysis(

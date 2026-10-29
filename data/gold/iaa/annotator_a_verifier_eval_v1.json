@@ -1,0 +1,152 @@
+{
+  "schema_version": "rageval.iaa.v1",
+  "annotator_id": "single-author, disclosed",
+  "role": "rater_a",
+  "source": "data/gold/verifier_eval_v1.json",
+  "items": [
+    {
+      "id": "ve_001",
+      "claim": "Influenza A and B viruses cause seasonal epidemics in people in the United States.",
+      "premise": "There are four types of influenza viruses: A, B, C, and D. Influenza A and B viruses cause seasonal epidemics of disease in people (known as flu season) almost every winter in the United States. Influenza A viruses are the only influenza viruses known to cause flu pandemics (i.e., global epidemics of flu disease). Influenza C virus infections generally cause mild illness and are not thought to cause human epidemics. Influenza D viruses primarily affect cattle with spillover to other animals but are not known to cause illness in people.",
+      "gold_label": "supported"
+    },
+    {
+      "id": "ve_002",
+      "claim": "Influenza A viruses are the only influenza viruses known to cause flu pandemics.",
+      "premise": "There are four types of influenza viruses: A, B, C, and D. Influenza A and B viruses cause seasonal epidemics of disease in people (known as flu season) almost every winter in the United States. Influenza A viruses are the only influenza viruses known to cause flu pandemics (i.e., global epidemics of flu disease). Influenza C virus infections generally cause mild illness and are not thought to cause human epidemics. Influenza D viruses primarily affect cattle with spillover to other animals but are not known to cause illness in people.",
+      "gold_label": "supported"
+    },
+    {
+      "id": "ve_003",
+      "claim": "Influenza D viruses cause seasonal epidemics in people.",
+      "premise": "There are four types of influenza viruses: A, B, C, and D. Influenza A and B viruses cause seasonal epidemics of disease in people (known as flu season) almost every winter in the United States. Influenza A viruses are the only influenza viruses known to cause flu pandemics (i.e., global epidemics of flu disease). Influenza C virus infections generally cause mild illness and are not thought to cause human epidemics. Influenza D viruses primarily affect cattle with spillover to other animals but are not known to cause illness in people.",
+      "gold_label": "contradicted"
+    },
+    {
+      "id": "ve_004",
+      "claim": "Current influenza A subtypes that routinely circulate in people include A(H1N1) and A(H3N2).",
+      "premise": "Influenza A viruses are divided into subtypes based on two proteins on the surface of the virus: hemagglutinin (H) and neuraminidase (N). There are 18 hemagglutinin subtypes and 11 neuraminidase subtypes (H1 through H18 and N1 through N11, respectively). Current subtypes of influenza A viruses that routinely circulate in people include A(H1N1) and A(H3N2). Currently circulating influenza A(H1N1) viruses are descendants of the 2009 H1N1 pandemic virus that emerged in the spring of 2009 and caused a flu pandemic. B/Yamagata viruses have not been detected after March 2020.",
+      "gold_label": "supported"
+    },
+    {
+      "id": "ve_005",
+      "claim": "B/Yamagata viruses have circulated continuously since 2021.",
+      "premise": "Influenza A viruses are divided into subtypes based on two proteins on the surface of the virus: hemagglutinin (H) and neuraminidase (N). There are 18 hemagglutinin subtypes and 11 neuraminidase subtypes (H1 through H18 and N1 through N11, respectively). Current subtypes of influenza A viruses that routinely circulate in people include A(H1N1) and A(H3N2). Currently circulating influenza A(H1N1) viruses are descendants of the 2009 H1N1 pandemic virus that emerged in the spring of 2009 and caused a flu pandemic. B/Yamagata viruses have not been detected after March 2020.",
+      "gold_label": "contradicted"
+    },
+    {
+      "id": "ve_006",
+      "claim": "Apollo 11 launched from Cape Kennedy on July 16, 1969.",
+      "premise": "The primary objective of Apollo 11 was to complete a national goal set by President John F. Kennedy on May 25, 1961: perform a crewed lunar landing and return to Earth. Apollo 11 launched from Cape Kennedy on July 16, 1969, carrying Commander Neil Armstrong, Command Module Pilot Michael Collins and Lunar Module Pilot Edwin \"Buzz\" Aldrin into an initial Earth-orbit of 114 by 116 miles. An estimated 650 million people watched Armstrong's televised image and heard his voice describe the event as he took \"one small step for a man, one giant leap for mankind\" on July 20, 1969.",
+      "gold_label": "supported"
+    },
+    {
+      "id": "ve_007",
+      "claim": "The Eagle landed in the Sea of Tranquility.",
+      "premise": "Partially piloted manually by Armstrong, the Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude. This was about four miles downrange from the predicted touchdown point and occurred almost one-and-a-half minutes earlier than scheduled. It included a powered descent that ran a mere nominal 40 seconds longer than preflight planning due to translation maneuvers to avoid a crater during the final phase of landing.",
+      "gold_label": "supported"
+    },
+    {
+      "id": "ve_008",
+      "claim": "The Eagle landed in the Ocean of Storms.",
+      "premise": "Partially piloted manually by Armstrong, the Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude. This was about four miles downrange from the predicted touchdown point and occurred almost one-and-a-half minutes earlier than scheduled. It included a powered descent that ran a mere nominal 40 seconds longer than preflight planning due to translation maneuvers to avoid a crater during the final phase of landing.",
+      "gold_label": "contradicted"
+    },
+    {
+      "id": "ve_009",
+      "claim": "Armstrong remained on the lunar surface for 14 days.",
+      "premise": "Partially piloted manually by Armstrong, the Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude. This was about four miles downrange from the predicted touchdown point and occurred almost one-and-a-half minutes earlier than scheduled. It included a powered descent that ran a mere nominal 40 seconds longer than preflight planning due to translation maneuvers to avoid a crater during the final phase of landing.",
+      "gold_label": "unsupported"
+    },
+    {
+      "id": "ve_010",
+      "claim": "The Greater Yellowstone Ecosystem is 28,000 square miles.",
+      "premise": "Yellowstone National Park is as wondrous as it is complex. Established primarily to protect hydrothermal areas that contain about half the world's active geysers, the park also forms the core of the Greater Yellowstone Ecosystem. At 28,000 square miles, it is one of the largest, nearly intact temperate-zone ecosystems on Earth. It preserves a great variety of terrestrial, aquatic, and microbial life.",
+      "gold_label": "supported"
+    },
+    {
+      "id": "ve_011",
+      "claim": "Yellowstone contains no hydrothermal features.",
+      "premise": "Yellowstone National Park is as wondrous as it is complex. Established primarily to protect hydrothermal areas that contain about half the world's active geysers, the park also forms the core of the Greater Yellowstone Ecosystem. At 28,000 square miles, it is one of the largest, nearly intact temperate-zone ecosystems on Earth. It preserves a great variety of terrestrial, aquatic, and microbial life.",
+      "gold_label": "contradicted"
+    },
+    {
+      "id": "ve_012",
+      "claim": "Yellowstone has 67 mammal species and 285 bird species.",
+      "premise": "Learn about the park's abundant and diverse species\u201467 mammals, 285 birds, 16 fish, 5 amphibians, and 6 reptiles. Hydrothermal features are habitats for microscopic organisms called thermophiles: \"thermo\" for heat, \"phile\" for lover. Fire is a natural process and shapes the ecosystem.",
+      "gold_label": "supported"
+    },
+    {
+      "id": "ve_013",
+      "claim": "Yellowstone recorded 4.5 million recreational visits in 2024.",
+      "premise": "Yellowstone National Park is as wondrous as it is complex. Established primarily to protect hydrothermal areas that contain about half the world's active geysers, the park also forms the core of the Greater Yellowstone Ecosystem. At 28,000 square miles, it is one of the largest, nearly intact temperate-zone ecosystems on Earth. It preserves a great variety of terrestrial, aquatic, and microbial life.",
+      "gold_label": "unsupported"
+    },
+    {
+      "id": "ve_014",
+      "claim": "HarborNet reported subscription revenue of $412 million for the second quarter of 2025.",
+      "premise": "HarborNet reported subscription revenue of $412 million for the second quarter of 2025, a 9% increase from $378 million in Q2 2024. Average revenue per user was $54.10. Monthly churn was 1.8%. Capital expenditure was $67 million, primarily for metro fiber laterals in Portland and Boise.",
+      "gold_label": "supported"
+    },
+    {
+      "id": "ve_015",
+      "claim": "HarborNet Q2 2025 subscription revenue was $50 million.",
+      "premise": "HarborNet reported subscription revenue of $412 million for the second quarter of 2025, a 9% increase from $378 million in Q2 2024. Average revenue per user was $54.10. Monthly churn was 1.8%. Capital expenditure was $67 million, primarily for metro fiber laterals in Portland and Boise.",
+      "gold_label": "contradicted"
+    },
+    {
+      "id": "ve_016",
+      "claim": "HarborNet employed 48,000 people in Osaka.",
+      "premise": "HarborNet reported subscription revenue of $412 million for the second quarter of 2025, a 9% increase from $378 million in Q2 2024. Average revenue per user was $54.10. Monthly churn was 1.8%. Capital expenditure was $67 million, primarily for metro fiber laterals in Portland and Boise.",
+      "gold_label": "unsupported"
+    },
+    {
+      "id": "ve_017",
+      "claim": "HarborNet Q2 2025 subscription revenue was $412 million and monthly churn was 9.8%.",
+      "premise": "HarborNet reported subscription revenue of $412 million for the second quarter of 2025, a 9% increase from $378 million in Q2 2024. Average revenue per user was $54.10. Monthly churn was 1.8%. Capital expenditure was $67 million, primarily for metro fiber laterals in Portland and Boise.",
+      "gold_label": "partially_supported"
+    },
+    {
+      "id": "ve_018",
+      "claim": "Influenza A, B, C, and D viruses cause seasonal epidemics in people.",
+      "premise": "There are four types of influenza viruses: A, B, C, and D. Influenza A and B viruses cause seasonal epidemics of disease in people (known as flu season) almost every winter in the United States. Influenza A viruses are the only influenza viruses known to cause flu pandemics (i.e., global epidemics of flu disease). Influenza C virus infections generally cause mild illness and are not thought to cause human epidemics. Influenza D viruses primarily affect cattle with spillover to other animals but are not known to cause illness in people.",
+      "gold_label": "partially_supported"
+    },
+    {
+      "id": "ve_019",
+      "claim": "LumenGrid median GET latency was 2.1 ms under the reported read-heavy workload.",
+      "premise": "LumenGrid is a geo-sharded object store. Under a 90% read workload across four availability zones, median GET latency was 2.1 ms and p99 GET latency was 9.6 ms. Writes use a two-phase commit with a median PUT latency of 41 ms.",
+      "gold_label": "supported"
+    },
+    {
+      "id": "ve_020",
+      "claim": "LumenGrid is deployed in 40 availability zones.",
+      "premise": "LumenGrid is a geo-sharded object store. Under a 90% read workload across four availability zones, median GET latency was 2.1 ms and p99 GET latency was 9.6 ms. Writes use a two-phase commit with a median PUT latency of 41 ms.",
+      "gold_label": "unsupported"
+    },
+    {
+      "id": "ve_021",
+      "claim": "Median progression-free survival was 11.2 months for Nerexin plus pembrolizumab.",
+      "premise": "In the Phase 3 SHORELINE trial (n=510), Nerexin plus pembrolizumab produced median progression-free survival of 11.2 months versus 6.4 months with pembrolizumab alone (hazard ratio 0.72; 95% CI 0.58-0.89). Confirmed objective response rate was 44.0% versus 27.5%. Grade 3 or higher treatment-related adverse events occurred in 22.1% of the combination arm.",
+      "gold_label": "supported"
+    },
+    {
+      "id": "ve_022",
+      "claim": "Five-year overall survival for pediatric Nerexin patients was 81%.",
+      "premise": "In the Phase 3 SHORELINE trial (n=510), Nerexin plus pembrolizumab produced median progression-free survival of 11.2 months versus 6.4 months with pembrolizumab alone (hazard ratio 0.72; 95% CI 0.58-0.89). Confirmed objective response rate was 44.0% versus 27.5%. Grade 3 or higher treatment-related adverse events occurred in 22.1% of the combination arm.",
+      "gold_label": "unsupported"
+    },
+    {
+      "id": "ve_023",
+      "claim": "I do not have sufficient information in the provided context to answer this question.",
+      "premise": "The primary objective of Apollo 11 was to complete a national goal set by President John F. Kennedy on May 25, 1961: perform a crewed lunar landing and return to Earth. Apollo 11 launched from Cape Kennedy on July 16, 1969, carrying Commander Neil Armstrong, Command Module Pilot Michael Collins and Lunar Module Pilot Edwin \"Buzz\" Aldrin into an initial Earth-orbit of 114 by 116 miles.",
+      "gold_label": "ambiguous"
+    },
+    {
+      "id": "ve_024",
+      "claim": "CedarRail opened unsupervised light-rail service in Tacoma with 40 driverless cars and a perfect five-year safety record.",
+      "premise": "CedarRail opened unsupervised light-rail service in Tacoma in March 2025 with 40 driverless cars running 20 hours per day and zero passenger injuries in the first 60 days.",
+      "gold_label": "partially_supported"
+    }
+  ]
+}

@@ -6,7 +6,7 @@
 | Size | 24 labeled claim–premise pairs |
 | Schema | `rageval.claim_labels.v1` |
 | Mix | 10 supported, 5 contradicted, 5 unsupported, 3 partially_supported, 1 ambiguous (abstention) |
-| Annotator | Single author, disclosed |
+| Annotator | Single author, disclosed. IAA template: `data/gold/iaa/`. Rater B not filled. |
 | Premises | Copied from `benchmark_v1` documents (US government PD excerpts and original CC-BY-4.0 fiction) |
 | Use | RQ2 verifier per-class P/R/F1. Not a hidden test for prompt or threshold tuning. |
 

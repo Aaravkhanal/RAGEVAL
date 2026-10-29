@@ -56,6 +56,7 @@ def test_named_configs_include_smoke_and_heavy():
     assert names["smoke"] is False
     assert names["C_retrieve"] is True
     assert "smoke" in LIGHT_CONFIGS
+    assert "smoke_llm" not in names
 
 
 def test_resolve_config_rejects_paths():
@@ -77,6 +78,11 @@ def test_experiment_configs_endpoint():
     dumped = json.dumps(body)
     assert "api_key" not in dumped
     assert str(Path.home()) not in dumped
+
+
+def test_post_max_items_above_cap_422():
+    res = client.post("/experiments", json={"config": "smoke", "max_items": 33})
+    assert res.status_code == 422
 
 
 def test_post_unknown_config_400():

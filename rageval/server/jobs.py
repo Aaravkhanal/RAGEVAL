@@ -21,7 +21,7 @@ SAFE_NAME = re.compile(r"^[A-Za-z0-9_-]+$")
 EXPERIMENTS_DIR = os.path.join("configs", "experiments")
 LIGHT_CONFIGS = frozenset({"smoke"})
 DEFAULT_HTTP_MAX_ITEMS = 2
-MAX_HTTP_ITEMS = 28
+MAX_HTTP_ITEMS = 32
 
 _job_lock = threading.Lock()
 _busy = False
@@ -46,7 +46,8 @@ def reset_job_state_for_tests() -> None:
         _job_lock.release()
 
 
-def list_named_configs(root: str = EXPERIMENTS_DIR) -> List[Dict[str, Any]]:
+def list_named_configs(root: Optional[str] = None) -> List[Dict[str, Any]]:
+    root = root or EXPERIMENTS_DIR
     rows: List[Dict[str, Any]] = []
     for path in sorted(glob.glob(os.path.join(root, "*.yaml"))):
         name = os.path.splitext(os.path.basename(path))[0]
@@ -55,7 +56,8 @@ def list_named_configs(root: str = EXPERIMENTS_DIR) -> List[Dict[str, Any]]:
     return rows
 
 
-def resolve_config_path(name: str, root: str = EXPERIMENTS_DIR) -> str:
+def resolve_config_path(name: str, root: Optional[str] = None) -> str:
+    root = root or EXPERIMENTS_DIR
     if not SAFE_NAME.match(name):
         raise ValueError("invalid config name")
     path = os.path.normpath(os.path.join(root, f"{name}.yaml"))
@@ -78,6 +80,11 @@ def enqueue_experiment(
     """Create a queued run dir and start a background worker. Returns 202 payload fields."""
     path = resolve_config_path(config_name)
     spec = load_experiment(path)
+    if spec.opt_in or any(p.opt_in for p in spec.pipelines):
+        raise PermissionError(
+            "HTTP jobs cannot run opt-in LLM configs. Use the CLI with --allow-opt-in. "
+            "configs/opt_in/ is not on this allowlist."
+        )
     if not spec.pipelines:
         raise ValueError(
             f"Experiment {config_name!r} has no pipelines (analysis-only). Use GET /experiments results."

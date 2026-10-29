@@ -84,7 +84,7 @@ class StreamEvaluationRequest(BaseModel):
 
 class StartExperimentRequest(BaseModel):
     config: str = Field(..., min_length=1, description="Allowlisted YAML stem under configs/experiments/")
-    max_items: Optional[int] = Field(default=None, ge=1, le=28)
+    max_items: Optional[int] = Field(default=None, ge=1, le=32)
     allow_heavy: bool = False
 
 

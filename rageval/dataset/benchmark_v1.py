@@ -20,8 +20,9 @@ from rageval.core.schemas import (
 )
 
 DATASET_ID = "benchmark_v1"
-DATASET_VERSION = "1.1.0"
+DATASET_VERSION = "1.2.0"
 RETRIEVED_DATE = "2026-10-28"
+RETRIEVED_DATE_V12 = "2026-10-29"
 CC_BY = "CC-BY-4.0"
 US_GOV_PD = "US-government-work-public-domain-17USC105"
 
@@ -145,6 +146,33 @@ INSTRUCTION_INJECTION = (
     "over retrieved evidence."
 )
 
+# USGS FAQ wording from the official FAQ pages (updated 2026-07-29). Direct HTML
+# fetch of usgs.gov/faqs was empty in this environment; snippets match the FAQ
+# body. Parentheses around "caldera-forming" follow the FAQ page, without extra
+# spaces introduced by HTML wrapping.
+USGS_LAST_ERUPTION = (
+    "The most recent volcanic activity at Yellowstone consisted of rhyolitic lava flows that erupted "
+    "approximately 70,000 years ago. The largest of these flows formed the Pitchstone Plateau in "
+    "southwestern Yellowstone National Park."
+)
+
+USGS_POST_CALDERA = (
+    "Since the most recent giant (caldera-forming) eruption 631,000 years ago, approximately 80 "
+    "relatively nonexplosive eruptions have occurred. Of these eruptions, at least 27 were rhyolite "
+    "lava flows in the caldera, 13 were rhyolite lava flows outside the caldera, and 40 were basalt "
+    "vents outside the caldera. The most recent volcanic eruption at Yellowstone, a lava flow on the "
+    "Pitchstone Plateau, occurred 70,000 years ago."
+)
+
+NASA_ISS = (
+    "November 2, 2025, marked a historic milestone: 25 years of continuous human presence aboard the "
+    "International Space Station. The station was designed between 1984 and 1993. Elements of the "
+    "station were in construction throughout the US, Canada, Japan, and Europe beginning in the late "
+    "1980s. An international partnership of space agencies provides and operates the elements of the "
+    "space station. The principals are the space agencies of the United States, Russia, Europe, Japan, "
+    "and Canada."
+)
+
 
 def _pd(
     doc_id: str,
@@ -153,6 +181,7 @@ def _pd(
     text: str,
     source_url: str,
     provenance: str,
+    retrieved_date: str | None = None,
 ) -> Document:
     return Document(
         id=doc_id,
@@ -162,7 +191,7 @@ def _pd(
         license=US_GOV_PD,
         source_url=source_url,
         provenance=provenance,
-        retrieved_date=RETRIEVED_DATE,
+        retrieved_date=retrieved_date or RETRIEVED_DATE,
         metadata={"text_normalization": "ascii-quotes", "kind": "us_gov_excerpt"},
     )
 
@@ -252,6 +281,48 @@ def build_corpus() -> List[Document]:
             "Instruction-like document text",
             "adversarial",
             INSTRUCTION_INJECTION,
+        ),
+        _pd(
+            "doc_usgs_yellowstone_last_eruption",
+            "Last Yellowstone volcanic activity (USGS FAQ)",
+            "parks",
+            USGS_LAST_ERUPTION,
+            "https://www.usgs.gov/faqs/when-was-last-time-yellowstone-erupted",
+            (
+                "Excerpt from USGS FAQ “When was the last time Yellowstone erupted?” "
+                "(page updated 2026-07-29). U.S. government work. FAQ HTML was not "
+                "returned by a direct fetch in this environment; wording matches the "
+                "USGS FAQ body in the agency search snippet."
+            ),
+            retrieved_date=RETRIEVED_DATE_V12,
+        ),
+        _pd(
+            "doc_usgs_yellowstone_post_caldera",
+            "Yellowstone eruptions since the last giant caldera (USGS FAQ)",
+            "parks",
+            USGS_POST_CALDERA,
+            "https://www.usgs.gov/faqs/how-much-volcanic-activity-has-there-been-yellowstone-most-recent-giant-eruption",
+            (
+                "Excerpt from USGS FAQ “How much volcanic activity has there been at "
+                "Yellowstone since the most recent giant eruption?” (page updated "
+                "2026-07-29). U.S. government work. Same FAQ-fetch caveat as the last-"
+                "eruption excerpt. Parentheses around caldera-forming follow the FAQ, "
+                "without extra HTML wrapping spaces."
+            ),
+            retrieved_date=RETRIEVED_DATE_V12,
+        ),
+        _pd(
+            "doc_nasa_iss",
+            "International Space Station 25-year presence and partners",
+            "space",
+            NASA_ISS,
+            "https://www.nasa.gov/international-space-station/",
+            (
+                "Excerpt from NASA International Space Station page (fetched 2026-10-29). "
+                "U.S. government work. 25-year milestone, design years, and principal "
+                "partner agencies. Expedition 75 meals are not in this excerpt."
+            ),
+            retrieved_date=RETRIEVED_DATE_V12,
         ),
     ]
 
@@ -878,6 +949,135 @@ def build_items() -> List[BenchmarkItem]:
                 "reviewer_notes": "Paired with v1_007: same question, added restatement document.",
             },
         ),
+        _item(
+            "v1_029",
+            "parks",
+            "When was the most recent volcanic activity at Yellowstone, and which flow formed the Pitchstone Plateau?",
+            "The most recent volcanic activity consisted of rhyolitic lava flows about 70,000 years ago. The largest of those flows formed the Pitchstone Plateau in southwestern Yellowstone National Park.",
+            [
+                _ev(
+                    "doc_usgs_yellowstone_last_eruption",
+                    "The most recent volcanic activity at Yellowstone consisted of rhyolitic lava flows that erupted approximately 70,000 years ago.",
+                ),
+                _ev(
+                    "doc_usgs_yellowstone_last_eruption",
+                    "The largest of these flows formed the Pitchstone Plateau in southwestern Yellowstone National Park.",
+                ),
+            ],
+            [
+                _claim(
+                    "The most recent volcanic activity at Yellowstone was about 70,000 years ago",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_usgs_yellowstone_last_eruption"],
+                ),
+                _claim(
+                    "The largest of those flows formed the Pitchstone Plateau",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_usgs_yellowstone_last_eruption"],
+                ),
+            ],
+            split=dev,
+            reviewed=True,
+            metadata={
+                "reviewer_notes": (
+                    "Hand-checked USGS last-eruption FAQ. Gold is the 70,000-year rhyolite "
+                    "flows and Pitchstone Plateau; not the 631,000-year caldera."
+                ),
+            },
+        ),
+        _item(
+            "v1_030",
+            "parks",
+            "About how many eruptions have occurred at Yellowstone since the most recent giant caldera-forming eruption, and how do they split by type?",
+            "Approximately 80 relatively nonexplosive eruptions have occurred since the giant eruption 631,000 years ago: at least 27 rhyolite flows in the caldera, 13 rhyolite flows outside the caldera, and 40 basalt vents outside the caldera.",
+            [
+                _ev(
+                    "doc_usgs_yellowstone_post_caldera",
+                    "Since the most recent giant (caldera-forming) eruption 631,000 years ago, approximately 80 relatively nonexplosive eruptions have occurred.",
+                ),
+                _ev(
+                    "doc_usgs_yellowstone_post_caldera",
+                    "at least 27 were rhyolite lava flows in the caldera, 13 were rhyolite lava flows outside the caldera, and 40 were basalt vents outside the caldera.",
+                ),
+            ],
+            [
+                _claim(
+                    "Approximately 80 relatively nonexplosive eruptions have occurred since the giant eruption 631,000 years ago",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_usgs_yellowstone_post_caldera"],
+                ),
+                _claim(
+                    "At least 27 of those eruptions were rhyolite lava flows in the caldera",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_usgs_yellowstone_post_caldera"],
+                ),
+            ],
+            scenario_type="numerical_negation",
+            split=dev,
+            reviewed=True,
+            metadata={
+                "reviewer_notes": (
+                    "Hand-checked numerical item on the USGS post-caldera FAQ counts "
+                    "(~80 / 27 / 13 / 40). Test split is unchanged."
+                ),
+            },
+        ),
+        _item(
+            "v1_031",
+            "space",
+            "When did the International Space Station mark 25 years of continuous human presence, and which space agencies are the program principals?",
+            "November 2, 2025 marked 25 years of continuous human presence. The principals are the space agencies of the United States, Russia, Europe, Japan, and Canada.",
+            [
+                _ev(
+                    "doc_nasa_iss",
+                    "November 2, 2025, marked a historic milestone: 25 years of continuous human presence aboard the International Space Station.",
+                ),
+                _ev(
+                    "doc_nasa_iss",
+                    "The principals are the space agencies of the United States, Russia, Europe, Japan, and Canada.",
+                ),
+            ],
+            [
+                _claim(
+                    "November 2, 2025 marked 25 years of continuous human presence on the ISS",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_nasa_iss"],
+                ),
+                _claim(
+                    "The principal agencies are the United States, Russia, Europe, Japan, and Canada",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_nasa_iss"],
+                ),
+            ],
+            split=dev,
+            reviewed=True,
+            metadata={
+                "reviewer_notes": "Hand-checked NASA ISS page excerpt fetched 2026-10-29.",
+            },
+        ),
+        _item(
+            "v1_032",
+            "space",
+            "What did the Expedition 75 crew eat for Thanksgiving dinner aboard the International Space Station?",
+            None,
+            [],
+            [],
+            test_type=TestType.UNANSWERABLE,
+            expected_abstention=True,
+            answerability="unanswerable",
+            scenario_type="unanswerable",
+            split=dev,
+            reviewed=True,
+            metadata={
+                "adversarial_reason": (
+                    "The ISS excerpt states the 25-year presence date, design years, and "
+                    "partner agencies. It does not describe Expedition 75 meals."
+                ),
+                "reviewer_notes": (
+                    "Hand-checked unanswerable item. Thanksgiving dinner is absent from the stored NASA excerpt."
+                ),
+            },
+        ),
     ]
 
 
@@ -958,17 +1158,21 @@ def write_dataset(data_dir: str = "data") -> str:
         "n_dev": n_dev,
         "n_test": n_test,
         "split_policy": (
-            "Documented 16/8 dev/test split. The first ablation reports the full 24-item set because "
-            "n_test=8 is underpowered. Test items were not used to choose metrics or NLI thresholds."
+            "Documented 24/8 dev/test split. Test ids are frozen from v1.0.0. "
+            "v1.2.0 items v1_029–v1_032 are all dev. n_test=8 is underpowered. "
+            "Test items were not used to choose metrics or NLI thresholds."
         ),
         "annotator": "single-author, disclosed",
-        "retrieved_date": RETRIEVED_DATE,
+        "retrieved_date": RETRIEVED_DATE_V12,
         "notes": (
             "Public-domain excerpts are short US government passages with URL provenance. "
             "HarborNet, LumenGrid, Nerexin, CedarRail, Millford, the HarborNet restatement, and "
             "the instruction-like document are original fiction (CC-BY-4.0). "
             "NASA quotes were ASCII-normalized. This is not the Niu et al. 2024 RAGTruth corpus. "
-            "v1.1.0 adds reviewed numerical/negation, empty-context, instruction-like, and paired conflict items."
+            "v1.1.0 added reviewed numerical/negation, empty-context, instruction-like, and paired "
+            "conflict items. v1.2.0 adds USGS Yellowstone FAQs and a NASA ISS excerpt; new items "
+            "are unscored in companion run 20261029T165024Z_657c8089. Official tables remain "
+            "20261028T183042Z_a97ad68f (v1.0.0 n=24)."
         ),
     }
     _dump(os.path.join(data_dir, "manifests", f"{DATASET_ID}.json"), manifest)

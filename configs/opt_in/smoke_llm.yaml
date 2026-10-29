@@ -1,0 +1,16 @@
+experiment_id: smoke_llm
+label: pilot
+title: Opt-in live LLM generator on smoke_v1
+family: smoke
+dataset_id: smoke_v1
+split: all
+opt_in: true
+resource_note: >
+  Calls a live OpenAI-compatible chat model (pipeline openai_http.yaml).
+  Requires OPENAI_API_KEY or RAGEVAL_API_KEY in the environment. Swap
+  pipeline_paths to ollama_http.yaml or local_hf.yaml for those backends.
+  Not an official ablation. Official tables remain blinded-mock run
+  20261028T183042Z_a97ad68f. HTTP jobs refuse this file; CLI needs
+  --allow-opt-in. There is no mock fallback if the LLM call fails.
+pipeline_paths:
+  - openai_http.yaml

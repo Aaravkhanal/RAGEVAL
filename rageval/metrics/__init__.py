@@ -36,6 +36,7 @@ from rageval.metrics.classification import (
     macro_f1,
     per_class_scores,
 )
+from rageval.metrics.agreement import cohen_kappa, percent_agreement, summarize_agreement
 
 __all__ = [
     "claim_support_rate",
@@ -69,4 +70,7 @@ __all__ = [
     "per_class_scores",
     "macro_f1",
     "accuracy",
+    "cohen_kappa",
+    "percent_agreement",
+    "summarize_agreement",
 ]

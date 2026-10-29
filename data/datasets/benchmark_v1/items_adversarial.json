@@ -568,5 +568,74 @@
       "pair_role": "with_conflict",
       "reviewed": true
     }
+  },
+  {
+    "id": "v1_030",
+    "domain": "parks",
+    "question": "About how many eruptions have occurred at Yellowstone since the most recent giant caldera-forming eruption, and how do they split by type?",
+    "gold_answer": "Approximately 80 relatively nonexplosive eruptions have occurred since the giant eruption 631,000 years ago: at least 27 rhyolite flows in the caldera, 13 rhyolite flows outside the caldera, and 40 basalt vents outside the caldera.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_usgs_yellowstone_post_caldera",
+        "span": "Since the most recent giant (caldera-forming) eruption 631,000 years ago, approximately 80 relatively nonexplosive eruptions have occurred.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_usgs_yellowstone_post_caldera",
+        "span": "at least 27 were rhyolite lava flows in the caldera, 13 were rhyolite lava flows outside the caldera, and 40 were basalt vents outside the caldera.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Approximately 80 relatively nonexplosive eruptions have occurred since the giant eruption 631,000 years ago",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_usgs_yellowstone_post_caldera"
+        ]
+      },
+      {
+        "claim": "At least 27 of those eruptions were rhyolite lava flows in the caldera",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_usgs_yellowstone_post_caldera"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "numerical_negation",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked numerical item on the USGS post-caldera FAQ counts (~80 / 27 / 13 / 40). Test split is unchanged.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_032",
+    "domain": "space",
+    "question": "What did the Expedition 75 crew eat for Thanksgiving dinner aboard the International Space Station?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "answerability": "unanswerable",
+    "scenario_type": "unanswerable",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "adversarial_reason": "The ISS excerpt states the 25-year presence date, design years, and partner agencies. It does not describe Expedition 75 meals.",
+      "reviewer_notes": "Hand-checked unanswerable item. Thanksgiving dinner is absent from the stored NASA excerpt.",
+      "reviewed": true
+    }
   }
 ]

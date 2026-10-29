@@ -57,7 +57,7 @@ def test_datasets_index_and_detail():
     detail = client.get("/datasets/benchmark_v1")
     assert detail.status_code == 200
     body = detail.json()
-    assert body["n_items"] == 28
+    assert body["n_items"] == 32
     assert any("Apollo" in item["question"] or "influenza" in item["question"].lower() for item in body["items"])
     assert "api_key" not in json.dumps(body)
 

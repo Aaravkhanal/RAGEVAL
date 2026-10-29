@@ -35,7 +35,7 @@ def test_list_datasets_includes_smoke_and_v1():
 
 def test_get_dataset_items_are_licensed_corpus_not_sec_html():
     ds = get_dataset("benchmark_v1", root="data", include_items=True)
-    assert ds["version"] == "1.1.0"
+    assert ds["version"] == "1.2.0"
     questions = " ".join(item["question"] for item in ds["items"])
     assert "Apollo" in questions or "influenza" in questions.lower() or "Yellowstone" in questions
     assert "Form 10-Q" not in questions

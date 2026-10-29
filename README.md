@@ -10,13 +10,13 @@ This project was previously prototyped under the name RAGTruth. It is **not** th
 - Atomic claim decomposition and NLI verification (`supported` / `unsupported` / `contradicted`, plus `partially_supported` and `ambiguous` in the schema).
 - Citation existence and support-conditioned citation metrics.
 - A **synthetic smoke dataset** (8 documents, 8 questions). It is author-written fiction, not SEC/NEJM/OSDI source text.
-- A **licensed benchmark_v1** (18 documents, 28 questions in v1.1.0): short U.S. government public-domain excerpts plus original CC-BY-4.0 fiction. See `data/cards/benchmark_v1.md`. The committed ablation tables used v1.0.0 (16/24).
+- A **licensed benchmark_v1** (21 documents, 32 questions in v1.2.0): short U.S. government public-domain excerpts plus original CC-BY-4.0 fiction. See `data/cards/benchmark_v1.md`. The committed ablation tables used v1.0.0 (16/24). Companion mock+NLI scored v1.1.0 (18/28).
 - Answer-level EM / token F1 alongside claim-level support (RQ3).
 - Official metric registry (`rageval.metrics.registry`) with no composite overall score.
 - Adversarial scenarios with a failure taxonomy (`docs/FAILURE_TAXONOMY.md`) and robustness means by `scenario_type`.
 - CLI, FastAPI live claim audit, and pytest suite.
 
-Official generation for smoke tests is a **blinded mock** that cannot read gold `test_type` labels. Opt-in HTTP (`openai` / `ollama`) and `local_hf` backends live under `configs/opt_in/`; keys come from `OPENAI_API_KEY` / `RAGEVAL_API_KEY`, never YAML.
+Official generation for smoke tests is a **blinded mock** that cannot read gold `test_type` labels. Opt-in HTTP (`openai` / `ollama`) and `local_hf` backends live under `configs/opt_in/`; keys come from `OPENAI_API_KEY` / `RAGEVAL_API_KEY`, never YAML. Live LLM configs need `rageval experiment --allow-opt-in`; HTTP jobs refuse them.
 
 ## Status of results
 
@@ -61,6 +61,9 @@ rageval validate --dataset benchmark_v1
 
 # RQ2: score NLI (or heuristic) against the labeled claim set
 rageval verifier-eval --gold data/gold/verifier_eval_v1.json --method nli --output reports/verifier_eval_v1.md
+
+# IAA (kappa is null until an independent rater B fills data/gold/iaa/annotator_b_verifier_eval_v1.json)
+rageval iaa --rater-a data/gold/iaa/annotator_a_verifier_eval_v1.json --rater-b data/gold/iaa/annotator_b_template.json --output reports/iaa/iaa.md
 
 # Single YAML config (repeat --config for a custom matrix)
 rageval benchmark --dataset smoke_v1 --config configs/ablation/sparse_bm25_256.yaml

@@ -31,6 +31,29 @@ def load_experiment(path: str) -> ExperimentSpec:
     return experiment_spec_from_yaml(path)
 
 
+def require_opt_in_permission(
+    *,
+    opt_in: bool,
+    resource_note: str = "",
+    allow_opt_in: bool = False,
+    name: str = "config",
+) -> None:
+    """Opt-in LLM / paid backends need an explicit CLI flag and a resource note."""
+    if not opt_in:
+        return
+    if not allow_opt_in:
+        raise RuntimeError(
+            f"{name} is opt-in (live LLM or other paid/local model). "
+            "Pass --allow-opt-in on the CLI. HTTP jobs never run opt-in configs. "
+            "There is no mock fallback."
+        )
+    if not str(resource_note or "").strip():
+        raise RuntimeError(
+            f"{name} is opt-in and requires a non-empty resource_note "
+            "before it can run."
+        )
+
+
 def run_experiment(
     spec: ExperimentSpec,
     *,
@@ -39,12 +62,19 @@ def run_experiment(
     max_items: Optional[int] = None,
     run_id: Optional[str] = None,
     existing_run_dir: Optional[str] = None,
+    allow_opt_in: bool = False,
 ) -> str:
     """Run resolved pipelines. Analysis-only specs raise unless pipelines exist."""
-    if spec.opt_in:
-        raise RuntimeError(
-            f"Experiment {spec.experiment_id} is opt-in. Do not run without a resource note."
-        )
+    pipeline_opt_in = spec.opt_in or any(p.opt_in for p in spec.pipelines)
+    note = spec.resource_note or next(
+        (p.resource_note for p in spec.pipelines if p.resource_note), ""
+    )
+    require_opt_in_permission(
+        opt_in=pipeline_opt_in,
+        resource_note=note,
+        allow_opt_in=allow_opt_in,
+        name=f"Experiment {spec.experiment_id}",
+    )
     if not spec.pipelines:
         raise ValueError(
             f"Experiment {spec.experiment_id} has no pipelines. "
