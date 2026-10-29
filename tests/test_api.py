@@ -44,6 +44,8 @@ def test_openapi_lists_catalog_routes():
     assert "/experiments" in paths
     assert "/experiments/{run_id}" in paths
     assert "/experiments/{run_id}/results" in paths
+    assert "/experiment-configs" in paths
+    assert "post" in paths["/experiments"]
 
 
 def test_datasets_index_and_detail():
@@ -76,10 +78,9 @@ def test_benchmark_run_gone():
     assert "CLI" in res.json()["detail"] or "rageval experiment" in res.json()["detail"]
 
 
-def test_post_experiments_not_implemented():
+def test_post_experiments_requires_config_name():
     res = client.post("/experiments")
-    assert res.status_code == 501
-    assert "rageval experiment" in res.json()["detail"]
+    assert res.status_code == 422
 
 
 def test_experiments_committed_snapshot_results():

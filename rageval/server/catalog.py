@@ -153,8 +153,11 @@ def get_dataset(dataset_id: str, root: Optional[str] = None, include_items: bool
 def _read_json(path: str) -> Optional[Dict[str, Any]]:
     if not os.path.isfile(path):
         return None
-    with open(path, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return None
     return data if isinstance(data, dict) else None
 
 

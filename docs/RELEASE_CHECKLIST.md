@@ -12,4 +12,5 @@ Use before tagging. Version on this branch: **0.2.0rc1** (tag `v0.2.0-rc1`).
 - [ ] No API keys or `.env` files in git (`pytest tests/test_release.py`)
 - [ ] README extras and corpus description match `data/cards/`
 - [ ] `POST /benchmark/run` is 410; evaluate-on-context stays sync
+- [ ] `POST /experiments` with `config=smoke` returns 202; poll `GET /experiments/{id}` until complete; unknown names 400; heavy without `allow_heavy` 403; second job 409
 - [ ] Tag annotated `v0.2.0-rc1`; do not claim SOTA or confirmatory RAG rankings

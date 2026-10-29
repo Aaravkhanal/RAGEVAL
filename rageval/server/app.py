@@ -1,4 +1,4 @@
-"""FastAPI application: live claim audit plus read-only experiment/dataset catalog."""
+"""FastAPI application: live claim audit, catalog, and process-local experiment jobs."""
 
 from __future__ import annotations
 
@@ -22,17 +22,20 @@ from rageval.server.catalog import (
     list_experiments,
     table_from_metrics,
 )
+from rageval.server.jobs import enqueue_experiment, list_named_configs
 from rageval.server.metrics import global_metrics_collector
 from rageval.server.streaming import StreamingVerificationSession
 
 app = FastAPI(
     title="RAGeval Evaluation API",
     description=(
-        "Claim-level faithfulness evaluation and read-only access to datasets "
-        "and experiment run folders. Full ablations are started from the CLI, "
-        "not from HTTP. This project is not Niu et al. 2024 RAGTruth."
+        "Claim-level faithfulness evaluation, dataset/run catalog, and a "
+        "process-local job queue for allowlisted experiment YAML names. "
+        "POST /experiments returns 202 and never runs BenchmarkSuite on the "
+        "request thread. POST /benchmark/run stays 410. This project is not "
+        "Niu et al. 2024 RAGTruth."
     ),
-    version="0.2.0",
+    version="0.2.0rc1",
 )
 
 app.add_middleware(
@@ -78,6 +81,12 @@ class StreamEvaluationRequest(BaseModel):
     context_chunks: List[str] = Field(default_factory=list)
 
 
+class StartExperimentRequest(BaseModel):
+    config: str = Field(..., min_length=1, description="Allowlisted YAML stem under configs/experiments/")
+    max_items: Optional[int] = Field(default=None, ge=1, le=28)
+    allow_heavy: bool = False
+
+
 @app.get("/health", tags=["meta"])
 def health_check():
     return {"status": "ok", "service": "rageval"}
@@ -108,6 +117,12 @@ def experiments_index():
     return {"experiments": list_experiments()}
 
 
+@app.get("/experiment-configs", tags=["experiments"])
+def experiment_configs():
+    """Allowlisted YAML names. Heavy configs need allow_heavy on POST /experiments."""
+    return {"configs": list_named_configs()}
+
+
 @app.get("/experiments/{run_id}", tags=["experiments"])
 def experiment_detail(run_id: str):
     try:
@@ -131,15 +146,26 @@ def experiment_results(run_id: str):
         )
 
 
-@app.post("/experiments", tags=["experiments"])
-def start_experiment_cli_only():
-    raise HTTPException(
-        status_code=501,
-        detail=(
-            "Experiments are started from the CLI, not from HTTP. "
-            f"Example: {CLI_START}"
-        ),
-    )
+@app.post("/experiments", tags=["experiments"], status_code=202)
+def start_experiment(req: StartExperimentRequest):
+    """Queue an allowlisted experiment. Default smoke; NLI/v1 needs allow_heavy."""
+    try:
+        return enqueue_experiment(
+            req.config,
+            max_items=req.max_items,
+            allow_heavy=req.allow_heavy,
+        )
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unknown experiment config {req.config!r}",
+        )
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 @app.post("/benchmark/run", tags=["experiments"], deprecated=True)

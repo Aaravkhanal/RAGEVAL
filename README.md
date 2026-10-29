@@ -70,15 +70,17 @@ rageval report --metrics reports/phase7/v1_matrix/metrics.json --output-dir /tmp
 # Honest findings + figures from a completed metrics.json (Phase 8)
 rageval findings --metrics reports/phase7/v1_matrix/metrics.json --output-dir reports/20261028T183042Z_a97ad68f --run-id 20261028T183042Z_a97ad68f --case-studies reports/20261028T183042Z_a97ad68f/case_studies.json
 
-# Dashboard (live /evaluate/answer stays sync; ablations are CLI-only)
+# Dashboard (live /evaluate/answer stays sync; POST /experiments queues a job)
 rageval serve --port 8000 --runs-dir experiments/runs --data-dir data
 ```
 
-Read-only HTTP after `rageval serve`:
+HTTP after `rageval serve`:
 
 - `GET /datasets`, `GET /datasets/{id}`
+- `GET /experiment-configs` (allowlisted YAML names under `configs/experiments/`)
 - `GET /experiments`, `GET /experiments/{id}`, `GET /experiments/{id}/results`
-- `POST /evaluate/answer` (caller-supplied context)
+- `POST /experiments` → 202 `{id, status, poll}` then poll `GET /experiments/{id}`. Default config is `smoke`. NLI / full v1 names need `"allow_heavy": true`. One job at a time (409 if busy).
+- `POST /evaluate/answer` (caller-supplied context, sync)
 - `POST /benchmark/run` is removed (HTTP 410). OpenAPI: `/docs`
 
 ## Documentation

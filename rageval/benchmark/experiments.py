@@ -38,6 +38,7 @@ def run_experiment(
     output_root: str = "experiments/runs",
     max_items: Optional[int] = None,
     run_id: Optional[str] = None,
+    existing_run_dir: Optional[str] = None,
 ) -> str:
     """Run resolved pipelines. Analysis-only specs raise unless pipelines exist."""
     if spec.opt_in:
@@ -56,7 +57,10 @@ def run_experiment(
         items = items[: max(0, int(max_items))]
     manifest = loader.load_manifest() or {}
     dataset_version = manifest.get("version")
-    run_dir = create_run_dir(output_root, run_id=run_id)
+    if existing_run_dir:
+        run_dir = existing_run_dir
+    else:
+        run_dir = create_run_dir(output_root, run_id=run_id)
     suite = BenchmarkSuite(spec.pipelines)
     summaries = suite.run_suite(
         documents,

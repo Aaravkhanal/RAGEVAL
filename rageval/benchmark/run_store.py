@@ -57,12 +57,33 @@ def _status_path(run_dir: str) -> str:
     return os.path.join(run_dir, "status.json")
 
 
+def atomic_write_json(path: str, payload: Any) -> None:
+    """Write JSON via a sibling temp file so readers never see a truncated body."""
+    directory = os.path.dirname(path) or "."
+    os.makedirs(directory, exist_ok=True)
+    tmp = f"{path}.{os.getpid()}.tmp"
+    try:
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(payload, f, indent=2)
+            f.write("\n")
+        os.replace(tmp, path)
+    finally:
+        if os.path.isfile(tmp):
+            try:
+                os.remove(tmp)
+            except OSError:
+                pass
+
+
 def read_run_status(run_dir: str) -> Optional[Dict[str, Any]]:
     path = _status_path(run_dir)
     if not os.path.isfile(path):
         return None
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return None
 
 
 def write_run_status(run_dir: str, state: str, extra: Optional[Dict[str, Any]] = None) -> None:
@@ -71,9 +92,7 @@ def write_run_status(run_dir: str, state: str, extra: Optional[Dict[str, Any]] =
         "updated_utc": datetime.now(timezone.utc).isoformat(),
         **(extra or {}),
     }
-    with open(_status_path(run_dir), "w", encoding="utf-8") as f:
-        json.dump(payload, f, indent=2)
-        f.write("\n")
+    atomic_write_json(_status_path(run_dir), payload)
 
 
 def save_run(
@@ -101,11 +120,11 @@ def save_run(
         "experiment_id": experiment_id,
         **(extra_manifest or {}),
     }
-    with open(os.path.join(run_dir, "manifest.json"), "w", encoding="utf-8") as f:
-        json.dump(manifest, f, indent=2)
-
-    with open(os.path.join(run_dir, "summaries.json"), "w", encoding="utf-8") as f:
-        json.dump([s.model_dump() for s in summaries], f, indent=2)
+    atomic_write_json(os.path.join(run_dir, "manifest.json"), manifest)
+    atomic_write_json(
+        os.path.join(run_dir, "summaries.json"),
+        [s.model_dump() for s in summaries],
+    )
 
     pred_path = os.path.join(run_dir, "predictions.jsonl")
     with open(pred_path, "w", encoding="utf-8") as f:

@@ -39,7 +39,7 @@ python -m rageval.cli findings \
 python -m rageval.cli serve --port 8000
 ```
 
-`GET /datasets` and `GET /experiments` are read-only. Ablations are started from the CLI, not HTTP.
+`GET /datasets` and `GET /experiments` list completed runs. `POST /experiments` with `{"config": "smoke", "max_items": 2}` returns 202 and writes `experiments/runs/<id>/`. Heavy NLI configs need `"allow_heavy": true`. `POST /benchmark/run` stays 410. Live `POST /evaluate/answer` stays sync.
 
 ## Extras
 
