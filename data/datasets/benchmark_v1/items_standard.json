@@ -33,6 +33,9 @@
     "answerability": "answerable",
     "scenario_type": "standard",
     "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
     "metadata": {}
   },
   {
@@ -69,6 +72,9 @@
     "answerability": "answerable",
     "scenario_type": "standard",
     "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
     "metadata": {}
   },
   {
@@ -105,6 +111,9 @@
     "answerability": "answerable",
     "scenario_type": "standard",
     "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
     "metadata": {}
   },
   {
@@ -147,6 +156,9 @@
     "answerability": "answerable",
     "scenario_type": "standard",
     "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
     "metadata": {}
   },
   {
@@ -190,6 +202,9 @@
     "answerability": "answerable",
     "scenario_type": "standard",
     "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
     "metadata": {}
   },
   {
@@ -226,6 +241,9 @@
     "answerability": "answerable",
     "scenario_type": "standard",
     "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
     "metadata": {}
   },
   {
@@ -262,7 +280,13 @@
     "answerability": "answerable",
     "scenario_type": "standard",
     "split": "dev",
-    "metadata": {}
+    "pair_id": "pair_harbornet_q2",
+    "pair_role": "control",
+    "reviewed": false,
+    "metadata": {
+      "pair_id": "pair_harbornet_q2",
+      "pair_role": "control"
+    }
   },
   {
     "id": "v1_008",
@@ -298,6 +322,9 @@
     "answerability": "answerable",
     "scenario_type": "standard",
     "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
     "metadata": {}
   },
   {
@@ -334,6 +361,9 @@
     "answerability": "answerable",
     "scenario_type": "standard",
     "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
     "metadata": {}
   },
   {
@@ -370,6 +400,9 @@
     "answerability": "answerable",
     "scenario_type": "standard",
     "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
     "metadata": {}
   },
   {
@@ -406,6 +439,9 @@
     "answerability": "answerable",
     "scenario_type": "standard",
     "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
     "metadata": {}
   },
   {
@@ -435,6 +471,9 @@
     "answerability": "answerable",
     "scenario_type": "standard",
     "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
     "metadata": {}
   },
   {
@@ -471,9 +510,14 @@
     "answerability": "answerable",
     "scenario_type": "mixed_support",
     "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
     "metadata": {
       "example_mixed_answer": "Influenza A and B viruses cause seasonal epidemics of disease in people almost every winter in the United States. Influenza D viruses also cause seasonal epidemics in people.",
-      "rq3_note": "Token F1 vs gold stays high if the mixed sentence is appended; claim labels are mixed."
+      "rq3_note": "Token F1 vs gold stays high if the mixed sentence is appended; claim labels are mixed.",
+      "reviewer_notes": "Hand-checked mixed-support exemplar for RQ3.",
+      "reviewed": true
     }
   },
   {
@@ -508,6 +552,9 @@
     "answerability": "answerable",
     "scenario_type": "mixed_support",
     "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
     "metadata": {
       "example_mixed_answer": "The Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude. Armstrong remained on the lunar surface for 14 days."
     }
@@ -544,6 +591,9 @@
     "answerability": "answerable",
     "scenario_type": "mixed_support",
     "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
     "metadata": {
       "example_mixed_answer": "HarborNet reported subscription revenue of $412 million for the second quarter of 2025 and employed 48,000 people in Osaka."
     }
@@ -582,8 +632,46 @@
     "answerability": "answerable",
     "scenario_type": "mixed_support",
     "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
     "metadata": {
       "example_mixed_answer": "Yellowstone was established primarily to protect hydrothermal areas that contain about half the world's active geysers. Yellowstone contains no hydrothermal features."
+    }
+  },
+  {
+    "id": "v1_025",
+    "domain": "public_health",
+    "question": "Are influenza D viruses known to cause illness in people?",
+    "gold_answer": "No. Influenza D viruses are not known to cause illness in people.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cdc_flu_types",
+        "span": "Influenza D viruses primarily affect cattle with spillover to other animals but are not known to cause illness in people.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Influenza D viruses are not known to cause illness in people",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_flu_types"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "numerical_negation",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked negation item. The gold is the negated CDC clause; the same sentence also names cattle (numerical/entity distractors live in sibling docs).",
+      "reviewed": true
     }
   }
 ]

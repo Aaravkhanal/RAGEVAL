@@ -10,9 +10,10 @@ This project was previously prototyped under the name RAGTruth. It is **not** th
 - Atomic claim decomposition and NLI verification (`supported` / `unsupported` / `contradicted`, plus `partially_supported` and `ambiguous` in the schema).
 - Citation existence and support-conditioned citation metrics.
 - A **synthetic smoke dataset** (8 documents, 8 questions). It is author-written fiction, not SEC/NEJM/OSDI source text.
-- A **licensed benchmark_v1** (16 documents, 24 questions): short U.S. government public-domain excerpts plus original CC-BY-4.0 fiction. See `data/cards/benchmark_v1.md`.
+- A **licensed benchmark_v1** (18 documents, 28 questions in v1.1.0): short U.S. government public-domain excerpts plus original CC-BY-4.0 fiction. See `data/cards/benchmark_v1.md`. The committed ablation tables used v1.0.0 (16/24).
 - Answer-level EM / token F1 alongside claim-level support (RQ3).
 - Official metric registry (`rageval.metrics.registry`) with no composite overall score.
+- Adversarial scenarios with a failure taxonomy (`docs/FAILURE_TAXONOMY.md`) and robustness means by `scenario_type`.
 - CLI, FastAPI live claim audit, and pytest suite.
 
 Official generation for smoke tests is a **blinded mock** that cannot read gold `test_type` labels.
@@ -68,6 +69,8 @@ rageval serve --port 8000
 - `docs/RESEARCH_SPEC.md` — research questions
 - `docs/TERMINOLOGY.md`
 - `docs/METRIC_DEFINITIONS.md`
+- `docs/FAILURE_TAXONOMY.md`
+- `reports/error_analysis_phase6.md`
 - `docs/RELATED_WORK.md`
 - `data/cards/smoke_v1.md` — smoke corpus card
 - `data/cards/benchmark_v1.md` — licensed pilot card

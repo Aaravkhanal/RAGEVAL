@@ -13,6 +13,7 @@ from rageval.core.schemas import (
 )
 from rageval.benchmark.run_store import git_commit
 from rageval.core.config import PipelineConfig
+from rageval.metrics.aggregate import robustness_by_scenario_type
 from rageval.pipeline.rag import RAGPipeline
 from rageval.evaluator.evaluator import RAGEvalEvaluator
 
@@ -79,6 +80,7 @@ class BenchmarkRunner:
                 mixed_support_n=0,
                 mixed_support_mean_answer_f1=None,
                 mixed_support_mean_faithfulness=None,
+                robustness_by_scenario={},
                 total_estimated_cost_usd=None,
                 dataset_id=dataset_id,
                 dataset_version=dataset_version,
@@ -142,6 +144,7 @@ class BenchmarkRunner:
             mixed_support_n=len(mixed),
             mixed_support_mean_answer_f1=None if not mixed_f1 else round(float(np.mean(mixed_f1)), 4),
             mixed_support_mean_faithfulness=None if not mixed_faith else round(float(np.mean(mixed_faith)), 4),
+            robustness_by_scenario=robustness_by_scenario_type(results),
             total_estimated_cost_usd=None if not costs else round(float(sum(costs)), 6),
             dataset_id=dataset_id,
             dataset_version=dataset_version,

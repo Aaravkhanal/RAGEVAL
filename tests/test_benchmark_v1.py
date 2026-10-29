@@ -12,15 +12,15 @@ def test_benchmark_v1_integrity_and_licenses():
     docs = loader.load_corpus()
     items = loader.load_benchmark("all")
     report = validate_benchmark_integrity(
-        docs, items, require_license=True, require_verbatim_spans=True
+        docs, items, require_license=True, require_verbatim_spans=True, require_reviewed_scenarios=True
     )
     assert report["valid"] is True, report["errors"]
-    assert len(docs) == 16
-    assert len(items) == 24
+    assert len(docs) == 18
+    assert len(items) == 28
     assert all(doc.license for doc in docs)
     n_dev = sum(1 for item in items if item.split == "dev")
     n_test = sum(1 for item in items if item.split == "test")
-    assert n_dev == 16
+    assert n_dev == 20
     assert n_test == 8
 
 
@@ -47,7 +47,7 @@ def test_validate_cli_benchmark_v1():
     assert proc.returncode == 0, proc.stderr
     report = json.loads(proc.stdout)
     assert report["valid"] is True
-    assert report["total_benchmark_items"] == 24
+    assert report["total_benchmark_items"] == 28
 
 
 def test_smoke_loader_still_defaults():

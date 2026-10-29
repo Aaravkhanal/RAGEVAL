@@ -1,0 +1,99 @@
+[
+  {
+    "id": "v1_007",
+    "domain": "finance",
+    "question": "What was HarborNet's Q2 2025 subscription revenue and monthly churn?",
+    "gold_answer": "HarborNet reported subscription revenue of $412 million for Q2 2025 and monthly churn of 1.8%.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_harbornet_q2",
+        "span": "HarborNet reported subscription revenue of $412 million for the second quarter of 2025, a 9% increase from $378 million in Q2 2024. Average revenue per user was $54.10. Monthly churn was 1.8%.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "HarborNet Q2 2025 subscription revenue was $412 million",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_q2"
+        ]
+      },
+      {
+        "claim": "Monthly churn was 1.8%",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_q2"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": "pair_harbornet_q2",
+    "pair_role": "control",
+    "reviewed": false,
+    "metadata": {
+      "pair_id": "pair_harbornet_q2",
+      "pair_role": "control"
+    }
+  },
+  {
+    "id": "v1_028",
+    "domain": "finance",
+    "question": "What was HarborNet's Q2 2025 subscription revenue and monthly churn?",
+    "gold_answer": "Sources conflict. The earnings release reports $412 million subscription revenue and 1.8% monthly churn. The later restatement reports $280 million and 6.4% churn and says it supersedes the earlier release.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_harbornet_q2",
+        "span": "HarborNet reported subscription revenue of $412 million for the second quarter of 2025, a 9% increase from $378 million in Q2 2024. Average revenue per user was $54.10. Monthly churn was 1.8%.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_harbornet_restatement",
+        "span": "HarborNet later restated Q2 2025 subscription revenue as $280 million, not the $412 million previously reported, and monthly churn as 6.4%.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The earnings release reported $412 million subscription revenue and 1.8% monthly churn",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_q2"
+        ]
+      },
+      {
+        "claim": "The restatement reported $280 million subscription revenue and 6.4% monthly churn",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_restatement"
+        ]
+      }
+    ],
+    "test_type": "conflicting",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "conflicting",
+    "split": "dev",
+    "pair_id": "pair_harbornet_q2",
+    "pair_role": "with_conflict",
+    "reviewed": true,
+    "metadata": {
+      "conflict_docs": [
+        "doc_harbornet_q2",
+        "doc_harbornet_restatement"
+      ],
+      "control_item_id": "v1_007",
+      "reviewer_notes": "Paired with v1_007: same question, added restatement document.",
+      "pair_id": "pair_harbornet_q2",
+      "pair_role": "with_conflict",
+      "reviewed": true
+    }
+  }
+]

@@ -38,6 +38,16 @@ Mixed-support items: at least one `supported` gold claim and at least one non-su
 
 - Unanswerable: `expected_abstention=true`, empty gold spans, `gold_answer=null`.
 - Conflicting: two documents that cannot both be true; gold answer must state the conflict.
+- Paired conflict: same `question` as a control item, `pair_id` shared, `pair_role=with_conflict`, plus the added conflict document.
+
+## Other adversarial scenarios
+
+- Lexical distractor (`scenario_type=distractor`): gold lives in a small subset; other corpus docs share little more than tokens.
+- Numerical/negation: gold hinges on a number or a negation (`not`, `no`, `never`).
+- Empty context: `scenario_type=empty_context`; the harness drops retrieved chunks before generation.
+- Instruction-like: a document contains assistant instructions that contradict gold. Gold stays on the evidence document.
+
+Reviewed exemplars set `reviewed=true`. Synthetic `PerturbationEngine` items stay `reviewed=false`.
 
 ## Answer-level gold
 

@@ -78,6 +78,9 @@ class BenchmarkItem(BaseModel):
     answerability: str = "answerable"
     scenario_type: str = "standard"
     split: str = "smoke"
+    pair_id: Optional[str] = None
+    pair_role: Optional[str] = None
+    reviewed: bool = False
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
 
@@ -196,6 +199,7 @@ class BenchmarkRunSummary(BaseModel):
     mixed_support_n: int = 0
     mixed_support_mean_answer_f1: Optional[float] = None
     mixed_support_mean_faithfulness: Optional[float] = None
+    robustness_by_scenario: Dict[str, Any] = Field(default_factory=dict)
     total_estimated_cost_usd: Optional[float] = None
     run_id: Optional[str] = None
     dataset_id: Optional[str] = None

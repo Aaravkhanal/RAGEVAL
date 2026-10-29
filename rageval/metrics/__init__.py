@@ -22,6 +22,7 @@ from rageval.metrics.citation import (
     citation_marker_recall,
     citation_support_precision,
 )
+from rageval.metrics.aggregate import robustness_by_scenario_type, summarize_results
 from rageval.metrics.registry import (
     REGISTRY,
     get_metric,
@@ -57,6 +58,8 @@ __all__ = [
     "get_metric",
     "official_metrics",
     "has_overall_score",
+    "summarize_results",
+    "robustness_by_scenario_type",
     "normalize_answer",
     "exact_match",
     "token_f1",

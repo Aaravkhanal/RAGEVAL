@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import json
 import os
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from rageval.core.schemas import Document, BenchmarkItem
 from rageval.dataset.generator import save_benchmark_data
+from rageval.dataset.pairs import PairedScenario, group_paired_items
 
 
 SMOKE_DATASET_ID = "smoke_v1"
@@ -85,6 +86,10 @@ class DatasetLoader:
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
         return [BenchmarkItem(**item) for item in data]
+
+    def load_paired_items(self, split: str = "all") -> Dict[str, PairedScenario]:
+        """Load control/conflict pairs (same question, added conflict document)."""
+        return group_paired_items(self.load_benchmark(split))
 
     def load_manifest(self) -> Optional[dict]:
         path = os.path.join(self.data_dir, "manifests", f"{self.dataset_id}.json")

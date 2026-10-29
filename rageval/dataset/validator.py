@@ -4,8 +4,10 @@ from __future__ import annotations
 
 from typing import Any, Dict, List
 
+from rageval.analysis.failure_taxonomy import REQUIRED_REVIEWED_SCENARIOS
 from rageval.core.labels import VerificationLabel
 from rageval.core.schemas import BenchmarkItem, Document, TestType
+from rageval.dataset.pairs import group_paired_items
 
 
 def validate_benchmark_integrity(
@@ -14,6 +16,7 @@ def validate_benchmark_integrity(
     *,
     require_license: bool = False,
     require_verbatim_spans: bool = False,
+    require_reviewed_scenarios: bool = False,
 ) -> Dict[str, Any]:
     """Validates that:
 
@@ -67,6 +70,23 @@ def validate_benchmark_integrity(
                 errors.append(
                     f"Mixed-support item {item.id} has only supported gold claims"
                 )
+
+    if require_reviewed_scenarios:
+        reviewed_scenarios = {
+            item.scenario_type for item in items if item.reviewed or item.metadata.get("reviewed")
+        }
+        for scenario in REQUIRED_REVIEWED_SCENARIOS:
+            if scenario not in reviewed_scenarios:
+                errors.append(f"Missing reviewed item for scenario_type={scenario!r}")
+
+        pairs = group_paired_items(items)
+        if not pairs:
+            errors.append("No paired control/conflict items (pair_id) found")
+        for pid, pair in pairs.items():
+            if not pair.is_complete():
+                errors.append(f"Pair {pid} is missing control or with_conflict")
+            elif not pair.same_question():
+                errors.append(f"Pair {pid} control and conflict questions differ")
 
     return {
         "valid": len(errors) == 0,

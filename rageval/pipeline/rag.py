@@ -3,6 +3,7 @@
 from __future__ import annotations
 import time
 from typing import List, Optional, Tuple
+from rageval.analysis.failure_taxonomy import apply_retrieval_protocol
 from rageval.core.schemas import Document, Chunk, RetrievedChunk, BenchmarkItem
 from rageval.core.config import PipelineConfig
 from rageval.pipeline.chunkers import get_chunker
@@ -92,6 +93,7 @@ class RAGPipeline:
         # 1. Retrieval
         t0 = time.perf_counter()
         retrieved = self.retrieve(question)
+        retrieved = apply_retrieval_protocol(item, retrieved)
         retrieval_ms = (time.perf_counter() - t0) * 1000.0
 
         # 2. Generation

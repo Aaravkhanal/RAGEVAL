@@ -79,5 +79,6 @@ def test_write_metrics_bundle(tmp_path):
     assert path.endswith("aggregate.json")
     text = (tmp_path / "metrics" / "aggregate.json").read_text()
     assert '"overall_score": null' in text
+    assert '"by_scenario"' in text
     lines = (tmp_path / "metrics" / "per_example.jsonl").read_text().strip().splitlines()
     assert len(lines) == 2

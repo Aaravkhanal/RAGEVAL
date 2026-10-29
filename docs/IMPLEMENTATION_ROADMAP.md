@@ -64,7 +64,7 @@ Existing `rageval` modules are the implementation surface. New files are added o
 
 ## Phase 2 — Dataset construction and ground-truth design
 
-**Status:** Complete for the licensed 24-item pilot (`benchmark_v1`). Expansion toward 50–150 items remains a later increment.
+**Status:** Complete for the licensed pilot (`benchmark_v1` v1.1.0, 28 items). Expansion toward 50–150 items remains a later increment.
 
 **Objective:** A versioned, licensed, small-but-valid benchmark plus retention of the current 8-item set as `smoke`.
 
@@ -204,6 +204,8 @@ Existing `rageval` modules are the implementation surface. New files are added o
 ---
 
 ## Phase 6 — Adversarial evaluation and robustness
+
+**Status:** Complete for the reviewed v1.1 adversarial increment (paired HarborNet conflict, empty-context protocol, instruction-like document, numerical/negation, robustness-by-scenario, failure taxonomy). Phase 7 is not authorized by this increment.
 
 **Objective:** Controlled paired scenarios with a failure taxonomy.
 

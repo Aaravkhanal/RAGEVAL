@@ -1,18 +1,19 @@
 {
   "dataset_id": "benchmark_v1",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "synthetic": false,
   "license": "mixed: US-government-work-public-domain-17USC105 and CC-BY-4.0 original fiction",
   "documents": "data/datasets/benchmark_v1/corpus.json",
   "items_all": "data/datasets/benchmark_v1/items.json",
   "items_dev": "data/datasets/benchmark_v1/items_dev.json",
   "items_test": "data/datasets/benchmark_v1/items_test.json",
-  "n_documents": 16,
-  "n_items": 24,
-  "n_dev": 16,
+  "items_paired": "data/datasets/benchmark_v1/items_paired.json",
+  "n_documents": 18,
+  "n_items": 28,
+  "n_dev": 20,
   "n_test": 8,
   "split_policy": "Documented 16/8 dev/test split. The first ablation reports the full 24-item set because n_test=8 is underpowered. Test items were not used to choose metrics or NLI thresholds.",
   "annotator": "single-author, disclosed",
   "retrieved_date": "2026-10-28",
-  "notes": "Public-domain excerpts are short US government passages with URL provenance. HarborNet, LumenGrid, Nerexin, CedarRail, and Millford are original fiction (CC-BY-4.0). NASA quotes were ASCII-normalized. This is not the Niu et al. 2024 RAGTruth corpus."
+  "notes": "Public-domain excerpts are short US government passages with URL provenance. HarborNet, LumenGrid, Nerexin, CedarRail, Millford, the HarborNet restatement, and the instruction-like document are original fiction (CC-BY-4.0). NASA quotes were ASCII-normalized. This is not the Niu et al. 2024 RAGTruth corpus. v1.1.0 adds reviewed numerical/negation, empty-context, instruction-like, and paired conflict items."
 }

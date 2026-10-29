@@ -63,6 +63,34 @@ def summarize_results(
     return payload
 
 
+def robustness_by_scenario_type(
+    results: Iterable[QueryEvaluationResult],
+    *,
+    independent: bool = False,
+) -> Dict[str, Any]:
+    """Named-metric means sliced by `scenario_type`. No overall score."""
+    groups: Dict[str, List[QueryEvaluationResult]] = {}
+    for result in results:
+        key = result.scenario_type or "unknown"
+        groups.setdefault(key, []).append(result)
+    out: Dict[str, Any] = {}
+    for key in sorted(groups):
+        summary = summarize_results(groups[key], independent=independent)
+        out[key] = {
+            "n": summary["n"],
+            "claim_support_rate": summary["claim_support_rate"]["mean"],
+            "unsupported_claim_rate": summary["unsupported_claim_rate"]["mean"],
+            "contradiction_rate": summary["contradiction_rate"]["mean"],
+            "recall_at_5": summary["recall_at_5"]["mean"],
+            "mrr": summary["mrr"]["mean"],
+            "answer_em": summary["answer_em"]["mean"],
+            "answer_f1": summary["answer_f1"]["mean"],
+            "abstention_accuracy": summary["abstention_accuracy"],
+            "citation_support_precision": summary["citation_support_precision"]["mean"],
+        }
+    return out
+
+
 def write_metrics_bundle(
     run_dir: str,
     summaries: List[BenchmarkRunSummary],
@@ -77,6 +105,9 @@ def write_metrics_bundle(
     with open(example_path, "w", encoding="utf-8") as f:
         for summary in summaries:
             by_config[summary.config_name] = summarize_results(
+                summary.results, independent=independent
+            )
+            by_config[summary.config_name]["by_scenario"] = robustness_by_scenario_type(
                 summary.results, independent=independent
             )
             for result in summary.results:
@@ -95,6 +126,7 @@ def write_metrics_bundle(
                     "answer_em": result.answer_em,
                     "answer_f1": result.answer_f1,
                     "abstained": result.abstained,
+                    "scenario_type": result.scenario_type,
                     "total_latency_ms": result.total_latency_ms,
                     "estimated_cost_usd": result.estimated_cost_usd,
                 }
