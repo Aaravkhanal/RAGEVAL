@@ -15,5 +15,5 @@ Use before tagging. Version on this branch: **0.2.0rc1** (tag `v0.2.0-rc1`).
 - [ ] README extras and corpus description match `data/cards/`
 - [ ] `POST /benchmark/run` is 410; evaluate-on-context stays sync
 - [ ] `POST /experiments` with `config=smoke` returns 202; poll `GET /experiments/{id}` until complete; unknown names 400; heavy without `allow_heavy` 403; second job 409
-- [ ] `gh workflow run nightly.yml` (or Actions → RAGeval slow tests) is green; URL recorded in `docs/REPRODUCIBILITY.md`
+- [x] `gh workflow run nightly.yml` (or Actions → RAGeval slow tests) is green; URL recorded in `docs/REPRODUCIBILITY.md` ([run 40891849818](https://github.com/Aaravkhanal/RAGEVAL/actions/runs/40891849818))
 - [ ] Tag annotated `v0.2.0-rc1`; do not claim SOTA or confirmatory RAG rankings

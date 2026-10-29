@@ -70,7 +70,7 @@ gh workflow run nightly.yml --repo Aaravkhanal/RAGEVAL
 # Actions tab: https://github.com/Aaravkhanal/RAGEVAL/actions/workflows/nightly.yml
 ```
 
-First proven green run (fill after `workflow_dispatch` succeeds): _pending this phase’s dispatch._
+First proven green run: [40891849818](https://github.com/Aaravkhanal/RAGEVAL/actions/runs/40891849818) (`workflow_dispatch`, commit `94c9eeb`, 2026-10-29). Python 3.12, hashed `requirements-lock-all.txt`, CPU torch. NLI/evaluator: 8 passed, 122 deselected in 29 s. Embed/FAISS: 2 passed in 9 s. Hub cache saved (~757 MB) for later weekly runs.
 
 ## Smoke (CI / extra-env)
 

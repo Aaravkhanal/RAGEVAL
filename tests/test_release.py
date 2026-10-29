@@ -57,6 +57,9 @@ def test_hf_workflow_is_strict():
     assert "pytest -m hf" in nightly
     assert "workflow_dispatch" in nightly
     assert "0 6 * * 1" in nightly
+    repro = (ROOT / "docs" / "REPRODUCIBILITY.md").read_text(encoding="utf-8")
+    assert "https://github.com/Aaravkhanal/RAGEVAL/actions/runs/" in repro
+    assert "pending this phase" not in repro
 
 
 def test_smoke_experiment_yaml():
