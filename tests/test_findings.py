@@ -90,3 +90,20 @@ def test_render_includes_run_id():
     text = render_findings(metrics, run_id="abc", case_studies=[], significance=None)
     assert "`abc`" in text
     assert_findings_text_allowed(text, metrics)
+
+
+def test_v11_findings_do_not_claim_new_items_unscored():
+    metrics = _metrics_from_recalls(0.5, 0.5)
+    metrics["dataset_id"] = "benchmark_v1"
+    metrics["dataset_version"] = "1.1.0"
+    metrics["n_items"] = 28
+    metrics["n_documents"] = 18
+    metrics["label"] = "v1"
+    text = render_findings(metrics, run_id="run_v11", case_studies=[], significance=None)
+    assert "v1_025" not in text or "unscored" not in text.split("v1_025")[1][:80]
+    assert "unscored" not in text
+    assert "28" in text
+    assert "18 documents" in text
+    assert "v1_1_matrix" in text
+    assert "20261028T183042Z_a97ad68f" in text
+    assert_findings_text_allowed(text, metrics)

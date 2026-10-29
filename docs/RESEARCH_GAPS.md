@@ -1,19 +1,18 @@
 # Research Gaps and Threats to Validity
 
-## Status after Phase 8 (2026-10-29)
+## Status after the v1.1.0 companion run (2026-10-29)
 
-The Phase 0 list below is **historical**. Closed for the licensed pilot: synthetic-as-SEC disclosure, generator blinding, metric registry, citation support vs existence, answer-level EM/F1, verifier gold set, unique run dirs, `metrics.json` tables, no overall score.
+The Phase 0 list below is **historical**. Closed for the licensed pilot: synthetic-as-SEC disclosure, generator blinding, metric registry, citation support vs existence, answer-level EM/F1, verifier gold set, unique run dirs, `metrics.json` tables, no overall score. `v1_025`–`v1_028` are scored in companion run `20261029T165024Z_657c8089`.
 
 **Still blocking confirmatory RAG claims**
 
-- $n=24$ items / 16 documents on the recorded run (`20261028T183042Z_a97ad68f`); items share documents.
+- Official published tables remain $n=24$ / 16 documents (`20261028T183042Z_a97ad68f`). The v1.1.0 companion is $n=28$ / 18 documents — still underpowered (confirmatory $n\ge 30$ i.i.d.); items share documents.
 - Official generator is a blinded mock, not an LLM.
 - Single-author gold; no IAA.
-- RQ1 Recall@5/MRR identical across six configs — retrieval IVs are not identifiable here.
-- v1.1.0 items (`v1_025`–`v1_028`) have no scores in that run.
-- `paper.tex` is a draft whose table now matches `metrics.json`; it is still not a confirmatory paper.
+- RQ1 Recall@5 is identical across six configs on both recorded runs (0.8333 on v1.0.0, 0.8571 on v1.1.0). MRR differs on v1.1.0; that difference is diagnostic only.
+- `paper.tex` is a draft whose table matches the v1.0.0 published run; it is still not a confirmatory paper.
 
-Honest write-up: `reports/20261028T183042Z_a97ad68f/FINDINGS.md`.
+Honest write-ups: `reports/20261028T183042Z_a97ad68f/FINDINGS.md` (published v1.0.0) and `reports/20261029T165024Z_657c8089/FINDINGS.md` (companion v1.1.0).
 
 ---
 

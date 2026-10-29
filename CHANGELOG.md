@@ -5,7 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-**Software versions do not replace the recorded ablation.** Official tables under `reports/` are from blinded-mock run [`20261028T183042Z_a97ad68f`](reports/20261028T183042Z_a97ad68f/FINDINGS.md) on `benchmark_v1` **1.0.0** (16 documents, 24 items). $n=24$ is underpowered. This changelog is a packaging history, not a confirmatory RAG ranking.
+**Software versions do not replace the recorded ablation.** Official tables under `reports/` are from blinded-mock run [`20261028T183042Z_a97ad68f`](reports/20261028T183042Z_a97ad68f/FINDINGS.md) on `benchmark_v1` **1.0.0** (16 documents, 24 items). $n=24$ is underpowered. A companion v1.1.0 mock+NLI run is [`20261029T165024Z_657c8089`](reports/20261029T165024Z_657c8089/FINDINGS.md) (18 documents, 28 items); it does not replace the published table. This changelog is a packaging history, not a confirmatory RAG ranking.
+
+## [Unreleased]
+
+### Added
+
+- Companion `benchmark_v1` **1.1.0** six-config mock + DeBERTa NLI ablation (`20261029T165024Z_657c8089`, 18 documents, 28 items). Tables: `reports/phase7/v1_1_matrix/`. Official published tables remain `20261028T183042Z_a97ad68f`. n=28 is still underpowered.
+
+### Fixed
+
+- `rageval benchmark` no longer raises `UnboundLocalError` on `BenchmarkReporter` after the suite finishes (local import in the findings branch shadowed the module import).
 
 ## [0.2.1] - 2026-10-29
 

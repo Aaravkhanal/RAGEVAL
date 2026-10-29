@@ -190,7 +190,6 @@ def main():
     elif args.command == "findings":
         from rageval.analysis.findings import load_case_studies, write_findings
         from rageval.analysis.paper_plots import generate_figures_from_metrics
-        from rageval.benchmark.reporter import BenchmarkReporter
 
         metrics = BenchmarkReporter.load_metrics(args.metrics)
         cases = load_case_studies(args.case_studies) if args.case_studies else []

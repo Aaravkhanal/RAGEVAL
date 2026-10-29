@@ -101,6 +101,36 @@ def test_reports_match_recorded_metrics():
     assert_findings_text_allowed(findings, metrics)
 
 
+def test_v11_companion_snapshot_does_not_replace_published_tables():
+    v11 = BenchmarkReporter.load_metrics(str(ROOT / "reports" / "phase7" / "v1_1_matrix" / "metrics.json"))
+    v10 = BenchmarkReporter.load_metrics(str(ROOT / "reports" / "phase7" / "v1_matrix" / "metrics.json"))
+    assert v10["n_items"] == 24
+    assert v10["dataset_version"] == "1.0.0"
+    assert v11["n_items"] == 28
+    assert v11["dataset_version"] == "1.1.0"
+    assert v11.get("n_documents") == 18
+    assert v11.get("overall_score") is None
+    assert v11["by_config"]["Dense_Chunk256_Baseline"]["claim_support_rate"]["mean"] == 0.3929
+    assert v10["by_config"]["Dense_Chunk256_Baseline"]["claim_support_rate"]["mean"] == 0.4375
+    findings = (ROOT / "reports" / "20261029T165024Z_657c8089" / "FINDINGS.md").read_text(encoding="utf-8")
+    paper = (ROOT / "reports" / "paper.tex").read_text(encoding="utf-8")
+    assert "16.4%" not in findings
+    assert "unscored" not in findings
+    assert "0.8571" in findings
+    assert "20261028T183042Z_a97ad68f" in findings
+    assert "0.4375" in paper
+    assert_findings_text_allowed(findings, v11)
+
+
+def test_cli_benchmark_reporter_import_is_module_level():
+    src = (ROOT / "rageval" / "cli.py").read_text(encoding="utf-8")
+    matches = [
+        line for line in src.splitlines() if "from rageval.benchmark.reporter import BenchmarkReporter" in line
+    ]
+    assert len(matches) == 1
+    assert not matches[0].startswith(" ")
+
+
 def test_tracked_text_has_no_live_credentials():
     skip_dirs = {".git", ".venv", "venv", "env", "__pycache__", "experiments", "rageval.egg-info", "ragtruth.egg-info"}
     skip_suffix = {".png", ".jpg", ".pyc", ".so", ".bin", ".pt"}

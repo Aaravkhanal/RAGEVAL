@@ -96,12 +96,20 @@ def render_findings(
     dataset_id = metrics.get("dataset_id") or "unknown"
     version = metrics.get("dataset_version") or ""
     n_items = metrics.get("n_items")
+    n_documents = metrics.get("n_documents")
     configs = metrics.get("by_config") or {}
     baseline = "Dense_Chunk256_Baseline"
+    if version.startswith("1.1"):
+        tables_rel = "reports/phase7/v1_1_matrix"
+    else:
+        tables_rel = "reports/phase7/v1_matrix"
+    size_bits = [f"`{dataset_id}` {version}", f"n={n_items}"]
+    if n_documents is not None:
+        size_bits.append(f"{n_documents} documents")
     lines: List[str] = [
         f"# Findings — run `{run_id}`",
         "",
-        f"**Label:** `{label}`. **Dataset:** `{dataset_id}` {version}, n={n_items}.",
+        f"**Label:** `{label}`. **Dataset:** {', '.join(size_bits)}.",
         f"**Source:** `metrics.json` for run `{run_id}`.",
         "Every number below traces to that run or to a named companion file.",
         "Negative and inconclusive results are in scope. No overall score. No ranking claim.",
@@ -113,10 +121,19 @@ def render_findings(
         "- Cost: null (no pricing_source).",
         "- Items share documents, so they are not i.i.d. Bootstrap CIs are diagnostic.",
         f"- Confirmatory tests require n≥30 i.i.d. This run has n={n_items}.",
-        "",
-        "## RQ1 — retrieval family, chunk size, rerank",
-        "",
     ]
+    if version.startswith("1.1"):
+        lines.append(
+            "- Companion to the published v1.0.0 tables "
+            "(`20261028T183042Z_a97ad68f`). It does not replace them."
+        )
+    lines.extend(
+        [
+            "",
+            "## RQ1 — retrieval family, chunk size, rerank",
+            "",
+        ]
+    )
     recalls = {name: _mean(block, "recall_at_5") for name, block in configs.items()}
     mrrs = {name: _mean(block, "mrr") for name, block in configs.items()}
     faiths = {name: _mean(block, "claim_support_rate") for name, block in configs.items()}
@@ -130,9 +147,19 @@ def render_findings(
             "vs dense-only is **falsified on this corpus** (the means are equal)."
         )
     else:
-        lines.append(f"- Recall@5 by config: {recalls}.")
+        lines.append(
+            "- Recall@5 by config: "
+            + ", ".join(f"{name}={value}" for name, value in recalls.items())
+            + "."
+        )
     if len(unique_mrr) == 1:
         lines.append(f"- MRR is identical at {next(iter(unique_mrr))}.")
+    else:
+        lines.append(
+            "- MRR by config: "
+            + ", ".join(f"{name}={value}" for name, value in mrrs.items())
+            + "."
+        )
     if baseline in faiths:
         lines.append(
             f"- Claim support (faithfulness) is {faiths.get(baseline)} on {baseline}, "
@@ -145,11 +172,27 @@ def render_findings(
             f"- Computed relative Recall@5 lift, Hybrid_RRF_Chunk256 vs {baseline}: "
             f"{hybrid_lift:.1f}%."
         )
+    if len(unique_r5) == 1 and len(unique_mrr) == 1:
+        rq1_close = (
+            "- **Conclusion:** RQ1 retrieval differences are **not identifiable** "
+            "at this n and corpus size."
+        )
+    elif len(unique_r5) == 1:
+        rq1_close = (
+            "- **Conclusion:** Recall@5 remains identical, so an RQ1 Recall@5 ranking "
+            "is still not identifiable. MRR differs across configs; n is underpowered "
+            "and items share documents, so that difference is diagnostic only."
+        )
+    else:
+        rq1_close = (
+            "- **Conclusion:** Retrieval metrics differ across configs on this run; "
+            "n is underpowered and items share documents, so this is not a confirmatory ranking."
+        )
     lines.extend(
         [
-            "- Significance vs baseline is in `reports/phase7/v1_matrix/significance.json`. "
+            f"- Significance vs baseline is in `{tables_rel}/significance.json`. "
             "All comparisons have `underpowered=true` and `is_significant=false`.",
-            "- **Conclusion:** RQ1 retrieval differences are **not identifiable** at this n and corpus size.",
+            rq1_close,
             "",
             "## RQ2 — verifier vs gold claims",
             "",
@@ -178,23 +221,54 @@ def render_findings(
                 "while claim support ranges "
                 f"{min(r[3] for r in mixed_rows)}–{max(r[3] for r in mixed_rows)}."
             )
-        lines.append(
-            "- That is the RQ3 pattern on this slice: answer-level F1 does not move; "
-            "claim support does. n=4 is too small to confirm the hypothesis beyond this pilot."
-        )
+        mixed_n = mixed_rows[0][1]
+        if len(f1s) == 1:
+            lines.append(
+                "- That is the RQ3 pattern on this slice: answer-level F1 does not move; "
+                f"claim support does. n={mixed_n} is too small to confirm the hypothesis beyond this pilot."
+            )
+        else:
+            lines.append(
+                "- Mixed-support token F1 also differs across configs. "
+                f"n={mixed_n} is too small to confirm RQ3 beyond this pilot."
+            )
     lines.extend(
         [
             "",
             "## RQ4 — unanswerable / conflicting under a blinded generator",
             "",
-            f"- Ablation abstention accuracy is **0.0** on all configs (run `{run_id}`).",
-            "- Unanswerable items still retrieved context; the mock copies sentences and does not "
+        ]
+    )
+    abst = {name: block.get("abstention_accuracy") for name, block in configs.items()}
+    unique_abst = set(abst.values())
+    if len(unique_abst) == 1:
+        lines.append(
+            f"- Ablation abstention accuracy is **{next(iter(unique_abst))}** "
+            f"on all {len(configs)} configs (run `{run_id}`)."
+        )
+    elif abst:
+        lines.append(f"- Abstention accuracy by config: {abst}.")
+    empty_ns = []
+    for block in configs.values():
+        empty = (block.get("by_scenario") or {}).get("empty_context") or {}
+        if empty:
+            empty_ns.append(
+                (empty.get("n"), empty.get("abstention_accuracy"), empty.get("recall_at_5"))
+            )
+    if empty_ns:
+        n_empty, empty_abst, empty_r5 = empty_ns[0]
+        lines.append(
+            f"- Empty-context slice n={n_empty}: retrieval is dropped before generate "
+            f"(recall@5={empty_r5}); mock abstention_accuracy={empty_abst}."
+        )
+    lines.extend(
+        [
+            "- Other unanswerable items still retrieve context; the mock copies sentences and does not "
             "see `test_type` (`tests/test_generator_blind.py`).",
             "- A pre-blind historical smoke run had abstention 1.0 because the mock saw UNANSWERABLE. "
-            "After blinding, abstention on v1 unanswerables is 0.0. That matches RQ4: "
-            "gold-label leakage was driving abstention.",
+            "Gold-label leakage was driving that abstention.",
             "- Conflicting items: the mock copies one retrieved document and does not hedge "
-            "(see case `v1_017`).",
+            "(see case `v1_017` when present).",
             "",
             "## RQ5 — latency and cost",
             "",
@@ -251,7 +325,20 @@ def render_findings(
             "## Limitations",
             "",
             "- Mock generator, not an LLM.",
-            "- n=24 items / 16 documents; v1.1.0 items `v1_025`–`v1_028` are unscored.",
+        ]
+    )
+    if version.startswith("1.0") or n_items == 24:
+        lines.append(
+            f"- n={n_items} items / {n_documents or 16} documents; "
+            "v1.1.0 items `v1_025`–`v1_028` are unscored in this run."
+        )
+    else:
+        lines.append(
+            f"- n={n_items} items / {n_documents or '?'} documents. "
+            "Still underpowered (confirmatory n≥30 i.i.d.)."
+        )
+    lines.extend(
+        [
             "- Single-author gold. No IAA.",
             "- Dense chunk overlap in this run was 16/32/64, not the Phase 7 A_chunk fixed-32 protocol.",
             "- Faithfulness is support-by-retrieved-evidence, not world truth.",
@@ -260,8 +347,10 @@ def render_findings(
             "## Files",
             "",
             f"- Run id: `{run_id}`",
-            "- Tables: `reports/phase7/v1_matrix/metrics.json`",
-            "- Errors: `reports/error_analysis_phase6.md`",
+            f"- Tables: `{tables_rel}/metrics.json`",
+            "- Errors: `reports/error_analysis_v1_1.md`"
+            if version.startswith("1.1")
+            else "- Errors: `reports/error_analysis_phase6.md`",
             "- RQ2: `reports/verifier_eval_v1.md`",
             "",
         ]

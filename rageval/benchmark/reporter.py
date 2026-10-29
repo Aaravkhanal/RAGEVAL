@@ -163,10 +163,20 @@ class BenchmarkReporter:
                 f"| {name} | {mixed.get('n')} | {mixed.get('answer_f1')} | "
                 f"{mixed.get('claim_support_rate')} |"
             )
+        mixed_n = None
+        for block in (metrics.get("by_config") or {}).values():
+            mixed = (block.get("by_scenario") or {}).get("mixed_support") or {}
+            if mixed and mixed.get("n") is not None:
+                mixed_n = mixed.get("n")
+                break
+        version = metrics.get("dataset_version") or ""
+        n_note = f"n on this slice is {mixed_n}." if mixed_n is not None else "n on this slice is small."
+        if version:
+            n_note = n_note[:-1] + f" Dataset version {version}."
         lines.extend(
             [
                 "",
-                "No overall score. n on this slice is 4 in the recorded v1.0.0 run.",
+                f"No overall score. {n_note}",
                 "",
             ]
         )

@@ -155,6 +155,7 @@ def save_run(
         "timestamp_utc": env.get("timestamp_utc"),
         "n_items": (extra_manifest or {}).get("n_items")
         or (summaries[0].total_queries if summaries else 0),
+        "n_documents": (extra_manifest or {}).get("n_documents"),
     }
     write_metrics_bundle(run_dir, summaries, independent=False, extra=extra)
     write_run_status(

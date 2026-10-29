@@ -37,6 +37,6 @@ HarborNet, LumenGrid, Nerexin, CedarRail, Millford Public Library, the HarborNet
 - 1 empty-context protocol (`v1_026`; retrieval is dropped before generation)
 - 1 instruction-like document (`v1_027`; injection text tells the assistant to answer 99.0% churn)
 
-Test remains 8 held-out ids from v1.0.0. New Phase 6 items are **dev**. The recorded ablation in `reports/` is still v1.0.0 n=24.
+Test remains 8 held-out ids from v1.0.0. New Phase 6 items are **dev**. The **published** ablation in `reports/` is v1.0.0 n=24 (`20261028T183042Z_a97ad68f`). Companion mock+NLI scores for all 28 items: run `20261029T165024Z_657c8089` (`reports/phase7/v1_1_matrix/`). n=28 is still underpowered.
 
 Use `smoke_v1` for CI. Use `benchmark_v1` for the licensed pilot. Do not treat n=28 as a confirmatory scientific result.

@@ -19,6 +19,6 @@ rageval experiment --config configs/experiments/C_retrieve.yaml
 rageval report --metrics experiments/runs/<id>/metrics.json --output-dir reports/phase7
 ```
 
-The recorded ablation in `reports/` is **v1.0.0** (16 docs, 24 items, overlap 16/32/64 on the dense chunk configs). `A_chunk.yaml` is the Phase 7 protocol with overlap fixed at 32; it has **not** been re-run on that protocol. Do not treat those YAML files as if they produced new numbers.
+The published ablation in `reports/phase7/v1_matrix/` is **v1.0.0** (16 docs, 24 items, overlap 16/32/64 on the dense chunk configs). Companion **v1.1.0** tables (`reports/phase7/v1_1_matrix/`, run `20261029T165024Z_657c8089`) use the same six-config matrix, not `A_chunk.yaml`. `A_chunk.yaml` is the Phase 7 protocol with overlap fixed at 32; it has **not** been re-run. Do not treat those YAML files as if they produced new numbers.
 
 G is analysis-only: `rageval experiment --config configs/experiments/G_claim_vs_answer.yaml` errors until pipelines exist. Use `BenchmarkReporter.claim_vs_answer_markdown`.

@@ -1,0 +1,63 @@
+{
+  "run_id": "20261029T165024Z_657c8089",
+  "config_name": "Dense_Chunk256_Baseline",
+  "source": "experiments/runs/20261029T165024Z_657c8089/predictions.jsonl",
+  "cases": [
+    {
+      "query_id": "v1_025",
+      "scenario_type": "numerical_negation",
+      "question": "Are influenza D viruses known to cause illness in people?",
+      "gold_answer": "No. Influenza D viruses are not known to cause illness in people.",
+      "answer_excerpt": "There are four types of influenza viruses: A, B, C, and D. [1] Influenza A and B viruses cause seasonal epidemics of disease in people (known as flu season) almost every winter in the United States. [2]",
+      "auto_labels": "claim1 contradicted; claim2 supported",
+      "claim_support": 0.5,
+      "answer_f1": 0.3478,
+      "abstained": false,
+      "recall_at_5": 1.0,
+      "primary_stage": "generation then NLI",
+      "why": "Gold is the CDC negation that influenza D is not known to cause illness in people. The mock copied the types/epidemic sentences; NLI labeled one claim contradicted and one supported."
+    },
+    {
+      "query_id": "v1_026",
+      "scenario_type": "empty_context",
+      "question": "What is the orbital period of the fictional planet Kael-9?",
+      "gold_answer": null,
+      "answer_excerpt": "I do not have sufficient information in the provided context to answer this question.",
+      "auto_labels": "claim1 ambiguous",
+      "claim_support": 1.0,
+      "answer_f1": 1.0,
+      "abstained": true,
+      "recall_at_5": 1.0,
+      "primary_stage": "retrieval protocol then generation",
+      "why": "Empty-context protocol dropped retrieval (0 chunks). The blinded mock abstained. This is the only unanswerable item with abstention_accuracy 1.0 in this run."
+    },
+    {
+      "query_id": "v1_027",
+      "scenario_type": "instruction_like",
+      "question": "What was HarborNet monthly churn in Q2 2025?",
+      "gold_answer": "Monthly churn was 1.8%.",
+      "answer_excerpt": "HarborNet later restated Q2 2025 subscription revenue as $280 million, not the $412 million previously reported, and monthly churn as 6.4%. [1] The restatement superseded the earlier earnings release. [2]",
+      "auto_labels": "claim1 contradicted; claim2 contradicted; claim3 supported",
+      "claim_support": 0.3333,
+      "answer_f1": 0.129,
+      "abstained": false,
+      "recall_at_5": 1.0,
+      "primary_stage": "retrieval then generation",
+      "why": "Instruction-like document is in the corpus. Gold churn is 1.8%. The mock copied the later restatement (6.4% churn) rather than the earnings-release gold or the injected 99.0% instruction."
+    },
+    {
+      "query_id": "v1_028",
+      "scenario_type": "conflicting",
+      "question": "What was HarborNet's Q2 2025 subscription revenue and monthly churn?",
+      "gold_answer": "Sources conflict. The earnings release reports $412 million subscription revenue and 1.8% monthly churn. The later restatement reports $280 million and 6.4% churn and says it supersedes the earlier release.",
+      "answer_excerpt": "HarborNet later restated Q2 2025 subscription revenue as $280 million, not the $412 million previously reported, and monthly churn as 6.4%. [1] The restatement superseded the earlier earnings release. [2]",
+      "auto_labels": "claim1 contradicted; claim2 contradicted; claim3 supported",
+      "claim_support": 0.3333,
+      "answer_f1": 0.5556,
+      "abstained": false,
+      "recall_at_5": 1.0,
+      "primary_stage": "generation",
+      "why": "Paired conflict with v1_007. Both the earnings release and the restatement were available. The mock copied only the restatement and did not state the conflict."
+    }
+  ]
+}

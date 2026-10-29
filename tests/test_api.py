@@ -94,6 +94,10 @@ def test_experiments_committed_snapshot_results():
     assert body["metrics"]["n_items"] == 24
     assert body["table"]
     assert "run_dir" not in json.dumps(body)
+    assert "20261029T165024Z_657c8089" in ids
+    v11 = client.get("/experiments/20261029T165024Z_657c8089/results")
+    assert v11.status_code == 200
+    assert v11.json()["metrics"]["n_items"] == 28
 
 
 def test_experiment_secret_redaction(tmp_path, monkeypatch):

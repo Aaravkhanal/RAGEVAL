@@ -1,0 +1,26 @@
+{
+  "environment": {
+    "python": "3.13.13 | packaged by conda-forge | (main, Apr  8 2026, 02:29:07) [Clang 19.1.7 ]",
+    "platform": "macOS-14.5-arm64-arm-64bit-Mach-O",
+    "processor": "arm",
+    "git_commit": "041c93fb87ff23bcf3791254fd9a24f768c6698c",
+    "timestamp_utc": "2026-10-29T16:50:24.582673+00:00"
+  },
+  "configs": [
+    "Dense_Chunk128",
+    "Dense_Chunk256_Baseline",
+    "Dense_Chunk512",
+    "Sparse_BM25_Chunk256",
+    "Hybrid_RRF_Chunk256",
+    "Hybrid_RRF_Reranked"
+  ],
+  "label": "v1",
+  "experiment_id": "recorded_v1_1_0_matrix",
+  "data_dir": "data",
+  "dataset_id": "benchmark_v1",
+  "dataset_version": "1.1.0",
+  "split": "all",
+  "n_documents": 18,
+  "n_items": 28,
+  "source_run_id": "20261029T165024Z_657c8089"
+}

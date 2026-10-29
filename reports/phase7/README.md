@@ -1,14 +1,11 @@
 # Phase 7 tables
 
-**Label:** `v1`  
-**Source run:** `20261028T183042Z_a97ad68f` (`benchmark_v1` 1.0.0, 16 documents, 24 items)  
-**Generator:** blinded mock  
-**Verifier:** DeBERTa NLI  
+**Published (v1.0.0):** `v1_matrix/` from run `20261028T183042Z_a97ad68f` (`benchmark_v1` 1.0.0, 16 documents, 24 items), blinded mock + DeBERTa NLI.
 
-`v1_matrix/metrics.json` was **exported** from that recorded run. No new NLI or embedding scores were computed for Phase 7.
+**Companion (v1.1.0):** `v1_1_matrix/` from run `20261029T165024Z_657c8089` (`benchmark_v1` 1.1.0, 18 documents, 28 items), same six-config matrix (overlap 16/32/64). This does not replace `v1_matrix/`.
 
-Named YAML in `configs/experiments/` (A–G) is the protocol for future runs. `A_chunk.yaml` fixes overlap at 32; the recorded dense configs used overlap 16/32/64. Do not treat the YAML as if it produced these numbers.
+Named YAML in `configs/experiments/` (A–G) is the protocol for future runs. `A_chunk.yaml` fixes overlap at 32; both recorded dense configs used overlap 16/32/64. Do not treat the YAML as if it produced these numbers.
 
-`significance.json` compares each config to `Dense_Chunk256_Baseline`. n=24, so `underpowered=true` and `is_significant=false` even when a raw paired t-test p-value is below 0.05.
+`significance.json` compares each config to `Dense_Chunk256_Baseline`. n<30, so `underpowered=true` and `is_significant=false` even when a raw paired t-test p-value is below 0.05.
 
-G (claim vs answer) is `v1_matrix/G_claim_vs_answer.md` from the mixed-support slice (n=4).
+G (claim vs answer) is `G_claim_vs_answer.md` in each snapshot from the mixed-support slice (n=4).

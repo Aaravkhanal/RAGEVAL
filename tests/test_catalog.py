@@ -88,3 +88,7 @@ def test_committed_snapshot_listed_when_enabled(monkeypatch):
     payload = get_experiment_results("20261028T183042Z_a97ad68f")
     assert payload["metrics"]["n_items"] == 24
     assert payload["table"]
+    assert "20261029T165024Z_657c8089" in ids
+    v11 = get_experiment_results("20261029T165024Z_657c8089")
+    assert v11["metrics"]["n_items"] == 28
+    assert v11["metrics"]["dataset_version"] == "1.1.0"
