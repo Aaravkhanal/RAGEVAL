@@ -10,3 +10,4 @@ Longer threats list: `docs/RESEARCH_GAPS.md`. Honest v1 write-up: `reports/20261
 - v1.1.0 items `v1_025`–`v1_028` are unscored in run `20261028T183042Z_a97ad68f`.
 - This project is not Niu et al. 2024 RAGTruth.
 - HTTP jobs are process-local (one thread, one job). There is no Redis/Celery queue. Default HTTP config is smoke; a full NLI ablation needs `allow_heavy=true` or the CLI.
+- `requirements-lock-all.txt` is manylinux x86_64 CPU torch. It does not pin CUDA wheels and does not make NLI logits identical across machines.

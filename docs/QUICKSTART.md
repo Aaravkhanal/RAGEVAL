@@ -5,7 +5,8 @@ RAGeval is an installable Python package (`rageval`). It is **not** Niu et al. (
 ## Fast path (no Hugging Face models)
 
 ```bash
-python -m pip install -e ".[dev,api]"
+python -m pip install --require-hashes -r requirements-lock-fast.txt
+python -m pip install --no-deps -e .
 pytest -m "not hf"
 python -m rageval.cli evaluate --method heuristic \
   --question "What is the test question?" \
@@ -22,6 +23,7 @@ The smoke experiment uses BM25 + a blinded mock generator + a lexical heuristic.
 
 ```bash
 python -m pip install -e ".[all]"
+# linux/amd64 pinned: pip install --require-hashes -r requirements-lock-all.txt && pip install --no-deps -e .
 pytest
 python -m rageval.cli validate --dataset benchmark_v1
 python -m rageval.cli report --metrics reports/phase7/v1_matrix/metrics.json --output-dir /tmp/rageval-report

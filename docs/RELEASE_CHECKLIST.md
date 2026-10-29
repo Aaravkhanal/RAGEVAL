@@ -4,7 +4,8 @@ Use before tagging. Version on this branch: **0.2.0rc1** (tag `v0.2.0-rc1`).
 
 - [ ] `pyproject.toml` version matches `rageval/__init__.py`
 - [ ] `LICENSE` (MIT) and `data/LICENSE.md` present
-- [ ] `pip install -e ".[dev,api]"` in a clean extra-env
+- [ ] `pip install --require-hashes -r requirements-lock-fast.txt && pip install --no-deps -e .` in a clean extra-env
+- [ ] Locks regenerated with `bash scripts/compile_locks.sh` after extra changes; all-lock still `torch==…+cpu`
 - [ ] `pytest -m "not hf"` passes
 - [ ] `python -m rageval.cli experiment --config configs/experiments/smoke.yaml --max-items 2` writes `metrics.json`
 - [ ] `python -m rageval.cli evaluate --method heuristic --question ...` does not download models

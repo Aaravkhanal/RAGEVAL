@@ -1,3 +1,6 @@
-# Dependency source of truth is pyproject.toml extras.
-# Fast:     pip install -e ".[dev,api]"
-# Research: pip install -e ".[all]"
+# Loose extras live in pyproject.toml. Hashed pins:
+#   requirements-lock-fast.txt  — [dev,api], universal, Python 3.10+
+#   requirements-lock-all.txt   — [all], manylinux x86_64, Python 3.12, CPU torch
+# Fast:     pip install --require-hashes -r requirements-lock-fast.txt && pip install --no-deps -e .
+# Research: pip install -e ".[all]"   (or the all-lock on linux/amd64)
+# Regenerate: bash scripts/compile_locks.sh

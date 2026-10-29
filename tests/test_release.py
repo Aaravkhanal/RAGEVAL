@@ -26,6 +26,26 @@ def test_license_files_exist():
     assert (ROOT / "data" / "LICENSE.md").is_file()
 
 
+def test_hashed_lockfiles():
+    fast = (ROOT / "requirements-lock-fast.txt").read_text(encoding="utf-8")
+    all_lock = (ROOT / "requirements-lock-all.txt").read_text(encoding="utf-8")
+    assert "--hash=sha256:" in fast
+    assert "--hash=sha256:" in all_lock
+    assert "torch==" not in fast
+    assert "faiss-cpu==" not in fast
+    assert "torch==" in all_lock and "+cpu" in all_lock
+    assert "faiss-cpu==" in all_lock
+    assert "download.pytorch.org/whl/cpu" in all_lock
+    assert (ROOT / "Dockerfile").is_file()
+    dockerfile = (ROOT / "Dockerfile").read_text(encoding="utf-8")
+    assert "requirements-lock-all.txt" in dockerfile
+    assert '"rageval", "serve"' in dockerfile
+    ci = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    assert "requirements-lock-fast.txt" in ci
+    assert "--require-hashes" in ci
+    assert (ROOT / "scripts" / "compile_locks.sh").is_file()
+
+
 def test_smoke_experiment_yaml():
     spec = load_experiment(str(ROOT / "configs" / "experiments" / "smoke.yaml"))
     assert spec.experiment_id == "smoke"

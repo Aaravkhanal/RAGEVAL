@@ -26,10 +26,46 @@ python -m rageval.cli report \
 
 Re-running the six-config NLI matrix is optional, CPU-heavy, and **not** required to check that reports match the run. If you re-run, write a new `experiments/runs/<id>/` folder. Completed runs refuse to overwrite `metrics.json`.
 
+## Pinned install
+
+Loose extras stay in `pyproject.toml`. Committed hashed locks:
+
+| File | Extra | Target |
+| --- | --- | --- |
+| `requirements-lock-fast.txt` | `[dev,api]` | universal wheels, Python ≥3.10 (fast CI) |
+| `requirements-lock-all.txt` | `[all]` | **manylinux x86_64**, Python 3.12, **CPU** torch + `faiss-cpu` (Docker / weekly HF job) |
+
+```bash
+python -m pip install --upgrade pip setuptools wheel
+pip install --require-hashes -r requirements-lock-fast.txt
+pip install --no-deps -e .
+pytest -m "not hf"
+```
+
+Regenerate locks after changing extras:
+
+```bash
+bash scripts/compile_locks.sh
+```
+
+That script uses `uv pip compile` (`uv` 0.13+). The all-lock sets `--extra-index-url https://download.pytorch.org/whl/cpu` so `torch==…+cpu` is fetchable. It is **not** a CUDA image and is **not** bit-for-bit NLI logits across machines.
+
+## Docker
+
+```bash
+docker build --platform linux/amd64 -t rageval:0.2.0rc1 .
+docker run --rm -p 8000:8000 rageval:0.2.0rc1
+```
+
+`--platform linux/amd64` is required on Apple Silicon because the all-lock is x86_64. Default `CMD` is `rageval serve`. Hugging Face weights are **not** in the image; first NLI/embed call still downloads them.
+
+This job is not in GitHub Actions (torch wheels blow the fast-CI minute budget).
+
 ## Smoke (CI / extra-env)
 
 ```bash
-python -m pip install -e ".[dev]"
+python -m pip install --require-hashes -r requirements-lock-fast.txt
+python -m pip install --no-deps -e .
 python -m rageval.cli experiment --config configs/experiments/smoke.yaml --max-items 8
 pytest -m "not hf"
 ```

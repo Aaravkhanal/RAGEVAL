@@ -27,13 +27,17 @@ Committed tables under `reports/` are from run `20261028T183042Z_a97ad68f` on `b
 Python 3.10+. Prefer a dedicated environment. Version **0.2.0rc1**.
 
 ```bash
-# Fast tests and smoke (no torch / Hugging Face)
-pip install -e ".[dev,api]"
+# Fast tests and smoke (hashed [dev,api] lock, no torch)
+pip install --require-hashes -r requirements-lock-fast.txt
+pip install --no-deps -e .
 pytest -m "not hf"
 
-# Research install (MiniLM, DeBERTa, FAISS, dashboard, figures)
+# Research install (MiniLM, DeBERTa, FAISS). On linux/amd64 you can pin:
+# pip install --require-hashes -r requirements-lock-all.txt && pip install --no-deps -e .
 pip install -e ".[all]"
 ```
+
+Hashed locks: `requirements-lock-fast.txt` (universal) and `requirements-lock-all.txt` (manylinux x86_64, CPU torch). Regenerate with `bash scripts/compile_locks.sh`. Docker: `docker build --platform linux/amd64 -t rageval:0.2.0rc1 .` (see `docs/REPRODUCIBILITY.md`).
 
 First NLI/embedding calls download Hugging Face weights unless they are already cached. There are no paid APIs in the default path. See `docs/QUICKSTART.md`.
 
