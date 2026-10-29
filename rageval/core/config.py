@@ -6,7 +6,7 @@ import os
 from typing import List, Optional
 
 import yaml
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ChunkerConfig(BaseModel):
@@ -37,12 +37,19 @@ class RerankerConfig(BaseModel):
 
 
 class GeneratorConfig(BaseModel):
-    backend: str = "mock"  # mock, openai, ollama
+    """Generation backend. API keys are never fields; read them from the environment."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    backend: str = "mock"  # mock, openai, ollama, local_hf
     model_name: str = "meta-llama/Llama-3.2-3B-Instruct"
     temperature: float = 0.0
     max_tokens: int = 512
     mock_mode: str = "faithful"  # faithful, hallucinatory, contradictory, mixed
     abstention_policy: str = "empty_context"  # never, empty_context
+    base_url: Optional[str] = None
+    api_key_env: Optional[str] = None  # environment variable *name*, never a secret value
+    device: str = "cpu"  # local_hf only
 
 
 class EvaluatorConfig(BaseModel):
@@ -61,6 +68,8 @@ class EvaluatorConfig(BaseModel):
 class PipelineConfig(BaseModel):
     name: str = "baseline_hybrid"
     seed: int = 0
+    opt_in: bool = False
+    resource_note: str = ""
     chunker: ChunkerConfig = Field(default_factory=ChunkerConfig)
     embedder: EmbedderConfig = Field(default_factory=EmbedderConfig)
     retriever: RetrieverConfig = Field(default_factory=RetrieverConfig)

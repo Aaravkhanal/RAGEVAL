@@ -1,13 +1,18 @@
-"""Generation layer supporting deterministic mock generators and optional HTTP LLMs."""
+"""Generation layer: blinded mock, OpenAI-like HTTP, and optional local Hugging Face."""
 
 from __future__ import annotations
 
+import os
 import re
 from abc import ABC, abstractmethod
-from typing import List, Optional, Tuple
+from typing import Any, List, Optional, Tuple
 
 from rageval.core.config import GeneratorConfig
 from rageval.core.schemas import BenchmarkItem, RetrievedChunk
+
+OPENAI_DEFAULT_BASE_URL = "https://api.openai.com/v1"
+OLLAMA_DEFAULT_BASE_URL = "http://127.0.0.1:11434/v1"
+SUPPORTED_BACKENDS = ("mock", "openai", "ollama", "local_hf")
 
 
 class BaseGenerator(ABC):
@@ -23,6 +28,71 @@ class BaseGenerator(ABC):
         Implementations must not read gold labels, test_type, or expected_abstention
         from `item`. `item` is accepted only for API compatibility.
         """
+
+
+def build_rag_prompt(question: str, retrieved_chunks: List[RetrievedChunk]) -> str:
+    """Prompt from question + retrieved text only. Never include gold item fields."""
+    if retrieved_chunks:
+        context_str = "\n\n".join(
+            f"[{i + 1}] {row.chunk.text}" for i, row in enumerate(retrieved_chunks)
+        )
+    else:
+        context_str = "(no retrieved context)"
+    return (
+        f"Context Information:\n{context_str}\n\n"
+        f"Question: {question}\n\n"
+        "Answer the question strictly based on the context above. Cite sources with "
+        "bracketed numbers like [1]. If the context does not contain the answer, say "
+        "'I do not have sufficient information to answer.'"
+    )
+
+
+def default_base_url(backend: str) -> str:
+    if backend == "openai":
+        return OPENAI_DEFAULT_BASE_URL
+    return OLLAMA_DEFAULT_BASE_URL
+
+
+def resolve_api_key(backend: str, api_key_env: Optional[str] = None) -> str:
+    """Read a key from the environment. Never from YAML."""
+    names: List[str] = []
+    if api_key_env:
+        names.append(api_key_env)
+    names.extend(["OPENAI_API_KEY", "RAGEVAL_API_KEY"])
+    seen = set()
+    for name in names:
+        if name in seen:
+            continue
+        seen.add(name)
+        value = os.environ.get(name)
+        if value:
+            return value
+    if backend == "openai":
+        raise RuntimeError(
+            "openai backend requires OPENAI_API_KEY or RAGEVAL_API_KEY in the environment. "
+            "Do not put API keys in YAML or git."
+        )
+    return ""
+
+
+def _httpx_client(timeout: float):
+    try:
+        import httpx
+    except ImportError as exc:
+        raise RuntimeError(
+            'openai/ollama backends require httpx. Install with pip install -e ".[api]"'
+        ) from exc
+    return httpx.Client(timeout=timeout)
+
+
+def _import_transformers_pipeline():
+    try:
+        from transformers import pipeline
+    except ImportError as exc:
+        raise RuntimeError(
+            'local_hf requires torch and transformers. Install with pip install -e ".[bench]"'
+        ) from exc
+    return pipeline
 
 
 class MockGenerator(BaseGenerator):
@@ -84,12 +154,24 @@ class MockGenerator(BaseGenerator):
 
 
 class OpenAILikeGenerator(BaseGenerator):
-    """Generator for OpenAI / vLLM / Ollama compatible HTTP endpoints."""
+    """OpenAI / vLLM / Ollama compatible HTTP. Keys come from the environment."""
 
-    def __init__(self, api_key: str = "", base_url: str = "http://localhost:11434/v1", model: str = "llama3"):
+    def __init__(
+        self,
+        *,
+        api_key: str = "",
+        base_url: str = OPENAI_DEFAULT_BASE_URL,
+        model: str = "gpt-4o-mini",
+        temperature: float = 0.0,
+        max_tokens: int = 512,
+        timeout: float = 30.0,
+    ):
         self.api_key = api_key
-        self.base_url = base_url
+        self.base_url = base_url.rstrip("/")
         self.model = model
+        self.temperature = temperature
+        self.max_tokens = max_tokens
+        self.timeout = timeout
 
     def generate(
         self,
@@ -98,44 +180,152 @@ class OpenAILikeGenerator(BaseGenerator):
         item: Optional[BenchmarkItem] = None,
     ) -> Tuple[str, int, int]:
         del item
-        import httpx
-
-        context_str = "\n\n".join([f"[{i+1}] {r.chunk.text}" for i, r in enumerate(retrieved_chunks)])
-        prompt = (
-            f"Context Information:\n{context_str}\n\n"
-            f"Question: {question}\n\n"
-            "Answer the question strictly based on the context above. Cite sources with bracketed numbers like [1]. "
-            "If the context does not contain the answer, say 'I do not have sufficient information to answer.'"
-        )
-
+        prompt = build_rag_prompt(question, retrieved_chunks)
         headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
         payload = {
             "model": self.model,
             "messages": [
-                {"role": "system", "content": "You are a factual RAG assistant. Never extrapolate beyond provided context."},
+                {
+                    "role": "system",
+                    "content": "You are a factual RAG assistant. Never extrapolate beyond provided context.",
+                },
                 {"role": "user", "content": prompt},
             ],
-            "temperature": 0.0,
+            "temperature": self.temperature,
+            "max_tokens": self.max_tokens,
         }
-
+        url = f"{self.base_url}/chat/completions"
         try:
-            with httpx.Client(timeout=30.0) as client:
-                res = client.post(f"{self.base_url}/chat/completions", json=payload, headers=headers)
-                data = res.json()
-                answer = data["choices"][0]["message"]["content"]
-                prompt_tokens = data.get("usage", {}).get("prompt_tokens", len(prompt.split()))
-                comp_tokens = data.get("usage", {}).get("completion_tokens", len(answer.split()))
-                return answer, prompt_tokens, comp_tokens
-        except Exception as e:
-            return f"Error contacting LLM endpoint: {e}", len(prompt.split()), 10
+            import httpx
+        except ImportError as exc:
+            raise RuntimeError(
+                'openai/ollama backends require httpx. Install with pip install -e ".[api]"'
+            ) from exc
+        try:
+            with _httpx_client(self.timeout) as client:
+                response = client.post(url, json=payload, headers=headers)
+        except httpx.RequestError as exc:
+            raise RuntimeError(f"LLM HTTP request failed for {url}: {exc}") from exc
+        if response.status_code >= 400:
+            snippet = (response.text or "")[:200]
+            raise RuntimeError(f"LLM HTTP {response.status_code} from {url}: {snippet}")
+        try:
+            data = response.json()
+        except ValueError as exc:
+            raise RuntimeError(f"LLM HTTP response from {url} was not JSON") from exc
+        try:
+            answer = data["choices"][0]["message"]["content"]
+        except (KeyError, IndexError, TypeError) as exc:
+            raise RuntimeError(f"LLM HTTP response from {url} missing choices[0].message.content") from exc
+        if not isinstance(answer, str):
+            raise RuntimeError(f"LLM HTTP response from {url} returned a non-string answer")
+        usage = data.get("usage") if isinstance(data.get("usage"), dict) else {}
+        prompt_tokens = int(usage.get("prompt_tokens") or len(prompt.split()))
+        completion_tokens = int(usage.get("completion_tokens") or len(answer.split()))
+        return answer, prompt_tokens, completion_tokens
+
+
+class LocalHfGenerator(BaseGenerator):
+    """Lazy transformers text-generation. Missing torch/model is a hard failure."""
+
+    def __init__(
+        self,
+        *,
+        model_name: str,
+        temperature: float = 0.0,
+        max_tokens: int = 512,
+        device: str = "cpu",
+    ):
+        self.model_name = model_name
+        self.temperature = temperature
+        self.max_tokens = max_tokens
+        self.device = device
+        self._pipeline: Any = None
+
+    def _build_pipeline(self):
+        try:
+            pipeline = _import_transformers_pipeline()
+            return pipeline(
+                "text-generation",
+                model=self.model_name,
+                device=self.device,
+            )
+        except RuntimeError:
+            raise
+        except Exception as exc:
+            raise RuntimeError(
+                f"Failed to load local_hf model {self.model_name!r}. "
+                'Install with pip install -e ".[bench]" and check the model id. '
+                "local_hf does not fall back to the mock generator."
+            ) from exc
+
+    def generate(
+        self,
+        question: str,
+        retrieved_chunks: List[RetrievedChunk],
+        item: Optional[BenchmarkItem] = None,
+    ) -> Tuple[str, int, int]:
+        del item
+        prompt = build_rag_prompt(question, retrieved_chunks)
+        if self._pipeline is None:
+            self._pipeline = self._build_pipeline()
+        kwargs: dict = {
+            "max_new_tokens": self.max_tokens,
+            "return_full_text": False,
+        }
+        if self.temperature and self.temperature > 0:
+            kwargs["do_sample"] = True
+            kwargs["temperature"] = self.temperature
+        else:
+            kwargs["do_sample"] = False
+        try:
+            outputs = self._pipeline(prompt, **kwargs)
+        except Exception as exc:
+            raise RuntimeError(f"local_hf generation failed for {self.model_name!r}: {exc}") from exc
+        answer = _text_from_pipeline_output(outputs)
+        prompt_tokens = len(prompt.split())
+        completion_tokens = len(answer.split())
+        tokenizer = getattr(self._pipeline, "tokenizer", None)
+        if tokenizer is not None:
+            try:
+                prompt_tokens = len(tokenizer.encode(prompt))
+                completion_tokens = len(tokenizer.encode(answer))
+            except Exception:
+                pass
+        return answer, prompt_tokens, completion_tokens
+
+
+def _text_from_pipeline_output(outputs: Any) -> str:
+    if isinstance(outputs, list) and outputs:
+        first = outputs[0]
+        if isinstance(first, dict):
+            text = first.get("generated_text") or first.get("summary_text")
+            if isinstance(text, str) and text.strip():
+                return text.strip()
+        elif isinstance(first, str) and first.strip():
+            return first.strip()
+    raise RuntimeError("local_hf pipeline returned no generated text")
 
 
 def get_generator(config: GeneratorConfig) -> BaseGenerator:
-    if config.backend == "mock":
+    backend = (config.backend or "mock").strip()
+    if backend == "mock":
         return MockGenerator(mode=config.mock_mode, abstention_policy=config.abstention_policy)
-    if config.backend in ("openai", "ollama"):
-        return OpenAILikeGenerator(model=config.model_name)
+    if backend in {"openai", "ollama"}:
+        return OpenAILikeGenerator(
+            api_key=resolve_api_key(backend, config.api_key_env),
+            base_url=config.base_url or default_base_url(backend),
+            model=config.model_name,
+            temperature=config.temperature,
+            max_tokens=config.max_tokens,
+        )
+    if backend == "local_hf":
+        return LocalHfGenerator(
+            model_name=config.model_name,
+            temperature=config.temperature,
+            max_tokens=config.max_tokens,
+            device=config.device,
+        )
     raise ValueError(
-        f"Unknown generator backend {config.backend!r}. Supported backends: mock, openai, ollama. "
-        "local_hf is not implemented; do not silently substitute another backend."
+        f"Unknown generator backend {backend!r}. Supported backends: {', '.join(SUPPORTED_BACKENDS)}."
     )

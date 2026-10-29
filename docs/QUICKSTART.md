@@ -27,7 +27,7 @@ python -m rageval.cli validate --dataset benchmark_v1
 python -m rageval.cli report --metrics reports/phase7/v1_matrix/metrics.json --output-dir /tmp/rageval-report
 ```
 
-First NLI/embedding calls download Hugging Face weights unless they are already cached. Do not call paid APIs; official generation is a blinded mock.
+First NLI/embedding calls download Hugging Face weights unless they are already cached. Official generation is a blinded mock. Opt-in LLM backends (`configs/opt_in/`) read `OPENAI_API_KEY` or `RAGEVAL_API_KEY` from the environment; HTTP errors raise instead of becoming the answer.
 
 ## Read a completed run
 
@@ -49,7 +49,7 @@ python -m rageval.cli serve --port 8000
 | `dev` | pytest |
 | `api` | FastAPI dashboard |
 | `viz` | matplotlib figures |
-| `bench` | torch, transformers, sentence-transformers, faiss-cpu |
+| `bench` | torch, transformers, sentence-transformers, faiss-cpu, httpx |
 | `all` | research install |
 
 See `docs/REPRODUCIBILITY.md` and `docs/RELEASE_CHECKLIST.md`.

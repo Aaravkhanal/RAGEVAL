@@ -2,7 +2,7 @@
 
 Longer threats list: `docs/RESEARCH_GAPS.md`. Honest v1 write-up: `reports/20261028T183042Z_a97ad68f/FINDINGS.md`.
 
-- Official generator is a **blinded mock**, not an LLM.
+- Official generator is a **blinded mock**, not an LLM. `openai` / `ollama` / `local_hf` exist as opt-in backends (`configs/opt_in/`); they are not the recorded ablation.
 - Recorded ablation is **n=24** items / 16 documents; items share documents; tests are underpowered.
 - Single-author gold; no IAA.
 - Faithfulness is support-by-retrieved-evidence, not world truth.

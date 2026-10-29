@@ -2,7 +2,13 @@
 
 from rageval.pipeline.chunkers import BaseChunker, FixedTokenChunker, SentenceWindowChunker, get_chunker
 from rageval.pipeline.sparse import BM25Retriever, HybridRetriever
-from rageval.pipeline.generator import BaseGenerator, MockGenerator, OpenAILikeGenerator, get_generator
+from rageval.pipeline.generator import (
+    BaseGenerator,
+    LocalHfGenerator,
+    MockGenerator,
+    OpenAILikeGenerator,
+    get_generator,
+)
 from rageval.pipeline.rag import RAGPipeline
 
 __all__ = [
@@ -15,6 +21,7 @@ __all__ = [
     "BaseGenerator",
     "MockGenerator",
     "OpenAILikeGenerator",
+    "LocalHfGenerator",
     "get_generator",
     "RAGPipeline",
 ]

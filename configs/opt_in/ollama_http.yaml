@@ -1,0 +1,24 @@
+name: OptIn_Ollama_HTTP
+seed: 0
+opt_in: true
+resource_note: >
+  Calls a local Ollama-compatible /v1/chat/completions endpoint. No API key
+  is required by default. Not an official ablation.
+chunker:
+  strategy: fixed
+  chunk_size: 256
+  chunk_overlap: 32
+retriever:
+  method: sparse
+  top_k: 5
+reranker:
+  enabled: false
+generator:
+  backend: ollama
+  model_name: llama3
+  temperature: 0.0
+  max_tokens: 256
+  base_url: http://127.0.0.1:11434/v1
+evaluator:
+  method: heuristic
+  allow_heuristic_fallback: false

@@ -3,7 +3,7 @@
 import inspect
 
 from rageval.core.schemas import BenchmarkItem, Chunk, RetrievedChunk, TestType
-from rageval.pipeline.generator import MockGenerator, OpenAILikeGenerator
+from rageval.pipeline.generator import LocalHfGenerator, MockGenerator, OpenAILikeGenerator
 
 
 def _chunk():
@@ -42,7 +42,7 @@ def test_empty_context_abstains():
 
 
 def test_generator_source_does_not_read_test_type():
-    for cls in (MockGenerator, OpenAILikeGenerator):
+    for cls in (MockGenerator, OpenAILikeGenerator, LocalHfGenerator):
         src = inspect.getsource(cls.generate)
         assert "test_type" not in src
         assert "expected_abstention" not in src

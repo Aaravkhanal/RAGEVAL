@@ -1,0 +1,25 @@
+name: OptIn_Local_HF
+seed: 0
+opt_in: true
+resource_note: >
+  Loads a local Hugging Face causal LM via transformers (pip install -e ".[bench]").
+  Missing torch or a missing model is a hard failure; it does not become the mock.
+  Not an official ablation.
+chunker:
+  strategy: fixed
+  chunk_size: 256
+  chunk_overlap: 32
+retriever:
+  method: sparse
+  top_k: 5
+reranker:
+  enabled: false
+generator:
+  backend: local_hf
+  model_name: meta-llama/Llama-3.2-3B-Instruct
+  temperature: 0.0
+  max_tokens: 256
+  device: cpu
+evaluator:
+  method: heuristic
+  allow_heuristic_fallback: false

@@ -16,7 +16,7 @@ This project was previously prototyped under the name RAGTruth. It is **not** th
 - Adversarial scenarios with a failure taxonomy (`docs/FAILURE_TAXONOMY.md`) and robustness means by `scenario_type`.
 - CLI, FastAPI live claim audit, and pytest suite.
 
-Official generation for smoke tests is a **blinded mock** that cannot read gold `test_type` labels.
+Official generation for smoke tests is a **blinded mock** that cannot read gold `test_type` labels. Opt-in HTTP (`openai` / `ollama`) and `local_hf` backends live under `configs/opt_in/`; keys come from `OPENAI_API_KEY` / `RAGEVAL_API_KEY`, never YAML.
 
 ## Status of results
 

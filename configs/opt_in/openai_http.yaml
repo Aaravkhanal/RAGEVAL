@@ -1,0 +1,26 @@
+name: OptIn_OpenAI_HTTP
+seed: 0
+opt_in: true
+resource_note: >
+  Calls an OpenAI-compatible HTTP API. Set OPENAI_API_KEY or RAGEVAL_API_KEY
+  in the environment. Do not put keys in this file. Cost stays null unless
+  evaluator.pricing_source and USD/million prices are set. Not an official
+  ablation; official tables remain the blinded mock run.
+chunker:
+  strategy: fixed
+  chunk_size: 256
+  chunk_overlap: 32
+retriever:
+  method: sparse
+  top_k: 5
+reranker:
+  enabled: false
+generator:
+  backend: openai
+  model_name: gpt-4o-mini
+  temperature: 0.0
+  max_tokens: 256
+  base_url: https://api.openai.com/v1
+evaluator:
+  method: heuristic
+  allow_heuristic_fallback: false
