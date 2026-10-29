@@ -1,6 +1,6 @@
 # Research image: Python 3.12, hashed [all] extras, CPU torch + faiss-cpu.
 # Build on amd64 (GitHub runners / most servers):
-#   docker build --platform linux/amd64 -t rageval:0.2.0 .
+#   docker build --platform linux/amd64 -t rageval:0.2.1 .
 # The lock file is manylinux x86_64. Apple Silicon hosts need that platform flag.
 FROM python:3.12-slim-bookworm
 

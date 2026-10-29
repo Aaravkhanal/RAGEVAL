@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Software versions do not replace the recorded ablation.** Official tables under `reports/` are from blinded-mock run [`20261028T183042Z_a97ad68f`](reports/20261028T183042Z_a97ad68f/FINDINGS.md) on `benchmark_v1` **1.0.0** (16 documents, 24 items). $n=24$ is underpowered. This changelog is a packaging history, not a confirmatory RAG ranking.
 
-## [Unreleased]
+## [0.2.1] - 2026-10-29
+
+Software patch after `0.2.0` so the dashboard job UI is in a tagged release. Official tables remain run `20261028T183042Z_a97ad68f`.
 
 ### Added
 
@@ -40,5 +42,6 @@ Installable software release after `0.2.0rc1`: HTTP jobs, opt-in LLM backends, h
 
 Phase 10 release candidate (tag `v0.2.0-rc1`). Split extras so fast tests run without Hugging Face; MIT `LICENSE` and dataset license notes; smoke experiment YAML; quickstart and reproducibility docs; CI that skips `-m hf`.
 
+[0.2.1]: https://github.com/Aaravkhanal/RAGEVAL/releases/tag/v0.2.1
 [0.2.0]: https://github.com/Aaravkhanal/RAGEVAL/releases/tag/v0.2.0
 [0.2.0rc1]: https://github.com/Aaravkhanal/RAGEVAL/releases/tag/v0.2.0-rc1

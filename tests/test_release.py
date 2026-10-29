@@ -17,17 +17,19 @@ SECRET_VALUE = re.compile(
 
 
 def test_version_is_release():
-    assert rageval.__version__ == "0.2.0"
+    assert rageval.__version__ == "0.2.1"
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert re.search(r'(?m)^version = "0.2.0"$', pyproject)
+    assert re.search(r'(?m)^version = "0.2.1"$', pyproject)
     changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    assert "## [0.2.1]" in changelog
     assert "## [0.2.0]" in changelog
     assert "Keep a Changelog" in changelog
     assert "20261028T183042Z_a97ad68f" in changelog
     assert "twine upload" in changelog
+    assert "POST /experiments" in changelog
     from rageval.server.app import app
 
-    assert app.version == "0.2.0"
+    assert app.version == "0.2.1"
 
 
 def test_license_files_exist():

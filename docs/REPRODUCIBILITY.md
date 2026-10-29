@@ -53,17 +53,17 @@ That script uses `uv pip compile` (`uv` 0.13+). The all-lock sets `--extra-index
 ## Docker
 
 ```bash
-docker build --platform linux/amd64 -t rageval:0.2.0 .
-docker run --rm -p 8000:8000 rageval:0.2.0
+docker build --platform linux/amd64 -t rageval:0.2.1 .
+docker run --rm -p 8000:8000 rageval:0.2.1
 ```
 
 `--platform linux/amd64` is required on Apple Silicon because the all-lock is x86_64. Default `CMD` is `rageval serve`. Hugging Face weights are **not** in the image; first NLI/embed call still downloads them.
 
 This job is not in GitHub Actions (torch wheels blow the fast-CI minute budget).
 
-## Software package (0.2.0)
+## Software package (0.2.1)
 
-Git tag `v0.2.0` is the software release. It does **not** upload to PyPI. Official tables remain run `20261028T183042Z_a97ad68f`.
+Git tag `v0.2.1` is the current software release (dashboard job UI on top of `v0.2.0`). It does **not** upload to PyPI. Official tables remain run `20261028T183042Z_a97ad68f`.
 
 ```bash
 python -m pip install build twine
