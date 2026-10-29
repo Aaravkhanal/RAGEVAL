@@ -204,7 +204,10 @@ def export_tables_from_summaries_json(
         json.dump(
             {
                 "baseline": baseline_name,
-                "note": "n<30: underpowered; is_significant is false.",
+                "note": (
+                    "Confirmatory tests require n>=30 i.i.d. items. "
+                    "Items that share documents are not i.i.d.; is_significant stays false."
+                ),
                 "comparisons": comparisons,
             },
             f,

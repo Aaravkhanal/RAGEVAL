@@ -122,6 +122,53 @@ def test_v11_companion_snapshot_does_not_replace_published_tables():
     assert_findings_text_allowed(findings, v11)
 
 
+def test_v12_companion_snapshot_does_not_replace_published_tables():
+    v12 = BenchmarkReporter.load_metrics(str(ROOT / "reports" / "phase7" / "v1_2_matrix" / "metrics.json"))
+    v10 = BenchmarkReporter.load_metrics(str(ROOT / "reports" / "phase7" / "v1_matrix" / "metrics.json"))
+    assert v10["n_items"] == 24
+    assert v10["dataset_version"] == "1.0.0"
+    assert v12["n_items"] == 32
+    assert v12["dataset_version"] == "1.2.0"
+    assert v12.get("n_documents") == 21
+    assert v12.get("overall_score") is None
+    assert v12["by_config"]["Dense_Chunk256_Baseline"]["claim_support_rate"]["mean"] == 0.401
+    assert v12["by_config"]["Dense_Chunk256_Baseline"]["recall_at_5"]["mean"] == 0.8438
+    assert v10["by_config"]["Dense_Chunk256_Baseline"]["claim_support_rate"]["mean"] == 0.4375
+    findings = (ROOT / "reports" / "20261029T173408Z_de870a29" / "FINDINGS.md").read_text(encoding="utf-8")
+    paper = (ROOT / "reports" / "paper.tex").read_text(encoding="utf-8")
+    assert "16.4%" not in findings
+    assert "0.8438" in findings
+    assert "20261028T183042Z_a97ad68f" in findings
+    assert "0.4375" in paper
+    assert_findings_text_allowed(findings, v12)
+    errors = (ROOT / "reports" / "error_analysis_v1_2.md").read_text(encoding="utf-8")
+    assert "v1_029" in errors and "v1_032" in errors
+    assert "20261029T173408Z_de870a29" in errors
+    v12_sig = json.loads((ROOT / "reports" / "phase7" / "v1_2_matrix" / "significance.json").read_text(encoding="utf-8"))
+    assert all(row.get("underpowered") is True for row in v12_sig["comparisons"])
+    assert all(row.get("is_significant") is False for row in v12_sig["comparisons"])
+
+
+def test_achunk_snapshot_does_not_replace_published_tables():
+    achunk = BenchmarkReporter.load_metrics(str(ROOT / "reports" / "phase7" / "A_chunk_overlap32" / "metrics.json"))
+    v10 = BenchmarkReporter.load_metrics(str(ROOT / "reports" / "phase7" / "v1_matrix" / "metrics.json"))
+    assert v10["n_items"] == 24
+    assert achunk["n_items"] == 32
+    assert achunk["dataset_version"] == "1.2.0"
+    assert achunk.get("experiment_id") == "A_chunk"
+    assert achunk["by_config"]["Dense_Chunk256_Baseline"]["claim_support_rate"]["mean"] == 0.401
+    assert achunk["by_config"]["Dense_Chunk128_overlap32"]["recall_at_5"]["mean"] == 0.8438
+    assert v10["by_config"]["Dense_Chunk256_Baseline"]["claim_support_rate"]["mean"] == 0.4375
+    findings = (ROOT / "reports" / "20261029T173515Z_7e2b94a3" / "FINDINGS.md").read_text(encoding="utf-8")
+    paper = (ROOT / "reports" / "paper.tex").read_text(encoding="utf-8")
+    assert "16.4%" not in findings
+    assert "A_chunk_overlap32" in findings
+    assert "fixed at 32" in findings
+    assert "None on Hybrid" not in findings
+    assert "0.4375" in paper
+    assert_findings_text_allowed(findings, achunk)
+
+
 def test_cli_benchmark_reporter_import_is_module_level():
     src = (ROOT / "rageval" / "cli.py").read_text(encoding="utf-8")
     matches = [

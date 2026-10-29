@@ -10,7 +10,7 @@ This project was previously prototyped under the name RAGTruth. It is **not** th
 - Atomic claim decomposition and NLI verification (`supported` / `unsupported` / `contradicted`, plus `partially_supported` and `ambiguous` in the schema).
 - Citation existence and support-conditioned citation metrics.
 - A **synthetic smoke dataset** (8 documents, 8 questions). It is author-written fiction, not SEC/NEJM/OSDI source text.
-- A **licensed benchmark_v1** (21 documents, 32 questions in v1.2.0): short U.S. government public-domain excerpts plus original CC-BY-4.0 fiction. See `data/cards/benchmark_v1.md`. The committed ablation tables used v1.0.0 (16/24). Companion mock+NLI scored v1.1.0 (18/28).
+- A **licensed benchmark_v1** (21 documents, 32 questions in v1.2.0): short U.S. government public-domain excerpts plus original CC-BY-4.0 fiction. See `data/cards/benchmark_v1.md`. The committed ablation tables used v1.0.0 (16/24). Companion mock+NLI scored v1.1.0 (18/28) and v1.2.0 (21/32).
 - Answer-level EM / token F1 alongside claim-level support (RQ3).
 - Official metric registry (`rageval.metrics.registry`) with no composite overall score.
 - Adversarial scenarios with a failure taxonomy (`docs/FAILURE_TAXONOMY.md`) and robustness means by `scenario_type`.
@@ -20,7 +20,7 @@ Official generation for smoke tests is a **blinded mock** that cannot read gold 
 
 ## Status of results
 
-Committed tables under `reports/` are from run `20261028T183042Z_a97ad68f` on `benchmark_v1` 1.0.0 (16 documents, 24 items; US government public-domain excerpts plus CC-BY-4.0 fiction). Honest write-up: `reports/20261028T183042Z_a97ad68f/FINDINGS.md`. `reports/paper.tex` is a **draft** whose table matches that run; $n=24$ is underpowered. New runs write unique folders under `experiments/runs/`.
+Committed tables under `reports/` are from run `20261028T183042Z_a97ad68f` on `benchmark_v1` 1.0.0 (16 documents, 24 items; US government public-domain excerpts plus CC-BY-4.0 fiction). Honest write-up: `reports/20261028T183042Z_a97ad68f/FINDINGS.md`. Companion mock+NLI: v1.1.0 `657c8089`, v1.2.0 `de870a29`, A_chunk overlap-32 `7e2b94a3`. `reports/paper.tex` is a **draft** whose table matches the published run; $n=24$ is underpowered. New runs write unique folders under `experiments/runs/`.
 
 ## Install
 
@@ -64,6 +64,9 @@ rageval verifier-eval --gold data/gold/verifier_eval_v1.json --method nli --outp
 
 # IAA (kappa is null until an independent rater B fills data/gold/iaa/annotator_b_verifier_eval_v1.json)
 rageval iaa --rater-a data/gold/iaa/annotator_a_verifier_eval_v1.json --rater-b data/gold/iaa/annotator_b_template.json --output reports/iaa/iaa.md
+
+# Score an external RAG system's answers (no retrieval). Default verifier is heuristic.
+rageval score --input answers.jsonl --output scores.jsonl --method heuristic
 
 # Single YAML config (repeat --config for a custom matrix)
 rageval benchmark --dataset smoke_v1 --config configs/ablation/sparse_bm25_256.yaml
@@ -109,6 +112,7 @@ HTTP after `rageval serve`:
 - `reports/phase7/` — v1-labeled tables from `metrics.json`
 - `reports/20261028T183042Z_a97ad68f/FINDINGS.md` — Phase 8 findings for the recorded run
 - `reports/error_analysis_phase6.md`
+- `reports/error_analysis_v1_2.md` — v1.2.0 companion notes (`v1_029`–`v1_032`)
 - `docs/RELATED_WORK.md`
 - `data/cards/smoke_v1.md` — smoke corpus card
 - `data/cards/benchmark_v1.md` — licensed pilot card

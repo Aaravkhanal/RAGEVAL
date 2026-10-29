@@ -66,7 +66,7 @@ This report must not claim retrieval or faithfulness improvements unless those d
 - Default generation is a blinded mock that copies retrieved sentences.
 - Cost is omitted unless explicit pricing is configured.
 - Compare named metrics only. There is no overall score.
-- Significance tests with n<30 are diagnostic (`underpowered=true`).
+- Significance tests are diagnostic unless n≥30 i.i.d. (`underpowered=true` when items share documents).
 """
     report_path = os.path.join(output_dir, "paper_analysis.md")
     with open(report_path, "w", encoding="utf-8") as f:

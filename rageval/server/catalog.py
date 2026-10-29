@@ -18,6 +18,8 @@ SAFE_ID = re.compile(r"^[A-Za-z0-9_.:-]+$")
 COMMITTED_SNAPSHOTS = (
     ("20261028T183042Z_a97ad68f", os.path.join("reports", "phase7", "v1_matrix")),
     ("20261029T165024Z_657c8089", os.path.join("reports", "phase7", "v1_1_matrix")),
+    ("20261029T173408Z_de870a29", os.path.join("reports", "phase7", "v1_2_matrix")),
+    ("20261029T173515Z_7e2b94a3", os.path.join("reports", "phase7", "A_chunk_overlap32")),
 )
 
 

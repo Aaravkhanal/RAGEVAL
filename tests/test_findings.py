@@ -107,3 +107,35 @@ def test_v11_findings_do_not_claim_new_items_unscored():
     assert "v1_1_matrix" in text
     assert "20261028T183042Z_a97ad68f" in text
     assert_findings_text_allowed(text, metrics)
+
+
+def test_v12_findings_point_at_v1_2_matrix():
+    metrics = _metrics_from_recalls(0.5, 0.5)
+    metrics["dataset_id"] = "benchmark_v1"
+    metrics["dataset_version"] = "1.2.0"
+    metrics["n_items"] = 32
+    metrics["n_documents"] = 21
+    metrics["label"] = "v1"
+    text = render_findings(metrics, run_id="run_v12", case_studies=[], significance=None)
+    assert "v1_2_matrix" in text
+    assert "32" in text
+    assert "21 documents" in text
+    assert "20261028T183042Z_a97ad68f" in text
+    assert "does not replace" in text.lower()
+    assert "error_analysis_v1_2.md" in text
+    assert_findings_text_allowed(text, metrics)
+
+
+def test_achunk_findings_point_at_overlap32_tables():
+    metrics = _metrics_from_recalls(0.5, 0.5)
+    metrics["dataset_id"] = "benchmark_v1"
+    metrics["dataset_version"] = "1.2.0"
+    metrics["n_items"] = 32
+    metrics["n_documents"] = 21
+    metrics["label"] = "v1"
+    metrics["experiment_id"] = "A_chunk"
+    text = render_findings(metrics, run_id="run_achunk", case_studies=[], significance=None)
+    assert "A_chunk_overlap32" in text
+    assert "v1_2_matrix" not in text
+    assert "fixed at 32" in text
+    assert_findings_text_allowed(text, metrics)

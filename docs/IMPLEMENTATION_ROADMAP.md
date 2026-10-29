@@ -235,7 +235,7 @@ Existing `rageval` modules are the implementation surface. New files are added o
 
 ## Phase 7 — Experimental matrix and ablations
 
-**Status:** Complete for the named A–G YAML matrix, `metrics.json` tables, the v1.0.0 recorded-run export, and a companion v1.1.0 six-config mock+NLI export (`20261029T165024Z_657c8089`). `A_chunk` overlap-fixed protocol has not been re-run. Published numbers remain the historical 6-config v1.0.0 snapshot.
+**Status:** Complete for the named A–G YAML matrix, `metrics.json` tables, the v1.0.0 recorded-run export, companion v1.1.0 (`20261029T165024Z_657c8089`) and v1.2.0 (`20261029T173408Z_de870a29`) six-config mock+NLI exports, and the `A_chunk` overlap-32 protocol (`20261029T173515Z_7e2b94a3`, `reports/phase7/A_chunk_overlap32/`). Published numbers remain the historical 6-config v1.0.0 snapshot.
 
 **Objective:** A **small** matrix on the frozen set, not a full factorial.
 
@@ -347,6 +347,18 @@ Embeddings beyond MiniLM and any paid LLM are **opt-in** after a resource note.
 **Acceptance criteria:** clean extra-env install of a documented extra; `pytest` of fast tests; smoke experiment command; no credentials; reports match runs.
 
 **Compute:** CI minutes; no paid APIs by default.
+
+---
+
+## Research follow-on after 0.2.1
+
+**R3 (opt-in LLM smoke):** wiring complete; live call skipped (no key / empty Ollama).  
+**R4 (IAA + 1.2.0 corpus):** kappa CLI and 21/32 corpus complete; rater B missing.  
+**R5 (external scorer):** `rageval score` / `score_answer` — question+chunks+answer in.  
+**R6 (v1.2.0 companion NLI):** complete as `20261029T173408Z_de870a29`; does not replace `a97ad68f`.  
+**R7 (`A_chunk` overlap-32):** complete as `20261029T173515Z_7e2b94a3`; snapshot `reports/phase7/A_chunk_overlap32/`.
+
+Still blocked for confirmatory claims: live LLM generator, independent second annotator, n≥30 i.i.d. items.
 
 ---
 

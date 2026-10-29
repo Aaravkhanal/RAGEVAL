@@ -92,3 +92,11 @@ def test_committed_snapshot_listed_when_enabled(monkeypatch):
     v11 = get_experiment_results("20261029T165024Z_657c8089")
     assert v11["metrics"]["n_items"] == 28
     assert v11["metrics"]["dataset_version"] == "1.1.0"
+    assert "20261029T173408Z_de870a29" in ids
+    v12 = get_experiment_results("20261029T173408Z_de870a29")
+    assert v12["metrics"]["n_items"] == 32
+    assert v12["metrics"]["dataset_version"] == "1.2.0"
+    assert "20261029T173515Z_7e2b94a3" in ids
+    achunk = get_experiment_results("20261029T173515Z_7e2b94a3")
+    assert achunk["metrics"]["n_items"] == 32
+    assert achunk["metrics"]["experiment_id"] == "A_chunk"

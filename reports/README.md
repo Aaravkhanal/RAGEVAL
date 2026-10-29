@@ -14,7 +14,7 @@ Phase 7 labeled tables generated from this run’s summaries: `reports/phase7/v1
 
 Phase 8 findings: `reports/20261028T183042Z_a97ad68f/FINDINGS.md`. `paper.tex` table matches this run and remains a draft.
 
-Companion **v1.1.0** mock+NLI run `20261029T165024Z_657c8089` (18 documents, 28 items) is snapshotted at `reports/phase7/v1_1_matrix/` and `reports/20261029T165024Z_657c8089/FINDINGS.md`. It does **not** replace this published table. On-disk corpus is now v1.2.0 (21/32); `v1_029`–`v1_032` are unscored in that companion.
+Companion **v1.1.0** mock+NLI run `20261029T165024Z_657c8089` (18 documents, 28 items) is snapshotted at `reports/phase7/v1_1_matrix/` and `reports/20261029T165024Z_657c8089/FINDINGS.md`. Companion **v1.2.0** run `20261029T173408Z_de870a29` (21 documents, 32 items) is snapshotted at `reports/phase7/v1_2_matrix/` and `reports/20261029T173408Z_de870a29/FINDINGS.md`. They do **not** replace this published table.
 
 The process started from git commit `3f8d3a3` with **uncommitted** `benchmark_v1` files in the working tree. Re-run after this commit to pin the same data to a commit hash.
 

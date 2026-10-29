@@ -50,3 +50,28 @@ def test_significance_analyzer():
     assert res["underpowered"] is True
     assert res["confirmatory"] is False
     assert res["is_significant"] is False
+
+
+def test_n32_shared_documents_is_not_confirmatory():
+    baseline = _mock_summary(
+        "Baseline",
+        [0.20 + 0.01 * i for i in range(32)],
+        [0.8] * 32,
+    )
+    treatment = _mock_summary(
+        "Improved",
+        [0.38 + 0.012 * i for i in range(32)],
+        [0.8] * 32,
+    )
+    res = SignificanceAnalyzer.compare_runs(baseline, treatment, metric="faithfulness")
+    assert res["n"] == 32
+    assert res["p_value_ttest"] < 0.05
+    assert res["independent_items_assumed"] is False
+    assert res["underpowered"] is True
+    assert res["confirmatory"] is False
+    assert res["is_significant"] is False
+    opt_in = SignificanceAnalyzer.compare_runs(
+        baseline, treatment, metric="faithfulness", independent=True
+    )
+    assert opt_in["confirmatory"] is True
+    assert opt_in["is_significant"] is True

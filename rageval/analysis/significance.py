@@ -18,8 +18,15 @@ class SignificanceAnalyzer:
         baseline: BenchmarkRunSummary,
         treatment: BenchmarkRunSummary,
         metric: str = "faithfulness",
+        *,
+        independent: bool = False,
     ) -> Dict[str, Any]:
-        """Compares paired per-query scores between baseline and treatment configurations."""
+        """Compares paired per-query scores between baseline and treatment configurations.
+
+        Confirmatory (`is_significant` may be true) only when n≥MIN_N_CONFIRMATORY
+        **and** `independent=True`. Items that share documents are not i.i.d.;
+        leave `independent` false (the default).
+        """
         if len(baseline.results) != len(treatment.results):
             raise ValueError("Baseline and treatment must have identical query evaluation counts.")
 
@@ -41,7 +48,20 @@ class SignificanceAnalyzer:
         from rageval.metrics.bootstrap import MIN_N_CONFIRMATORY, bootstrap_mean_ci
 
         n = int(len(diffs))
-        underpowered = n < MIN_N_CONFIRMATORY
+        confirmatory = n >= MIN_N_CONFIRMATORY and independent
+        underpowered = not confirmatory
+        if n < MIN_N_CONFIRMATORY:
+            note = (
+                f"n={n} < {MIN_N_CONFIRMATORY}: tests are diagnostic; "
+                "is_significant stays false."
+            )
+        elif not independent:
+            note = (
+                f"n={n} but items are not treated as i.i.d.; tests are diagnostic; "
+                "is_significant stays false."
+            )
+        else:
+            note = None
 
         # If identical values across all queries, p-value is 1.0
         if np.all(diffs == 0):
@@ -55,12 +75,9 @@ class SignificanceAnalyzer:
                 "p_value_wilcoxon": 1.0,
                 "is_significant": False,
                 "underpowered": underpowered,
-                "confirmatory": not underpowered,
-                "note": (
-                    f"n={n} < {MIN_N_CONFIRMATORY}: significance tests are diagnostic only."
-                    if underpowered
-                    else None
-                ),
+                "confirmatory": confirmatory,
+                "independent_items_assumed": independent,
+                "note": note,
             }
 
         # 1. Paired t-test
@@ -83,15 +100,12 @@ class SignificanceAnalyzer:
             "t_statistic": round(float(t_stat), 4),
             "p_value_ttest": round(float(p_ttest), 4),
             "p_value_wilcoxon": round(float(p_wilcoxon), 4),
-            "is_significant": (not underpowered) and bool(p_ttest < 0.05),
+            "is_significant": confirmatory and bool(p_ttest < 0.05),
             "underpowered": underpowered,
-            "confirmatory": not underpowered,
-            "bootstrap_mean_diff": bootstrap_mean_ci(diffs, independent=False),
-            "note": (
-                f"n={n} < {MIN_N_CONFIRMATORY}: tests are diagnostic; is_significant stays false."
-                if underpowered
-                else None
-            ),
+            "confirmatory": confirmatory,
+            "independent_items_assumed": independent,
+            "bootstrap_mean_diff": bootstrap_mean_ci(diffs, independent=independent),
+            "note": note,
         }
 
 
@@ -105,5 +119,5 @@ def compare_summaries_by_name(
     if baseline_name not in by_name or treatment_name not in by_name:
         raise KeyError(f"Need {baseline_name!r} and {treatment_name!r} in run summaries")
     return SignificanceAnalyzer.compare_runs(
-        by_name[baseline_name], by_name[treatment_name], metric=metric
+        by_name[baseline_name], by_name[treatment_name], metric=metric, independent=False
     )

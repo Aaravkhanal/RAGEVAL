@@ -52,6 +52,7 @@ class RAGEvalEvaluator:
         generation_latency_ms: float = 0.0,
         prompt_tokens: int = 0,
         completion_tokens: int = 0,
+        query_id: Optional[str] = None,
     ) -> QueryEvaluationResult:
         t0 = time.perf_counter()
 
@@ -100,7 +101,7 @@ class RAGEvalEvaluator:
         split: Optional[str] = None
         if item:
             retrieval_metrics = RetrievalMetricsCalculator.calculate(retrieved_chunks, item)
-            query_id = item.id
+            resolved_id = item.id
             test_type = item.test_type
             scenario_type = item.scenario_type
             split = item.split
@@ -111,11 +112,11 @@ class RAGEvalEvaluator:
                 expected_abstention=item.expected_abstention,
             )
         else:
+            resolved_id = query_id or "live_query"
             retrieval_metrics = RetrievalMetricsCalculator.calculate(
                 retrieved_chunks,
-                BenchmarkItem(id="live_query", question=question),
+                BenchmarkItem(id=resolved_id, question=question),
             )
-            query_id = "live_query"
             test_type = TestType.STANDARD
 
         verif_latency_ms = (time.perf_counter() - t0) * 1000.0
@@ -130,7 +131,7 @@ class RAGEvalEvaluator:
         )
 
         return QueryEvaluationResult(
-            query_id=query_id,
+            query_id=resolved_id,
             question=question,
             test_type=test_type,
             generated_answer=generated_answer,

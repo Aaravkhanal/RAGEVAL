@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-**Software versions do not replace the recorded ablation.** Official tables under `reports/` are from blinded-mock run [`20261028T183042Z_a97ad68f`](reports/20261028T183042Z_a97ad68f/FINDINGS.md) on `benchmark_v1` **1.0.0** (16 documents, 24 items). $n=24$ is underpowered. A companion v1.1.0 mock+NLI run is [`20261029T165024Z_657c8089`](reports/20261029T165024Z_657c8089/FINDINGS.md) (18 documents, 28 items); it does not replace the published table. This changelog is a packaging history, not a confirmatory RAG ranking.
+**Software versions do not replace the recorded ablation.** Official tables under `reports/` are from blinded-mock run [`20261028T183042Z_a97ad68f`](reports/20261028T183042Z_a97ad68f/FINDINGS.md) on `benchmark_v1` **1.0.0** (16 documents, 24 items). $n=24$ is underpowered. Companion mock+NLI runs: v1.1.0 [`20261029T165024Z_657c8089`](reports/20261029T165024Z_657c8089/FINDINGS.md) (18/28) and v1.2.0 [`20261029T173408Z_de870a29`](reports/20261029T173408Z_de870a29/FINDINGS.md) (21/32). They do not replace the published table. This changelog is a packaging history, not a confirmatory RAG ranking.
 
 ## [Unreleased]
 
@@ -14,11 +14,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Companion `benchmark_v1` **1.1.0** six-config mock + DeBERTa NLI ablation (`20261029T165024Z_657c8089`, 18 documents, 28 items). Tables: `reports/phase7/v1_1_matrix/`. Official published tables remain `20261028T183042Z_a97ad68f`. n=28 is still underpowered.
 - R3: `configs/opt_in/smoke_llm.yaml` plus CLI `--allow-opt-in` on `rageval experiment` and `rageval benchmark`. HTTP jobs still list only `configs/experiments/` and refuse `opt_in: true`. Live LLM smoke was **not** run (no API key, empty Ollama models); see `reports/opt_in_smoke_llm/STATUS.md`.
 - R4: `rageval iaa` (Cohen's kappa, `rageval.iaa.v1`). Rater B is still missing; kappa on the template is null. Files: `data/gold/iaa/`.
-- R4: `benchmark_v1` **1.2.0** — 21 documents, 32 items (24 dev / 8 test). New USGS Yellowstone FAQs and NASA ISS excerpt; new ids `v1_029`–`v1_032` are **dev** and **unscored** vs `657c8089`. Test ids remain frozen. HTTP `max_items` cap is 32.
+- R4: `benchmark_v1` **1.2.0** — 21 documents, 32 items (24 dev / 8 test). New USGS Yellowstone FAQs and NASA ISS excerpt; new ids `v1_029`–`v1_032` are **dev**. Test ids remain frozen. HTTP `max_items` cap is 32.
+- R5: external RAG scorer — `rageval score --input answers.jsonl --output scores.jsonl` and `score_answer(question, answer, contexts)`. Question + chunks + answer in, `QueryEvaluationResult` out. Default verifier is heuristic. No retrieval, no generator, no gold in a prompt.
+- Companion `benchmark_v1` **1.2.0** six-config mock + DeBERTa NLI ablation (`20261029T173408Z_de870a29`, 21 documents, 32 items). Tables: `reports/phase7/v1_2_matrix/`. Recall@5 0.8438 identical; Dense faith 0.401; Sparse 0.4219; Hybrid 0.4635; Reranked 0.4583; abstention 0.1667. n=32 is still underpowered. Official published tables remain `a97ad68f`.
+- R7: `A_chunk` overlap-32 protocol on 1.2.0 (`20261029T173515Z_7e2b94a3`). Tables: `reports/phase7/A_chunk_overlap32/`. Three dense configs; faith 0.401 / R@5 0.8438 / MRR 0.7344 identical (matches the six-config dense rows). Does not replace `a97ad68f` or `v1_2_matrix`.
+
+### Changed
+
+- Significance tests are confirmatory only when n≥30 **and** items are treated as i.i.d. (`independent=True`). Default remains `independent=False` because recorded items share documents. The v1.2.0 Hybrid vs Dense faithfulness raw p=0.0435 is diagnostic; `is_significant` stays false.
 
 ### Fixed
 
 - `rageval benchmark` no longer raises `UnboundLocalError` on `BenchmarkReporter` after the suite finishes (local import in the findings branch shadowed the module import).
+- Findings text for A_chunk no longer prints `None` for missing hybrid configs. Mixed-support narrative does not claim claim-support moved when every config is tied.
 
 ## [0.2.1] - 2026-10-29
 

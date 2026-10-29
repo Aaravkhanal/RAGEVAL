@@ -15,6 +15,7 @@ python -m rageval.cli evaluate --method heuristic \
 python -m rageval.cli experiment \
   --config configs/experiments/smoke.yaml \
   --output-dir experiments/runs
+python -m rageval.cli score --input configs/examples/external_score.jsonl --output /tmp/scores.jsonl --method heuristic
 ```
 
 The smoke experiment uses BM25 + a blinded mock generator + a lexical heuristic. It is a CI fixture, not a publication result.

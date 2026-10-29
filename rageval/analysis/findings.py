@@ -99,7 +99,12 @@ def render_findings(
     n_documents = metrics.get("n_documents")
     configs = metrics.get("by_config") or {}
     baseline = "Dense_Chunk256_Baseline"
-    if version.startswith("1.1"):
+    exp_id = metrics.get("experiment_id") or ""
+    if exp_id == "A_chunk":
+        tables_rel = "reports/phase7/A_chunk_overlap32"
+    elif version.startswith("1.2"):
+        tables_rel = "reports/phase7/v1_2_matrix"
+    elif version.startswith("1.1"):
         tables_rel = "reports/phase7/v1_1_matrix"
     else:
         tables_rel = "reports/phase7/v1_matrix"
@@ -122,7 +127,7 @@ def render_findings(
         "- Items share documents, so they are not i.i.d. Bootstrap CIs are diagnostic.",
         f"- Confirmatory tests require n≥30 i.i.d. This run has n={n_items}.",
     ]
-    if version.startswith("1.1"):
+    if version.startswith("1.1") or version.startswith("1.2"):
         lines.append(
             "- Companion to the published v1.0.0 tables "
             "(`20261028T183042Z_a97ad68f`). It does not replace them."
@@ -141,10 +146,19 @@ def render_findings(
     unique_mrr = set(mrrs.values())
     if len(unique_r5) == 1:
         r5 = next(iter(unique_r5))
+        if "Hybrid_RRF_Chunk256" in configs or "Hybrid_RRF_Reranked" in configs:
+            hypo = (
+                "The RQ1 hypothesis that hybrid RRF improves Recall@5 "
+                "vs dense-only is **falsified on this corpus** (the means are equal)."
+            )
+        else:
+            hypo = (
+                "Chunk-size differences on Recall@5 are **not identifiable** "
+                "on this corpus (the means are equal)."
+            )
         lines.append(
             f"- Recall@5 is **identical** at {r5} on all {len(configs)} configs "
-            f"(run `{run_id}`). The RQ1 hypothesis that hybrid RRF improves Recall@5 "
-            "vs dense-only is **falsified on this corpus** (the means are equal)."
+            f"(run `{run_id}`). {hypo}"
         )
     else:
         lines.append(
@@ -160,12 +174,16 @@ def render_findings(
             + ", ".join(f"{name}={value}" for name, value in mrrs.items())
             + "."
         )
-    if baseline in faiths:
-        lines.append(
-            f"- Claim support (faithfulness) is {faiths.get(baseline)} on {baseline}, "
-            f"{faiths.get('Hybrid_RRF_Chunk256')} on Hybrid_RRF_Chunk256, and "
-            f"{faiths.get('Hybrid_RRF_Reranked')} on Hybrid_RRF_Reranked."
-        )
+    faith_bits = []
+    for key in (baseline, "Hybrid_RRF_Chunk256", "Hybrid_RRF_Reranked"):
+        if key in faiths and faiths[key] is not None:
+            faith_bits.append(f"{faiths[key]} on {key}")
+    if not faith_bits:
+        faith_bits = [f"{value} on {name}" for name, value in faiths.items() if value is not None]
+    elif len(faith_bits) == 1 and len(faiths) > 1:
+        faith_bits = [f"{value} on {name}" for name, value in faiths.items() if value is not None]
+    if faith_bits:
+        lines.append("- Claim support (faithfulness) is " + ", ".join(faith_bits) + ".")
     hybrid_lift = recall_relative_lift_pct(metrics, baseline, "Hybrid_RRF_Chunk256")
     if hybrid_lift is not None:
         lines.append(
@@ -191,7 +209,8 @@ def render_findings(
     lines.extend(
         [
             f"- Significance vs baseline is in `{tables_rel}/significance.json`. "
-            "All comparisons have `underpowered=true` and `is_significant=false`.",
+            "Comparisons stay diagnostic unless n≥30 i.i.d.; recorded items share documents, "
+            "so `underpowered=true` and `is_significant=false`.",
             rq1_close,
             "",
             "## RQ2 — verifier vs gold claims",
@@ -222,10 +241,16 @@ def render_findings(
                 f"{min(r[3] for r in mixed_rows)}–{max(r[3] for r in mixed_rows)}."
             )
         mixed_n = mixed_rows[0][1]
-        if len(f1s) == 1:
+        claim_vals = {row[3] for row in mixed_rows}
+        if len(f1s) == 1 and len(claim_vals) > 1:
             lines.append(
                 "- That is the RQ3 pattern on this slice: answer-level F1 does not move; "
                 f"claim support does. n={mixed_n} is too small to confirm the hypothesis beyond this pilot."
+            )
+        elif len(f1s) == 1:
+            lines.append(
+                "- On this slice both token F1 and claim support are identical across configs. "
+                f"n={mixed_n} is too small to confirm RQ3 beyond this pilot."
             )
         else:
             lines.append(
@@ -239,7 +264,10 @@ def render_findings(
             "",
         ]
     )
-    abst = {name: block.get("abstention_accuracy") for name, block in configs.items()}
+    def _round4(value):
+        return round(float(value), 4) if isinstance(value, (int, float)) else value
+
+    abst = {name: _round4(block.get("abstention_accuracy")) for name, block in configs.items()}
     unique_abst = set(abst.values())
     if len(unique_abst) == 1:
         lines.append(
@@ -340,7 +368,22 @@ def render_findings(
     lines.extend(
         [
             "- Single-author gold. No IAA.",
-            "- Dense chunk overlap in this run was 16/32/64, not the Phase 7 A_chunk fixed-32 protocol.",
+        ]
+    )
+    if exp_id == "A_chunk":
+        lines.append("- Dense chunk overlap in this run was fixed at 32 (A_chunk protocol).")
+    else:
+        lines.append(
+            "- Dense chunk overlap in this run was 16/32/64, not the Phase 7 A_chunk fixed-32 protocol."
+        )
+    if version.startswith("1.2"):
+        error_line = "- Errors: `reports/error_analysis_v1_2.md`"
+    elif version.startswith("1.1"):
+        error_line = "- Errors: `reports/error_analysis_v1_1.md`"
+    else:
+        error_line = "- Errors: `reports/error_analysis_phase6.md`"
+    lines.extend(
+        [
             "- Faithfulness is support-by-retrieved-evidence, not world truth.",
             "- This project is not Niu et al. 2024 RAGTruth.",
             "",
@@ -348,9 +391,7 @@ def render_findings(
             "",
             f"- Run id: `{run_id}`",
             f"- Tables: `{tables_rel}/metrics.json`",
-            "- Errors: `reports/error_analysis_v1_1.md`"
-            if version.startswith("1.1")
-            else "- Errors: `reports/error_analysis_phase6.md`",
+            error_line,
             "- RQ2: `reports/verifier_eval_v1.md`",
             "",
         ]

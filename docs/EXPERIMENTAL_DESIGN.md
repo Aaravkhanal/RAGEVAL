@@ -18,7 +18,7 @@ Embedder: `sentence-transformers/all-MiniLM-L6-v2`.
 ## Dataset
 
 - **smoke_v1**: 8 synthetic documents, 8 items (`data/cards/smoke_v1.md`). Development fixture and CI. Not for publication claims.
-- **benchmark_v1**: v1.2.0 is 21 licensed documents, 32 items (`data/cards/benchmark_v1.md`). Mix of U.S. government public-domain excerpts and original CC-BY-4.0 fiction. Documented 24/8 dev/test split (test ids frozen from v1.0.0). The published ablation reports the **full v1.0.0 24-item set**. Companion run `20261029T165024Z_657c8089` scores the 28-item 1.1.0 set; `v1_029`–`v1_032` are unscored; n_test=8 is still underpowered.
+- **benchmark_v1**: v1.2.0 is 21 licensed documents, 32 items (`data/cards/benchmark_v1.md`). Mix of U.S. government public-domain excerpts and original CC-BY-4.0 fiction. Documented 24/8 dev/test split (test ids frozen from v1.0.0). The published ablation reports the **full v1.0.0 24-item set**. Companion `657c8089` scores 1.1.0 (28 items); companion `de870a29` scores 1.2.0 (32 items). n_test=8 is still underpowered.
 
 ## Analysis plan
 

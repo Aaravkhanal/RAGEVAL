@@ -1,0 +1,62 @@
+{
+  "baseline": "Dense_Chunk256_Baseline",
+  "note": "Confirmatory tests require n>=30 i.i.d. items. Items that share documents are not i.i.d.; is_significant stays false.",
+  "comparisons": [
+    {
+      "metric": "faithfulness",
+      "baseline_name": "Dense_Chunk256_Baseline",
+      "treatment_name": "Dense_Chunk128_overlap32",
+      "n": 32,
+      "mean_diff": 0.0,
+      "p_value_ttest": 1.0,
+      "p_value_wilcoxon": 1.0,
+      "is_significant": false,
+      "underpowered": true,
+      "confirmatory": false,
+      "independent_items_assumed": false,
+      "note": "n=32 but items are not treated as i.i.d.; tests are diagnostic; is_significant stays false."
+    },
+    {
+      "metric": "recall",
+      "baseline_name": "Dense_Chunk256_Baseline",
+      "treatment_name": "Dense_Chunk128_overlap32",
+      "n": 32,
+      "mean_diff": 0.0,
+      "p_value_ttest": 1.0,
+      "p_value_wilcoxon": 1.0,
+      "is_significant": false,
+      "underpowered": true,
+      "confirmatory": false,
+      "independent_items_assumed": false,
+      "note": "n=32 but items are not treated as i.i.d.; tests are diagnostic; is_significant stays false."
+    },
+    {
+      "metric": "faithfulness",
+      "baseline_name": "Dense_Chunk256_Baseline",
+      "treatment_name": "Dense_Chunk512_overlap32",
+      "n": 32,
+      "mean_diff": 0.0,
+      "p_value_ttest": 1.0,
+      "p_value_wilcoxon": 1.0,
+      "is_significant": false,
+      "underpowered": true,
+      "confirmatory": false,
+      "independent_items_assumed": false,
+      "note": "n=32 but items are not treated as i.i.d.; tests are diagnostic; is_significant stays false."
+    },
+    {
+      "metric": "recall",
+      "baseline_name": "Dense_Chunk256_Baseline",
+      "treatment_name": "Dense_Chunk512_overlap32",
+      "n": 32,
+      "mean_diff": 0.0,
+      "p_value_ttest": 1.0,
+      "p_value_wilcoxon": 1.0,
+      "is_significant": false,
+      "underpowered": true,
+      "confirmatory": false,
+      "independent_items_assumed": false,
+      "note": "n=32 but items are not treated as i.i.d.; tests are diagnostic; is_significant stays false."
+    }
+  ]
+}

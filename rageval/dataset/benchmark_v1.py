@@ -1170,8 +1170,8 @@ def write_dataset(data_dir: str = "data") -> str:
             "the instruction-like document are original fiction (CC-BY-4.0). "
             "NASA quotes were ASCII-normalized. This is not the Niu et al. 2024 RAGTruth corpus. "
             "v1.1.0 added reviewed numerical/negation, empty-context, instruction-like, and paired "
-            "conflict items. v1.2.0 adds USGS Yellowstone FAQs and a NASA ISS excerpt; new items "
-            "are unscored in companion run 20261029T165024Z_657c8089. Official tables remain "
+            "conflict items. v1.2.0 adds USGS Yellowstone FAQs and a NASA ISS excerpt; those items "
+            "are scored in companion run 20261029T173408Z_de870a29. Official tables remain "
             "20261028T183042Z_a97ad68f (v1.0.0 n=24)."
         ),
     }

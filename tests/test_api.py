@@ -98,6 +98,14 @@ def test_experiments_committed_snapshot_results():
     v11 = client.get("/experiments/20261029T165024Z_657c8089/results")
     assert v11.status_code == 200
     assert v11.json()["metrics"]["n_items"] == 28
+    assert "20261029T173408Z_de870a29" in ids
+    v12 = client.get("/experiments/20261029T173408Z_de870a29/results")
+    assert v12.status_code == 200
+    assert v12.json()["metrics"]["n_items"] == 32
+    assert "20261029T173515Z_7e2b94a3" in ids
+    achunk = client.get("/experiments/20261029T173515Z_7e2b94a3/results")
+    assert achunk.status_code == 200
+    assert achunk.json()["metrics"]["experiment_id"] == "A_chunk"
 
 
 def test_experiment_secret_redaction(tmp_path, monkeypatch):

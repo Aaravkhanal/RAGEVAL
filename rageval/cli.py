@@ -9,9 +9,6 @@ from rageval.dataset.loader import DatasetLoader
 from rageval.benchmark.suite import BenchmarkSuite
 from rageval.benchmark.reporter import BenchmarkReporter
 from rageval.analysis.generate_paper_report import run_and_generate_paper_analysis
-from rageval.evaluator.evaluator import RAGEvalEvaluator
-from rageval.core.config import EvaluatorConfig
-from rageval.core.schemas import Chunk, RetrievedChunk
 
 
 def main():
@@ -103,6 +100,19 @@ def main():
     eval_parser.add_argument("--answer", required=True, help="Generated answer text")
     eval_parser.add_argument("--context", action="append", required=True, help="Context chunk text (can specify multiple)")
     eval_parser.add_argument("--method", default="nli", choices=["nli", "heuristic"], help="Verifier method")
+
+    score_parser = subparsers.add_parser(
+        "score",
+        help="Score caller-supplied RAG answers (question+chunks+answer JSONL; no retrieval)",
+    )
+    score_parser.add_argument("--input", required=True, help="JSONL or JSON array of {id, question, answer, contexts}")
+    score_parser.add_argument("--output", required=True, help="Output JSONL of QueryEvaluationResult")
+    score_parser.add_argument(
+        "--method",
+        default="heuristic",
+        choices=["nli", "heuristic"],
+        help="Verifier. Default heuristic so a batch score does not download DeBERTa.",
+    )
 
     # Subcommand: serve
     serve_parser = subparsers.add_parser("serve", help="Launch FastAPI web server and interactive dashboard")
@@ -251,30 +261,22 @@ def main():
         print(f"Wrote {path}")
 
     elif args.command == "evaluate":
-        evaluator = RAGEvalEvaluator(EvaluatorConfig(method=args.method))
-        retrieved_chunks = [
-            RetrievedChunk(
-                chunk=Chunk(
-                    id=f"cli_chk_{i}",
-                    doc_id=f"cli_doc_{i}",
-                    text=c,
-                    chunk_index=i-1,
-                    token_count=len(c.split()),
-                    start_char=0,
-                    end_char=len(c),
-                ),
-                score=1.0,
-                rank=i,
-                retrieval_method="cli_input",
-            )
-            for i, c in enumerate(args.context, start=1)
-        ]
-        result = evaluator.evaluate_query(
-            question=args.question,
-            generated_answer=args.answer,
-            retrieved_chunks=retrieved_chunks,
+        from rageval.integrations.external import result_to_jsonable, score_answer
+
+        result = score_answer(
+            args.question,
+            args.answer,
+            args.context,
+            method=args.method,
+            query_id="cli_evaluate",
         )
-        print(json.dumps(result.model_dump(), indent=2))
+        print(json.dumps(result_to_jsonable(result), indent=2))
+
+    elif args.command == "score":
+        from rageval.integrations.external import score_file
+
+        path = score_file(args.input, args.output, method=args.method)
+        print(f"Wrote {path}")
 
     elif args.command == "serve":
         import uvicorn
