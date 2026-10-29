@@ -11,6 +11,7 @@ from fastapi.responses import HTMLResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+from rageval import __version__
 from rageval.core.config import EvaluatorConfig
 from rageval.core.schemas import Chunk, QueryEvaluationResult, RetrievedChunk
 from rageval.evaluator.evaluator import RAGEvalEvaluator
@@ -35,7 +36,7 @@ app = FastAPI(
         "request thread. POST /benchmark/run stays 410. This project is not "
         "Niu et al. 2024 RAGTruth."
     ),
-    version="0.2.0rc1",
+    version=__version__,
 )
 
 app.add_middleware(

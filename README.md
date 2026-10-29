@@ -24,7 +24,7 @@ Committed tables under `reports/` are from run `20261028T183042Z_a97ad68f` on `b
 
 ## Install
 
-Python 3.10+. Prefer a dedicated environment. Version **0.2.0rc1**.
+Python 3.10+. Prefer a dedicated environment. Software version **0.2.0**. Official ablation tables remain mock run `20261028T183042Z_a97ad68f`.
 
 ```bash
 # Fast tests and smoke (hashed [dev,api] lock, no torch)
@@ -37,7 +37,7 @@ pytest -m "not hf"
 pip install -e ".[all]"
 ```
 
-Hashed locks: `requirements-lock-fast.txt` (universal) and `requirements-lock-all.txt` (manylinux x86_64, CPU torch). Regenerate with `bash scripts/compile_locks.sh`. Docker: `docker build --platform linux/amd64 -t rageval:0.2.0rc1 .` (see `docs/REPRODUCIBILITY.md`).
+Hashed locks: `requirements-lock-fast.txt` (universal) and `requirements-lock-all.txt` (manylinux x86_64, CPU torch). Regenerate with `bash scripts/compile_locks.sh`. Docker: `docker build --platform linux/amd64 -t rageval:0.2.0 .` (see `docs/REPRODUCIBILITY.md`). Packaging history: `CHANGELOG.md`.
 
 First NLI/embedding calls download Hugging Face weights unless they are already cached. There are no paid APIs in the default path. See `docs/QUICKSTART.md`.
 
@@ -89,6 +89,7 @@ HTTP after `rageval serve`:
 
 ## Documentation
 
+- `CHANGELOG.md`
 - `docs/QUICKSTART.md`
 - `docs/REPRODUCIBILITY.md`
 - `docs/RELEASE_CHECKLIST.md`

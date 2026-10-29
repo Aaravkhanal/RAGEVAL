@@ -1,4 +1,4 @@
-# Known limitations (release candidate)
+# Known limitations (0.2.0)
 
 Longer threats list: `docs/RESEARCH_GAPS.md`. Honest v1 write-up: `reports/20261028T183042Z_a97ad68f/FINDINGS.md`.
 

@@ -1,4 +1,4 @@
-"""Release-candidate checks: version, license, reports match the recorded run, no secrets."""
+"""Release checks: version, license, reports match the recorded run, no secrets."""
 
 import json
 import re
@@ -16,8 +16,18 @@ SECRET_VALUE = re.compile(
 )
 
 
-def test_version_is_rc():
-    assert rageval.__version__ == "0.2.0rc1"
+def test_version_is_release():
+    assert rageval.__version__ == "0.2.0"
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert re.search(r'(?m)^version = "0.2.0"$', pyproject)
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    assert "## [0.2.0]" in changelog
+    assert "Keep a Changelog" in changelog
+    assert "20261028T183042Z_a97ad68f" in changelog
+    assert "twine upload" in changelog
+    from rageval.server.app import app
+
+    assert app.version == "0.2.0"
 
 
 def test_license_files_exist():

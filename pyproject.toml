@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rageval"
-version = "0.2.0rc1"
+version = "0.2.0"
 description = "A research-grade benchmark and claim-level faithfulness evaluation system for RAG applications"
 readme = "README.md"
 license = { file = "LICENSE" }

@@ -329,7 +329,7 @@ Embeddings beyond MiniLM and any paid LLM are **opt-in** after a resource note.
 
 ## Phase 10 — QA and release candidate
 
-**Status:** Complete for 0.2.0rc1 (`v0.2.0-rc1`). Fast CI is `pytest -m "not hf"`. Hugging Face tests are a manual/weekly workflow. Later phases are not defined.
+**Status:** Complete for 0.2.0rc1 (`v0.2.0-rc1`). Software tag **0.2.0** (`v0.2.0`) adds HTTP jobs, opt-in LLM backends, hashed locks, Docker, and proven HF CI. Fast CI is `pytest -m "not hf"`. Hugging Face tests are a manual/weekly workflow.
 
 **Objective:** Another researcher can reproduce smoke + documented baseline.
 

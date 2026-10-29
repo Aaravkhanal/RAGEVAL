@@ -1,0 +1,38 @@
+# Changelog
+
+All notable changes to this project are documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+**Software versions do not replace the recorded ablation.** Official tables under `reports/` are from blinded-mock run [`20261028T183042Z_a97ad68f`](reports/20261028T183042Z_a97ad68f/FINDINGS.md) on `benchmark_v1` **1.0.0** (16 documents, 24 items). $n=24$ is underpowered. This changelog is a packaging history, not a confirmatory RAG ranking.
+
+## [0.2.0] - 2026-10-29
+
+Installable software release after `0.2.0rc1`: HTTP jobs, opt-in LLM backends, hashed locks, a CPU Docker image, and proven Hugging Face CI.
+
+### Added
+
+- Process-local experiment job queue: `POST /experiments` returns 202; poll `GET /experiments/{id}`. Allowlisted YAML names under `configs/experiments/`. Default HTTP config is `smoke`. NLI / full v1 names require `allow_heavy=true`. One job at a time (HTTP 409 if busy).
+- Opt-in generators `openai`, `ollama`, and `local_hf` (`configs/opt_in/`). API keys from `OPENAI_API_KEY` / `RAGEVAL_API_KEY` only. HTTP errors raise; there is no mock fallback and no silent NLI→heuristic fallback.
+- Hashed lockfiles: `requirements-lock-fast.txt` (`[dev,api]`, universal) and `requirements-lock-all.txt` (manylinux x86_64, CPU `torch` + `faiss-cpu`). Regenerator: `bash scripts/compile_locks.sh`.
+- Docker image: Python 3.12, hashed all-lock, `CMD ["rageval", "serve"]`. Build with `--platform linux/amd64`.
+- Hugging Face nightly workflow with hub cache, 90-minute timeout, and no `continue-on-error`. First green GitHub run: [40891849818](https://github.com/Aaravkhanal/RAGEVAL/actions/runs/40891849818) (commit `94c9eeb`).
+- This changelog. Local sdist/wheel check: `python -m build && twine check dist/*`. PyPI upload is a maintainer step (`twine upload dist/*`) and is not run by CI.
+
+### Changed
+
+- Package version `0.2.0rc1` → `0.2.0`. Git tag `v0.2.0`.
+- Fast GitHub CI installs from `requirements-lock-fast.txt`.
+
+### Fixed
+
+- HTTP job status writes are atomic so a truncated `status.json` cannot 400 a poll.
+- OpenAI-like generators no longer turn HTTP failures into an answer string.
+
+## [0.2.0rc1] - 2026-10-28
+
+Phase 10 release candidate (tag `v0.2.0-rc1`). Split extras so fast tests run without Hugging Face; MIT `LICENSE` and dataset license notes; smoke experiment YAML; quickstart and reproducibility docs; CI that skips `-m hf`.
+
+[0.2.0]: https://github.com/Aaravkhanal/RAGEVAL/releases/tag/v0.2.0
+[0.2.0rc1]: https://github.com/Aaravkhanal/RAGEVAL/releases/tag/v0.2.0-rc1
