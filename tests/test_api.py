@@ -5,15 +5,112 @@ import json
 import pytest
 from fastapi.testclient import TestClient
 
+from rageval import __version__
 from rageval.server.app import app
+from rageval.server.runtime import cors_allow_origins, reset_runtime_for_tests
 
 client = TestClient(app)
+
+
+@pytest.fixture(autouse=True)
+def _reset_runtime():
+    reset_runtime_for_tests()
+    yield
+    reset_runtime_for_tests()
 
 
 def test_health_check():
     res = client.get("/health")
     assert res.status_code == 200
-    assert res.json() == {"status": "ok", "service": "rageval"}
+    body = res.json()
+    assert body["status"] == "ok"
+    assert body["service"] == "rageval"
+    assert body["version"] == __version__
+    assert "busy" in body
+    assert res.headers.get("x-content-type-options") == "nosniff"
+    assert res.headers.get("x-frame-options") == "DENY"
+    assert res.headers.get("x-request-id")
+
+
+def test_health_echoes_request_id():
+    res = client.get("/health", headers={"X-Request-ID": "req-test-1"})
+    assert res.headers.get("x-request-id") == "req-test-1"
+
+
+def test_ready_check():
+    res = client.get("/ready")
+    assert res.status_code == 200
+    body = res.json()
+    assert body["status"] == "ready"
+    assert body["data_ok"] is True
+    assert body["version"] == __version__
+
+
+def test_evaluate_answer_heuristic_default():
+    payload = {
+        "question": "What was ApexCloud gross margin?",
+        "answer": "ApexCloud reached a 78.2% gross margin [1].",
+        "context_chunks": [
+            "ApexCloud reported that gross margin reached 78.2% in Q3 2024.",
+        ],
+    }
+    res = client.post("/evaluate/answer", json=payload)
+    assert res.status_code == 200
+    data = res.json()["evaluation"]
+    assert data["faithfulness_score"] == 1.0
+    assert len(data["claims"]) >= 1
+    assert data["verifications"][0]["verifier_method"] == "heuristic"
+
+
+def test_evaluate_answer_rejects_unknown_method():
+    res = client.post(
+        "/evaluate/answer",
+        json={
+            "question": "q",
+            "answer": "a",
+            "context_chunks": ["c"],
+            "method": "magic",
+        },
+    )
+    assert res.status_code == 422
+
+
+def test_score_endpoint_heuristic():
+    res = client.post(
+        "/score",
+        json={
+            "question": "What was the margin?",
+            "answer": "Gross margin was 78.2% [1].",
+            "contexts": ["ApexCloud reported that gross margin reached 78.2% in Q3 2024."],
+            "query_id": "http_score_1",
+        },
+    )
+    assert res.status_code == 200
+    body = res.json()
+    assert body["schema"] == "rageval.external_score.v1"
+    assert body["evaluation"]["faithfulness_score"] == 1.0
+    assert body["evaluation"]["query_id"] == "http_score_1"
+
+
+def test_evaluate_rate_limit(monkeypatch):
+    monkeypatch.setenv("RAGEVAL_RATE_LIMIT_PER_MINUTE", "2")
+    payload = {
+        "question": "What is the test question?",
+        "answer": "The test is valid [1].",
+        "context_chunks": ["The test is valid."],
+    }
+    codes = [client.post("/evaluate/answer", json=payload).status_code for _ in range(3)]
+    assert codes[:2] == [200, 200]
+    assert codes[2] == 429
+
+
+def test_cors_origins_helper():
+    origins, creds = cors_allow_origins("http://127.0.0.1:8000,http://localhost:8000")
+    assert origins == ["http://127.0.0.1:8000", "http://localhost:8000"]
+    assert creds is True
+    wild, wild_creds = cors_allow_origins("*")
+    assert wild == ["*"]
+    assert wild_creds is False
 
 
 @pytest.mark.hf
@@ -26,6 +123,7 @@ def test_evaluate_answer_api():
         "context_chunks": [
             "ApexCloud reported that gross margin reached 78.2% in Q3 2024.",
         ],
+        "method": "nli",
     }
     res = client.post("/evaluate/answer", json=payload)
     assert res.status_code == 200
@@ -46,6 +144,9 @@ def test_openapi_lists_catalog_routes():
     assert "/experiments/{run_id}/results" in paths
     assert "/experiment-configs" in paths
     assert "post" in paths["/experiments"]
+    assert "/ready" in paths
+    assert "/score" in paths
+    assert "post" in paths["/score"]
 
 
 def test_datasets_index_and_detail():
@@ -158,3 +259,7 @@ def test_dashboard_html_is_api_backed():
     assert "api_key" not in html
     assert "OPENAI_API_KEY" not in html
     assert "2000" in html
+    assert "eval-method" in html
+    assert 'value="heuristic"' in html
+    assert "fonts.googleapis.com" not in html
+    assert "fonts.gstatic.com" not in html

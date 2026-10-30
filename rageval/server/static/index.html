@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RAGeval — Claim-Level Faithfulness & Hallucination Auditor</title>
     <meta name="description" content="Research-grade benchmark and claim-level NLI verification system for detecting unreliable AI answers in RAG pipelines.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-base: #0a0d14;
@@ -27,8 +24,8 @@
             --status-neutral-bg: rgba(245, 158, 11, 0.12);
             --status-contra: #ef4444;
             --status-contra-bg: rgba(239, 68, 68, 0.12);
-            --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
+            --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
             --radius-md: 10px;
             --radius-lg: 16px;
         }
@@ -526,7 +523,7 @@
         <div class="hero-section">
             <h1 class="hero-title">RAG Faithfulness & Claim Attribution Engine</h1>
             <p class="hero-subtitle">
-                Decomposes answers into fine-grained atomic propositions, pinpoints exact evidence spans, and audits citation integrity using PyTorch Natural Language Inference.
+                Decomposes answers into atomic claims and audits citation support against caller-supplied chunks. Live audit defaults to a lexical heuristic. DeBERTa NLI is opt-in via method=nli.
             </p>
         </div>
 
@@ -566,6 +563,14 @@
                     <div class="input-group">
                         <label for="eval-answer">Generated Answer (with Citations)</label>
                         <textarea id="eval-answer" rows="3">ApexCloud achieved a gross margin of 78.2% [1]. This margin expansion was driven by custom ASIC silicon deployment [1].</textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="eval-method">Verifier</label>
+                        <select id="eval-method">
+                            <option value="heuristic" selected>heuristic (default, no model download)</option>
+                            <option value="nli">nli (DeBERTa, first call may download weights)</option>
+                        </select>
                     </div>
 
                     <button class="btn-primary" id="btn-run-eval">
@@ -762,13 +767,16 @@
 
             try {
                 const chunks = contextText.split("\n\n").filter(c => c.trim().length > 0);
+                const methodEl = document.getElementById("eval-method");
+                const method = methodEl ? methodEl.value : "heuristic";
                 const resp = await fetch("/evaluate/answer", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         question: question,
                         answer: answer,
-                        context_chunks: chunks.length ? chunks : [contextText]
+                        context_chunks: chunks.length ? chunks : [contextText],
+                        method: method
                     })
                 });
 

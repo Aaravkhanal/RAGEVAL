@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Production HTTP hardening: `GET /ready`, version+busy on `GET /health`, `POST /score`, live `method=heuristic|nli` (default heuristic), CORS from `RAGEVAL_CORS_ORIGINS`, trusted hosts, request-id, security headers, per-IP rate limit on evaluate/score. Docker `HEALTHCHECK`, `docker-compose.yml`, `.dockerignore`, `.env.example`, `docs/PRODUCTION.md`. Dashboard live audit no longer loads Google Fonts.
 - NVIDIA NIM opt-in generator (`configs/opt_in/nvidia_nim.yaml`, `smoke_llm_nvidia.yaml`, `benchmark_llm_nvidia.yaml`, `benchmark_llm_nvidia_retrieve.yaml`). Keys from `NVIDIA_API_KEY` in the environment or a gitignored `.env` (`rageval.core.envfile`). Model used: `nvidia/nemotron-3.5-bolt-e4b`. Live smoke `20261030T052448Z_6df3afb9` on `smoke_v1` (n=8, heuristic). Sparse companion `20261030T052638Z_79a8b21d` (faith 0.7188, R@5 0.8438, MRR 0.7812, abstention 1.0). Dense/hybrid companion `20261030T055224Z_388c5503` (dense faith 0.7396 / MRR 0.7344; hybrid faith 0.6458 / MRR 0.75; R@5 0.8438 and abstention 1.0 on both). Does not replace `a97ad68f`.
 - Disclosed LLM rater B (`data/gold/iaa/annotator_b_verifier_eval_v1.json`, annotator_id `rater_b_llm_grok`). Diagnostic kappa 0.9423 on n=24. Not confirmatory human IAA.
 - OpenAI-like generator reads NVIDIA `reasoning_content` when `content` is empty. `GeneratorConfig.timeout_s` default 60.

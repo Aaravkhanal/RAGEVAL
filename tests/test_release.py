@@ -52,6 +52,15 @@ def test_hashed_lockfiles():
     dockerfile = (ROOT / "Dockerfile").read_text(encoding="utf-8")
     assert "requirements-lock-all.txt" in dockerfile
     assert '"rageval", "serve"' in dockerfile
+    assert "HEALTHCHECK" in dockerfile
+    assert (ROOT / "docker-compose.yml").is_file()
+    compose = (ROOT / "docker-compose.yml").read_text(encoding="utf-8")
+    assert "rageval:0.2.1" in compose
+    dockerignore = (ROOT / ".dockerignore").read_text(encoding="utf-8")
+    assert ".env" in dockerignore
+    env_example = (ROOT / ".env.example").read_text(encoding="utf-8")
+    assert "NVIDIA_API_KEY=" in env_example
+    assert "nvapi-" not in env_example
     ci = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     assert "requirements-lock-fast.txt" in ci
     assert "--require-hashes" in ci

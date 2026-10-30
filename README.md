@@ -37,7 +37,7 @@ pytest -m "not hf"
 pip install -e ".[all]"
 ```
 
-Hashed locks: `requirements-lock-fast.txt` (universal) and `requirements-lock-all.txt` (manylinux x86_64, CPU torch). Regenerate with `bash scripts/compile_locks.sh`. Docker: `docker build --platform linux/amd64 -t rageval:0.2.1 .` (see `docs/REPRODUCIBILITY.md`). Packaging history: `CHANGELOG.md`.
+Hashed locks: `requirements-lock-fast.txt` (universal) and `requirements-lock-all.txt` (manylinux x86_64, CPU torch). Regenerate with `bash scripts/compile_locks.sh`. Docker: `docker build --platform linux/amd64 -t rageval:0.2.1 .` or `docker compose up --build` (see `docs/REPRODUCIBILITY.md`, `docs/PRODUCTION.md`). Packaging history: `CHANGELOG.md`.
 
 First NLI/embedding calls download Hugging Face weights unless they are already cached. There are no paid APIs in the default path. See `docs/QUICKSTART.md`.
 
@@ -97,7 +97,9 @@ HTTP after `rageval serve`:
 - `GET /experiment-configs` (allowlisted YAML names under `configs/experiments/`)
 - `GET /experiments`, `GET /experiments/{id}`, `GET /experiments/{id}/results`
 - `POST /experiments` → 202 `{id, status, poll}` then poll `GET /experiments/{id}`. Default config is `smoke`. NLI / full v1 names need `"allow_heavy": true`. One job at a time (409 if busy).
-- `POST /evaluate/answer` (caller-supplied context, sync)
+- `GET /health` (liveness: version, busy), `GET /ready`
+- `POST /evaluate/answer` (caller-supplied context, sync; default `method=heuristic`)
+- `POST /score` (external RAG scorer, same contract as `rageval score`)
 - `POST /benchmark/run` is removed (HTTP 410). OpenAPI: `/docs`
 
 ## Documentation
@@ -107,6 +109,7 @@ HTTP after `rageval serve`:
 - `docs/REPRODUCIBILITY.md`
 - `docs/RELEASE_CHECKLIST.md`
 - `docs/KNOWN_LIMITATIONS.md`
+- `docs/PRODUCTION.md`
 - `docs/PROJECT_AUDIT.md` — Phase 0 audit
 - `docs/ARCHITECTURE_PROPOSAL.md`
 - `docs/RESEARCH_GAPS.md`

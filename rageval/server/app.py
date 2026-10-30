@@ -3,28 +3,38 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Literal, Optional, Union
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, PlainTextResponse
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from rageval import __version__
-from rageval.core.config import EvaluatorConfig
 from rageval.core.schemas import Chunk, QueryEvaluationResult, RetrievedChunk
-from rageval.evaluator.evaluator import RAGEvalEvaluator
+from rageval.integrations.external import SCHEMA as SCORE_SCHEMA
+from rageval.integrations.external import score_answer
 from rageval.server.catalog import (
+    data_dir,
     get_dataset,
     get_experiment,
     get_experiment_results,
     list_datasets,
     list_experiments,
+    runs_root,
     table_from_metrics,
 )
-from rageval.server.jobs import enqueue_experiment, list_named_configs
+from rageval.server.jobs import enqueue_experiment, is_busy, list_named_configs
 from rageval.server.metrics import global_metrics_collector
+from rageval.server.runtime import (
+    allowed_hosts,
+    cors_allow_origins,
+    get_evaluator,
+    ProductionHeadersMiddleware,
+    RateLimitMiddleware,
+)
 from rageval.server.streaming import StreamingVerificationSession
 
 app = FastAPI(
@@ -33,21 +43,25 @@ app = FastAPI(
         "Claim-level faithfulness evaluation, dataset/run catalog, and a "
         "process-local job queue for allowlisted experiment YAML names. "
         "POST /experiments returns 202 and never runs BenchmarkSuite on the "
-        "request thread. POST /benchmark/run stays 410. This project is not "
+        "request thread. POST /benchmark/run stays 410. Live /evaluate/answer "
+        "and /score default to method=heuristic. This project is not "
         "Niu et al. 2024 RAGTruth."
     ),
     version=__version__,
 )
 
+_cors_origins, _cors_credentials = cors_allow_origins()
+app.add_middleware(RateLimitMiddleware)
+app.add_middleware(ProductionHeadersMiddleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=_cors_origins,
+    allow_credentials=_cors_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts())
 
-_evaluator: Optional[RAGEvalEvaluator] = None
 CLI_START = (
     "rageval experiment --config configs/experiments/C_retrieve.yaml "
     "--output-dir experiments/runs"
@@ -59,17 +73,11 @@ BENCHMARK_GONE = (
 )
 
 
-def get_evaluator() -> RAGEvalEvaluator:
-    global _evaluator
-    if _evaluator is None:
-        _evaluator = RAGEvalEvaluator(EvaluatorConfig())
-    return _evaluator
-
-
 class LiveEvaluationRequest(BaseModel):
     question: str
     answer: str
     context_chunks: List[str] = Field(default_factory=list)
+    method: Literal["heuristic", "nli"] = "heuristic"
 
 
 class LiveEvaluationResponse(BaseModel):
@@ -80,6 +88,15 @@ class StreamEvaluationRequest(BaseModel):
     question: str
     tokens: List[str]
     context_chunks: List[str] = Field(default_factory=list)
+    method: Literal["heuristic", "nli"] = "heuristic"
+
+
+class ScoreRequest(BaseModel):
+    question: str
+    answer: str
+    contexts: List[Union[str, Dict[str, Any]]] = Field(default_factory=list)
+    method: Literal["heuristic", "nli"] = "heuristic"
+    query_id: str = "live_query"
 
 
 class StartExperimentRequest(BaseModel):
@@ -88,9 +105,37 @@ class StartExperimentRequest(BaseModel):
     allow_heavy: bool = False
 
 
+def _health_payload() -> Dict[str, Any]:
+    return {
+        "status": "ok",
+        "service": "rageval",
+        "version": __version__,
+        "busy": is_busy(),
+    }
+
+
 @app.get("/health", tags=["meta"])
 def health_check():
-    return {"status": "ok", "service": "rageval"}
+    """Liveness. Always 200 if this process can answer HTTP."""
+    return _health_payload()
+
+
+@app.get("/ready", tags=["meta"])
+def ready_check():
+    """Readiness. 200 when data/runs dirs exist; 503 otherwise."""
+    data_ok = os.path.isdir(data_dir())
+    runs_ok = os.path.isdir(runs_root())
+    payload = {
+        "status": "ready" if data_ok else "not_ready",
+        "service": "rageval",
+        "version": __version__,
+        "busy": is_busy(),
+        "data_ok": data_ok,
+        "runs_ok": runs_ok,
+    }
+    if not data_ok:
+        return JSONResponse(status_code=503, content=payload)
+    return payload
 
 
 @app.get("/metrics", response_class=PlainTextResponse, tags=["meta"])
@@ -223,7 +268,7 @@ def evaluate_stream(req: StreamEvaluationRequest):
     session = StreamingVerificationSession(
         question=req.question,
         retrieved_chunks=retrieved_chunks,
-        verifier=get_evaluator().nli_verifier,
+        verifier=get_evaluator(req.method).nli_verifier,
     )
     events = []
     for tok in req.tokens:
@@ -240,14 +285,33 @@ def evaluate_stream(req: StreamEvaluationRequest):
 
 @app.post("/evaluate/answer", response_model=LiveEvaluationResponse, tags=["evaluate"])
 def evaluate_answer(req: LiveEvaluationRequest):
-    """Decompose an answer and verify claims against caller-supplied context. Sync."""
-    res = get_evaluator().evaluate_query(
+    """Decompose an answer and verify claims against caller-supplied context. Sync.
+
+    Default method is heuristic so the dashboard does not download DeBERTa.
+    Pass method=nli for the research verifier.
+    """
+    res = get_evaluator(req.method).evaluate_query(
         question=req.question,
         generated_answer=req.answer,
         retrieved_chunks=_chunks_from_texts(req.context_chunks, "user_provided"),
     )
     global_metrics_collector.record_evaluation(res)
     return LiveEvaluationResponse(evaluation=res)
+
+
+@app.post("/score", tags=["evaluate"])
+def score_external(req: ScoreRequest):
+    """HTTP surface for `rageval score`: question + contexts + answer in."""
+    res = score_answer(
+        req.question,
+        req.answer,
+        req.contexts,
+        method=req.method,
+        evaluator=get_evaluator(req.method),
+        query_id=req.query_id,
+    )
+    global_metrics_collector.record_evaluation(res)
+    return {"schema": SCORE_SCHEMA, "evaluation": res}
 
 
 static_dir = os.path.join(os.path.dirname(__file__), "static")

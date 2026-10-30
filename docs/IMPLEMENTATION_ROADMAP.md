@@ -306,7 +306,7 @@ Embeddings beyond MiniLM and any paid LLM are **opt-in** after a resource note.
 
 ## Phase 9 — API, interface, developer experience
 
-**Status:** Complete for dataset/experiment HTTP plus dashboard job UI (P6). `POST /experiments` queues a process-local job; the Experiments tab polls until complete. Live `/evaluate/answer` stays sync. `POST /benchmark/run` returns 410. Full NLI v1 still needs `allow_heavy` or the CLI.
+**Status:** Complete for dataset/experiment HTTP plus dashboard job UI (P6) and software production hardening (`docs/PRODUCTION.md`). `POST /experiments` queues a process-local job; the Experiments tab polls until complete. Live `/evaluate/answer` stays sync and defaults to heuristic. `POST /benchmark/run` returns 410. Full NLI v1 still needs `allow_heavy` or the CLI.
 
 **Objective:** Inspect experiments; do not block HTTP on training-sized jobs.
 

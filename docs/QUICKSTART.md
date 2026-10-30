@@ -48,7 +48,7 @@ python -m rageval.cli findings \
 python -m rageval.cli serve --port 8000
 ```
 
-`GET /datasets` and `GET /experiments` list completed runs. The dashboard Experiments tab starts a job with `POST /experiments` (`{"config": "smoke", "max_items": 2}`), polls every 2 s, then loads the results table. Heavy NLI configs need the allow-heavy checkbox (`"allow_heavy": true`). `POST /benchmark/run` stays 410. Live `POST /evaluate/answer` stays sync.
+`GET /datasets` and `GET /experiments` list completed runs. The dashboard Experiments tab starts a job with `POST /experiments` (`{"config": "smoke", "max_items": 2}`), polls every 2 s, then loads the results table. Heavy NLI configs need the allow-heavy checkbox (`"allow_heavy": true`). `POST /benchmark/run` stays 410. Live `POST /evaluate/answer` stays sync and defaults to `method=heuristic`. Production env, CORS, and Docker Compose: `docs/PRODUCTION.md`.
 
 ## Extras
 

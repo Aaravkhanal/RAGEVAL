@@ -55,9 +55,11 @@ That script uses `uv pip compile` (`uv` 0.13+). The all-lock sets `--extra-index
 ```bash
 docker build --platform linux/amd64 -t rageval:0.2.1 .
 docker run --rm -p 8000:8000 rageval:0.2.1
+# or
+DOCKER_DEFAULT_PLATFORM=linux/amd64 docker compose up --build
 ```
 
-`--platform linux/amd64` is required on Apple Silicon because the all-lock is x86_64. Default `CMD` is `rageval serve`. Hugging Face weights are **not** in the image; first NLI/embed call still downloads them.
+`--platform linux/amd64` is required on Apple Silicon because the all-lock is x86_64. Default `CMD` is `rageval serve`. The image `HEALTHCHECK` hits `GET /health`. Hugging Face weights are **not** in the image; first NLI/embed call still downloads them. CORS, hosts, and rate limits: `docs/PRODUCTION.md`.
 
 This job is not in GitHub Actions (torch wheels blow the fast-CI minute budget).
 

@@ -19,8 +19,11 @@ Use before tagging. Version on this branch: **0.2.1** (tag `v0.2.1`). This is a 
 - [x] `POST /experiments` with `config=smoke` returns 202; poll `GET /experiments/{id}` until complete; unknown names 400; heavy without `allow_heavy` 403; second job 409
 - [x] Hugging Face nightly is green; URL in `docs/REPRODUCIBILITY.md` ([run 40891849818](https://github.com/Aaravkhanal/RAGEVAL/actions/runs/40891849818))
 - [x] `python -m build && twine check dist/*` locally (sdist + wheel)
-- [ ] `twine upload dist/*` — **maintainer only**, needs a PyPI token. Not run in CI. Do not treat the GitHub tag as a PyPI publish.
 - [x] Annotated tag `v0.2.1`; Docker image tag `rageval:0.2.1`
+- [x] `GET /health` includes version; `GET /ready` is 200 when data dir exists
+- [x] `POST /evaluate/answer` default `method=heuristic` (no model download); `method=nli` still opt-in
+- [x] CORS default is localhost (not `*` + credentials); Docker `HEALTHCHECK` + `docker-compose.yml`
+- [ ] `twine upload dist/*` — **maintainer only**, needs a PyPI token. Not run in CI. Do not treat the GitHub tag as a PyPI publish.
 
 Rebuild a local wheel after extras change; regenerate locks first.
 

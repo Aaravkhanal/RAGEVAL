@@ -1,0 +1,37 @@
+# Local/production-style process. Image is linux/amd64 (hashed all-lock).
+# Apple Silicon:
+#   DOCKER_DEFAULT_PLATFORM=linux/amd64 docker compose up --build
+#
+# Do not bind-mount a .env that you then commit. Keys stay in the host environment
+# or a gitignored .env passed with --env-file.
+services:
+  rageval:
+    image: rageval:0.2.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      RAGEVAL_RUNS_DIR: /app/experiments/runs
+      RAGEVAL_DATA_DIR: /app/data
+      RAGEVAL_CORS_ORIGINS: http://127.0.0.1:8000,http://localhost:8000
+      RAGEVAL_ALLOWED_HOSTS: localhost,127.0.0.1,0.0.0.0
+      RAGEVAL_RATE_LIMIT_PER_MINUTE: "60"
+    volumes:
+      - rageval-runs:/app/experiments/runs
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4)",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  rageval-runs:
