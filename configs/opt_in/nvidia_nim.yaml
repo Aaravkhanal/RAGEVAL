@@ -1,0 +1,29 @@
+name: OptIn_NVIDIA_NIM
+seed: 0
+opt_in: true
+resource_note: >
+  Calls NVIDIA NIM via the OpenAI-compatible HTTP API
+  (https://integrate.api.nvidia.com/v1), model nvidia/nemotron-3.5-bolt-e4b.
+  Set NVIDIA_API_KEY in the environment or a gitignored .env. Do not put keys
+  in this file. Official tables remain the blinded mock run
+  20261028T183042Z_a97ad68f.
+chunker:
+  strategy: fixed
+  chunk_size: 256
+  chunk_overlap: 32
+retriever:
+  method: sparse
+  top_k: 5
+reranker:
+  enabled: false
+generator:
+  backend: openai
+  model_name: nvidia/nemotron-3.5-bolt-e4b
+  temperature: 0.0
+  max_tokens: 256
+  timeout_s: 120
+  base_url: https://integrate.api.nvidia.com/v1
+  api_key_env: NVIDIA_API_KEY
+evaluator:
+  method: heuristic
+  allow_heuristic_fallback: false

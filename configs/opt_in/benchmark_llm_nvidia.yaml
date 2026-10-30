@@ -1,0 +1,15 @@
+experiment_id: nvidia_nim_v1
+label: pilot
+title: Opt-in NVIDIA NIM generator on benchmark_v1 1.2.0
+family: companion
+dataset_id: benchmark_v1
+split: all
+opt_in: true
+resource_note: >
+  Calls NVIDIA NIM (nvidia/nemotron-3.5-bolt-e4b) through the OpenAI-compatible
+  HTTP API and scores claims with DeBERTa NLI. Requires NVIDIA_API_KEY. One
+  sparse-retriever config, not the six-config ablation. Official tables remain
+  blinded-mock run 20261028T183042Z_a97ad68f. HTTP jobs refuse this file; CLI
+  needs --allow-opt-in. There is no mock fallback if the LLM call fails.
+pipeline_paths:
+  - nvidia_nim_nli.yaml

@@ -2,13 +2,13 @@
 
 ## Status after R5–R7 (2026-10-29)
 
-The Phase 0 list below is **historical**. Closed for the licensed pilot: synthetic-as-SEC disclosure, generator blinding, metric registry, citation support vs existence, answer-level EM/F1, verifier gold set, unique run dirs, `metrics.json` tables, no overall score. `v1_025`–`v1_028` are scored in companion `657c8089`. `v1_029`–`v1_032` are scored in companion `de870a29`. IAA **tooling** (Cohen's kappa, rater template) exists; a second human does not. External answers score via `rageval score`.
+The Phase 0 list below is **historical**. Closed for the licensed pilot: synthetic-as-SEC disclosure, generator blinding, metric registry, citation support vs existence, answer-level EM/F1, verifier gold set, unique run dirs, `metrics.json` tables, no overall score. `v1_025`–`v1_028` are scored in companion `657c8089`. `v1_029`–`v1_032` are scored in companion `de870a29`. IAA **tooling** (Cohen's kappa) exists; rater B is a disclosed LLM (`rater_b_llm_grok`), not a second human. External answers score via `rageval score`. Live NVIDIA NIM smoke: `20261030T052448Z_6df3afb9` on `smoke_v1`.
 
 **Still blocking confirmatory RAG claims**
 
 - Official published tables remain $n=24$ / 16 documents (`20261028T183042Z_a97ad68f`). Companions: v1.1.0 $n=28$ / 18 documents; v1.2.0 $n=32$ / 21 documents. Still underpowered (confirmatory $n\ge 30$ i.i.d.); items share documents.
-- Official generator is a blinded mock, not an LLM. Opt-in HTTP wiring exists; a live smoke was not run (`reports/opt_in_smoke_llm/STATUS.md`). External systems can be scored with `rageval score` (question+chunks+answer).
-- Single-author gold; IAA kappa is null until rater B labels (`data/gold/iaa/STATUS.md`).
+- Official generator is a blinded mock, not an LLM. Live NVIDIA NIM smoke `20261030T052448Z_6df3afb9` and companion `20261030T052638Z_79a8b21d` (n=32, faith 0.7188) do not replace `a97ad68f`. External systems can be scored with `rageval score`.
+- Single-author gold; disclosed LLM rater B is diagnostic IAA (kappa 0.9423, n=24). Confirmatory IAA still needs an independent human (`data/gold/iaa/STATUS.md`).
 - RQ1 Recall@5 is identical across six configs on recorded runs (0.8333 on v1.0.0, 0.8571 on v1.1.0, 0.8438 on v1.2.0). MRR differs on companions; that difference is diagnostic only.
 - `paper.tex` is a draft whose table matches the v1.0.0 published run; it is still not a confirmatory paper.
 

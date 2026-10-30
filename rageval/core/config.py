@@ -45,6 +45,7 @@ class GeneratorConfig(BaseModel):
     model_name: str = "meta-llama/Llama-3.2-3B-Instruct"
     temperature: float = 0.0
     max_tokens: int = 512
+    timeout_s: float = 60.0
     mock_mode: str = "faithful"  # faithful, hallucinatory, contradictory, mixed
     abstention_policy: str = "empty_context"  # never, empty_context
     base_url: Optional[str] = None

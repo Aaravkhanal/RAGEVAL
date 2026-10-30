@@ -352,13 +352,13 @@ Embeddings beyond MiniLM and any paid LLM are **opt-in** after a resource note.
 
 ## Research follow-on after 0.2.1
 
-**R3 (opt-in LLM smoke):** wiring complete; live call skipped (no key / empty Ollama).  
-**R4 (IAA + 1.2.0 corpus):** kappa CLI and 21/32 corpus complete; rater B missing.  
+**R3 (opt-in LLM smoke):** live NVIDIA NIM smoke complete as `20261030T052448Z_6df3afb9` on `smoke_v1` (heuristic). OpenAI/Ollama/local_hf YAMLs remain available.  
+**R4 (IAA + 1.2.0 corpus):** kappa CLI and 21/32 corpus complete; rater B is a disclosed LLM (`rater_b_llm_grok`, diagnostic kappa 0.9423). Independent human still missing.  
 **R5 (external scorer):** `rageval score` / `score_answer` — question+chunks+answer in.  
 **R6 (v1.2.0 companion NLI):** complete as `20261029T173408Z_de870a29`; does not replace `a97ad68f`.  
 **R7 (`A_chunk` overlap-32):** complete as `20261029T173515Z_7e2b94a3`; snapshot `reports/phase7/A_chunk_overlap32/`.
 
-Still blocked for confirmatory claims: live LLM generator, independent second annotator, n≥30 i.i.d. items.
+Still blocked for confirmatory claims: independent second **human** annotator, n≥30 i.i.d. items. Official published SUT remains the blinded mock (`a97ad68f`). Live NVIDIA companion `20261030T052638Z_79a8b21d` is snapshotted as companion-only.
 
 ---
 

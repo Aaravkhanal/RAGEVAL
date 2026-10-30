@@ -1,0 +1,25 @@
+{
+  "run_dir": "/Users/aaravkhanal/Desktop/RAGEVAL/experiments/runs/20261030T052448Z_6df3afb9",
+  "environment": {
+    "python": "3.13.13 | packaged by conda-forge | (main, Apr  8 2026, 02:29:07) [Clang 19.1.7 ]",
+    "platform": "macOS-14.5-arm64-arm-64bit-Mach-O",
+    "processor": "arm",
+    "git_commit": "0ab99963283a024877d9a779da19c8e26c040beb",
+    "timestamp_utc": "2026-10-30T05:24:59.143563+00:00"
+  },
+  "configs": [
+    "OptIn_NVIDIA_NIM"
+  ],
+  "label": "pilot",
+  "experiment_id": "smoke_llm_nvidia",
+  "title": "Opt-in NVIDIA NIM generator on smoke_v1",
+  "family": "smoke",
+  "data_dir": "data",
+  "dataset_id": "smoke_v1",
+  "dataset_version": "1.0.0",
+  "split": "all",
+  "n_documents": 8,
+  "n_items": 8,
+  "resource_note": "Calls NVIDIA NIM (nvidia/nemotron-3.5-bolt-e4b) through the OpenAI-compatible HTTP API. Requires NVIDIA_API_KEY. Not an official ablation. Official tables remain blinded-mock run 20261028T183042Z_a97ad68f. HTTP jobs refuse this file; CLI needs --allow-opt-in. There is no mock fallback if the LLM call fails.\n",
+  "max_items": null
+}

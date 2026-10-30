@@ -14,7 +14,7 @@ How to reproduce **smoke** and the **documented v1 baseline tables**. This is no
 | Write-up | `reports/20261028T183042Z_a97ad68f/FINDINGS.md` |
 | Draft paper | `reports/paper.tex` (table matches that run; n=24 is underpowered) |
 
-Current `benchmark_v1` on disk is **1.2.0** (21/32). Companion mock+NLI tables: `reports/phase7/v1_1_matrix/` (1.1.0, `657c8089`) and `reports/phase7/v1_2_matrix/` (1.2.0, `de870a29`). Do not copy v1.1.0 scores onto `v1_029`–`v1_032`. The published table remains `a97ad68f`.
+Current `benchmark_v1` on disk is **1.2.0** (21/32). Companion mock+NLI tables: `reports/phase7/v1_1_matrix/` (1.1.0, `657c8089`) and `reports/phase7/v1_2_matrix/` (1.2.0, `de870a29`). Live NVIDIA NIM companion: `reports/phase7/nvidia_nim_v1/` (`20261030T052638Z_79a8b21d`). Do not copy v1.1.0 scores onto `v1_029`–`v1_032`. The published table remains `a97ad68f`.
 
 To regenerate tables **from the committed JSON** (no model load):
 

@@ -12,6 +12,9 @@ from rageval.analysis.generate_paper_report import run_and_generate_paper_analys
 
 
 def main():
+    from rageval.core.envfile import load_repo_dotenv
+
+    load_repo_dotenv()
     parser = argparse.ArgumentParser(
         prog="rageval",
         description="RAGeval: Research-Grade RAG Faithfulness & Claim Attribution Benchmark",

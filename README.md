@@ -62,8 +62,11 @@ rageval validate --dataset benchmark_v1
 # RQ2: score NLI (or heuristic) against the labeled claim set
 rageval verifier-eval --gold data/gold/verifier_eval_v1.json --method nli --output reports/verifier_eval_v1.md
 
-# IAA (kappa is null until an independent rater B fills data/gold/iaa/annotator_b_verifier_eval_v1.json)
-rageval iaa --rater-a data/gold/iaa/annotator_a_verifier_eval_v1.json --rater-b data/gold/iaa/annotator_b_template.json --output reports/iaa/iaa.md
+# IAA (disclosed LLM rater B is diagnostic; confirmatory IAA still needs an independent human)
+rageval iaa --rater-a data/gold/iaa/annotator_a_verifier_eval_v1.json --rater-b data/gold/iaa/annotator_b_verifier_eval_v1.json --output reports/iaa/iaa.md
+
+# Opt-in live NVIDIA NIM (requires NVIDIA_API_KEY in .env; HTTP jobs refuse this)
+rageval experiment --config configs/opt_in/smoke_llm_nvidia.yaml --allow-opt-in --output-dir experiments/runs
 
 # Score an external RAG system's answers (no retrieval). Default verifier is heuristic.
 rageval score --input answers.jsonl --output scores.jsonl --method heuristic

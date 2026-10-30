@@ -64,7 +64,11 @@ def run_experiment(
     existing_run_dir: Optional[str] = None,
     allow_opt_in: bool = False,
 ) -> str:
-    """Run resolved pipelines. Analysis-only specs raise unless pipelines exist."""
+    """Run resolved pipelines. Analysis-only specs raise unless pipelines exist.
+
+    CLI `main()` loads a gitignored `.env` before calling this. This function
+    does not reload dotenv so tests that `delenv` keys stay isolated.
+    """
     pipeline_opt_in = spec.opt_in or any(p.opt_in for p in spec.pipelines)
     note = spec.resource_note or next(
         (p.resource_note for p in spec.pipelines if p.resource_note), ""

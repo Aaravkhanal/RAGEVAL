@@ -16,6 +16,11 @@ from rageval.metrics.agreement import summarize_agreement
 SCHEMA = "rageval.iaa.v1"
 
 
+def _looks_like_llm_annotator(annotator_id: str) -> bool:
+    aid = (annotator_id or "").lower()
+    return "llm" in aid
+
+
 def compare_raters(
     path_a: str,
     path_b: str,
@@ -52,6 +57,11 @@ def compare_raters(
             "A template or self-repeat is not a second annotator."
         ),
     }
+    if _looks_like_llm_annotator(b_id):
+        payload["note"] = (
+            "Rater B is a disclosed LLM annotator. Cohen's kappa is diagnostic, "
+            "not confirmatory human IAA. A template or self-repeat is not a second annotator."
+        )
     if not labeled:
         payload["note"] = (
             "Rater B has no labels on shared ids. Fill "
@@ -95,6 +105,17 @@ def render_iaa_markdown(result: Dict[str, Any]) -> str:
         lines.append(
             "Unlabeled in B: `" + "`, `".join(result["unlabeled_in_b"][:24]) + "`"
         )
+        lines.append("")
+    disagreements = result.get("disagreements") or []
+    if disagreements:
+        lines.append(f"**Disagreements:** {result.get('n_disagreements')}.")
+        lines.append("")
+        lines.append("| id | rater A | rater B |")
+        lines.append("| --- | --- | --- |")
+        for row in disagreements:
+            lines.append(
+                f"| `{row.get('id')}` | {row.get('rater_a')} | {row.get('rater_b')} |"
+            )
         lines.append("")
     return "\n".join(lines)
 

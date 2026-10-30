@@ -1,0 +1,14 @@
+experiment_id: smoke_llm_nvidia
+label: pilot
+title: Opt-in NVIDIA NIM generator on smoke_v1
+family: smoke
+dataset_id: smoke_v1
+split: all
+opt_in: true
+resource_note: >
+  Calls NVIDIA NIM (nvidia/nemotron-3.5-bolt-e4b) through the OpenAI-compatible
+  HTTP API. Requires NVIDIA_API_KEY. Not an official ablation. Official tables
+  remain blinded-mock run 20261028T183042Z_a97ad68f. HTTP jobs refuse this file;
+  CLI needs --allow-opt-in. There is no mock fallback if the LLM call fails.
+pipeline_paths:
+  - nvidia_nim.yaml

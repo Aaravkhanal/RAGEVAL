@@ -20,6 +20,7 @@ COMMITTED_SNAPSHOTS = (
     ("20261029T165024Z_657c8089", os.path.join("reports", "phase7", "v1_1_matrix")),
     ("20261029T173408Z_de870a29", os.path.join("reports", "phase7", "v1_2_matrix")),
     ("20261029T173515Z_7e2b94a3", os.path.join("reports", "phase7", "A_chunk_overlap32")),
+    ("20261030T052638Z_79a8b21d", os.path.join("reports", "phase7", "nvidia_nim_v1")),
 )
 
 

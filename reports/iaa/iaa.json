@@ -1,42 +1,24 @@
 {
   "schema": "rageval.iaa.v1",
   "rater_a": "single-author, disclosed",
-  "rater_b": "rater_b_unfilled",
+  "rater_b": "rater_b_llm_grok",
   "n_shared_ids": 24,
-  "n_labeled_both": 0,
+  "n_labeled_both": 24,
   "missing_in_a": [],
   "missing_in_b": [],
   "unlabeled_in_a": [],
-  "unlabeled_in_b": [
-    "ve_001",
-    "ve_002",
-    "ve_003",
-    "ve_004",
-    "ve_005",
-    "ve_006",
-    "ve_007",
-    "ve_008",
-    "ve_009",
-    "ve_010",
-    "ve_011",
-    "ve_012",
-    "ve_013",
-    "ve_014",
-    "ve_015",
-    "ve_016",
-    "ve_017",
-    "ve_018",
-    "ve_019",
-    "ve_020",
-    "ve_021",
-    "ve_022",
-    "ve_023",
-    "ve_024"
+  "unlabeled_in_b": [],
+  "complete": true,
+  "percent_agreement": 0.9583,
+  "cohen_kappa": 0.9423,
+  "n_disagreements": 1,
+  "disagreements": [
+    {
+      "id": "ve_020",
+      "rater_a": "unsupported",
+      "rater_b": "contradicted"
+    }
   ],
-  "complete": false,
-  "percent_agreement": null,
-  "cohen_kappa": null,
-  "n_disagreements": 0,
-  "disagreements": [],
-  "note": "Rater B has no labels on shared ids. Fill data/gold/iaa/annotator_b_verifier_eval_v1.json and re-run. kappa is undefined until then."
+  "note": "Rater B is a disclosed LLM annotator. Cohen's kappa is diagnostic, not confirmatory human IAA. A template or self-repeat is not a second annotator.",
+  "n": 24
 }

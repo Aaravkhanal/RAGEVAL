@@ -39,6 +39,22 @@ def test_summarize_agreement_lists_disagreements():
     assert summary["cohen_kappa"] is not None
 
 
+def test_filled_llm_rater_b_is_complete_and_disclosed():
+    result = compare_raters(
+        "data/gold/iaa/annotator_a_verifier_eval_v1.json",
+        "data/gold/iaa/annotator_b_verifier_eval_v1.json",
+    )
+    assert result["complete"] is True
+    assert result["n_labeled_both"] == 24
+    assert result["cohen_kappa"] is not None
+    assert "disclosed LLM" in result["note"] or "diagnostic" in result["note"].lower()
+    assert "confirmatory human" in result["note"].lower() or "not confirmatory" in result["note"].lower()
+    b = json.loads(Path("data/gold/iaa/annotator_b_verifier_eval_v1.json").read_text(encoding="utf-8"))
+    assert b["annotator_id"] == "rater_b_llm_grok"
+    assert "not copied" in b["notes"].lower() or "were not copied" in b["notes"].lower()
+    assert all(row.get("gold_label") for row in b["items"])
+
+
 def test_unfilled_rater_b_kappa_is_null(tmp_path):
     gold = "data/gold/verifier_eval_v1.json"
     template = tmp_path / "b.json"

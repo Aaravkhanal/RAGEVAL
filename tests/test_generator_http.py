@@ -56,14 +56,35 @@ def _client_factory(handler):
     return factory
 
 
+def _clear_llm_keys(monkeypatch):
+    for name in ("OPENAI_API_KEY", "RAGEVAL_API_KEY", "NVIDIA_API_KEY"):
+        monkeypatch.delenv(name, raising=False)
+
+
 def test_openai_missing_key_hard_fails(monkeypatch):
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    monkeypatch.delenv("RAGEVAL_API_KEY", raising=False)
+    _clear_llm_keys(monkeypatch)
     with pytest.raises(RuntimeError, match="OPENAI_API_KEY"):
         get_generator(GeneratorConfig(backend="openai", model_name="gpt-4o-mini"))
 
 
+def test_openai_reads_nvidia_key_env(monkeypatch):
+    _clear_llm_keys(monkeypatch)
+    monkeypatch.setenv("NVIDIA_API_KEY", "test-nvidia-key")
+    gen = get_generator(
+        GeneratorConfig(
+            backend="openai",
+            model_name="nvidia/nemotron-3.5-bolt-e4b",
+            base_url="https://integrate.api.nvidia.com/v1",
+            api_key_env="NVIDIA_API_KEY",
+        )
+    )
+    assert isinstance(gen, OpenAILikeGenerator)
+    assert gen.api_key == "test-nvidia-key"
+    assert gen.base_url == "https://integrate.api.nvidia.com/v1"
+
+
 def test_openai_reads_env_key_not_yaml(monkeypatch):
+    _clear_llm_keys(monkeypatch)
     monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
     gen = get_generator(
         GeneratorConfig(backend="openai", model_name="gpt-4o-mini", base_url=OPENAI_DEFAULT_BASE_URL)
@@ -74,8 +95,7 @@ def test_openai_reads_env_key_not_yaml(monkeypatch):
 
 
 def test_ollama_default_base_url_allows_empty_key(monkeypatch):
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    monkeypatch.delenv("RAGEVAL_API_KEY", raising=False)
+    _clear_llm_keys(monkeypatch)
     gen = get_generator(GeneratorConfig(backend="ollama", model_name="llama3"))
     assert isinstance(gen, OpenAILikeGenerator)
     assert gen.base_url == OLLAMA_DEFAULT_BASE_URL
@@ -88,6 +108,7 @@ def test_generator_config_forbids_api_key_field():
 
 
 def test_openai_http_success_blinds_and_passes_usage(monkeypatch):
+    _clear_llm_keys(monkeypatch)
     monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
     captured = {}
 
@@ -139,6 +160,7 @@ def test_openai_http_success_blinds_and_passes_usage(monkeypatch):
 
 
 def test_openai_http_error_raises_not_answer(monkeypatch):
+    _clear_llm_keys(monkeypatch)
     monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -152,6 +174,7 @@ def test_openai_http_error_raises_not_answer(monkeypatch):
 
 
 def test_openai_connect_error_raises(monkeypatch):
+    _clear_llm_keys(monkeypatch)
     monkeypatch.setenv("RAGEVAL_API_KEY", "test-rageval-key")
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -164,6 +187,42 @@ def test_openai_connect_error_raises(monkeypatch):
 
 
 def test_resolve_api_key_prefers_named_env(monkeypatch):
+    _clear_llm_keys(monkeypatch)
     monkeypatch.setenv("OPENAI_API_KEY", "openai-default")
     monkeypatch.setenv("MY_CUSTOM_KEY", "custom-value")
     assert resolve_api_key("openai", "MY_CUSTOM_KEY") == "custom-value"
+
+
+def test_openai_accepts_nvidia_reasoning_content(monkeypatch):
+    _clear_llm_keys(monkeypatch)
+    monkeypatch.setenv("NVIDIA_API_KEY", "test-nvidia-key")
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            json={
+                "choices": [
+                    {
+                        "message": {
+                            "content": None,
+                            "reasoning_content": "Gross margin expanded to 78.2% [1].",
+                        }
+                    }
+                ],
+                "usage": {"prompt_tokens": 10, "completion_tokens": 6},
+            },
+        )
+
+    monkeypatch.setattr("rageval.pipeline.generator._httpx_client", _client_factory(handler))
+    gen = get_generator(
+        GeneratorConfig(
+            backend="openai",
+            model_name="nvidia/nemotron-3.5-bolt-e4b",
+            api_key_env="NVIDIA_API_KEY",
+            base_url="https://integrate.api.nvidia.com/v1",
+        )
+    )
+    answer, prompt_tokens, completion_tokens = gen.generate("Q", [_chunk()])
+    assert answer == "Gross margin expanded to 78.2% [1]."
+    assert prompt_tokens == 10
+    assert completion_tokens == 6

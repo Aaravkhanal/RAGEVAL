@@ -1,0 +1,98 @@
+{
+  "schema": "rageval.metrics.v1",
+  "overall_score": null,
+  "note": "No official composite ranking score. Compare named metrics only.",
+  "independent_items_assumed": false,
+  "by_config": {
+    "OptIn_NVIDIA_NIM": {
+      "n": 8,
+      "overall_score": null,
+      "has_official_overall_score": false,
+      "claim_support_rate": {
+        "mean": 1.0,
+        "bootstrap": {
+          "n": 8,
+          "mean": 1.0,
+          "ci_low": 1.0,
+          "ci_high": 1.0,
+          "ci_level": 0.95,
+          "n_bootstrap": 1000,
+          "assumptions_met": false,
+          "assumption_notes": "Diagnostic only. n=8, independent=False. Confirmatory CI requires n>=30 i.i.d. query items (items that share documents are not independent)."
+        }
+      },
+      "unsupported_claim_rate": {
+        "mean": 0.0
+      },
+      "contradiction_rate": {
+        "mean": 0.0
+      },
+      "recall_at_5": {
+        "mean": 0.75
+      },
+      "mrr": {
+        "mean": 0.75
+      },
+      "citation_existence_precision": {
+        "mean": 1.0
+      },
+      "citation_support_precision": {
+        "mean": 1.0
+      },
+      "citation_marker_recall": {
+        "mean": 0.75,
+        "legacy": true
+      },
+      "answer_em": {
+        "mean": 0.25
+      },
+      "answer_f1": {
+        "mean": 0.781
+      },
+      "abstention_accuracy": 1.0,
+      "mean_latency_ms": 1296.7575,
+      "total_estimated_cost_usd": null,
+      "official_metric_names": [
+        "recall_at_k",
+        "mrr",
+        "ndcg_at_k",
+        "noise_ratio",
+        "claim_support_rate",
+        "unsupported_claim_rate",
+        "contradiction_rate",
+        "claim_coverage",
+        "citation_existence_precision",
+        "citation_support_precision",
+        "citation_completeness",
+        "citation_marker_recall",
+        "exact_match",
+        "token_f1",
+        "abstention_accuracy",
+        "estimated_cost_usd",
+        "macro_f1"
+      ],
+      "by_scenario": {
+        "standard": {
+          "n": 8,
+          "claim_support_rate": 1.0,
+          "unsupported_claim_rate": 0.0,
+          "contradiction_rate": 0.0,
+          "recall_at_5": 0.75,
+          "mrr": 0.75,
+          "answer_em": 0.25,
+          "answer_f1": 0.781,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 1.0
+        }
+      }
+    }
+  },
+  "label": "pilot",
+  "experiment_id": "smoke_llm_nvidia",
+  "dataset_id": "smoke_v1",
+  "dataset_version": "1.0.0",
+  "git_commit": "0ab99963283a024877d9a779da19c8e26c040beb",
+  "timestamp_utc": "2026-10-30T05:24:59.143563+00:00",
+  "n_items": 8,
+  "n_documents": 8
+}

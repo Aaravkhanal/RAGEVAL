@@ -12,7 +12,7 @@ from rageval.core.config import pipeline_config_from_yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 SECRET_VALUE = re.compile(
-    r"(sk-[A-Za-z0-9]{10,}|hf_[A-Za-z0-9]{10,}|AKIA[0-9A-Z]{16}|BEGIN (RSA |OPENSSH )?PRIVATE KEY)"
+    r"(sk-[A-Za-z0-9]{10,}|hf_[A-Za-z0-9]{10,}|AKIA[0-9A-Z]{16}|nvapi-[A-Za-z0-9_-]{10,}|BEGIN (RSA |OPENSSH )?PRIVATE KEY)"
 )
 
 
@@ -169,6 +169,29 @@ def test_achunk_snapshot_does_not_replace_published_tables():
     assert_findings_text_allowed(findings, achunk)
 
 
+def test_nvidia_companion_snapshot_does_not_replace_published_tables():
+    live = BenchmarkReporter.load_metrics(str(ROOT / "reports" / "phase7" / "nvidia_nim_v1" / "metrics.json"))
+    v10 = BenchmarkReporter.load_metrics(str(ROOT / "reports" / "phase7" / "v1_matrix" / "metrics.json"))
+    assert v10["n_items"] == 24
+    assert v10["by_config"]["Dense_Chunk256_Baseline"]["claim_support_rate"]["mean"] == 0.4375
+    assert live["n_items"] == 32
+    assert live["dataset_version"] == "1.2.0"
+    assert live.get("experiment_id") == "nvidia_nim_v1"
+    block = live["by_config"]["OptIn_NVIDIA_NIM_NLI"]
+    assert block["claim_support_rate"]["mean"] == 0.7188
+    assert block["recall_at_5"]["mean"] == 0.8438
+    assert block["mrr"]["mean"] == 0.7812
+    assert block["abstention_accuracy"] == 1.0
+    findings = (ROOT / "reports" / "20261030T052638Z_79a8b21d" / "FINDINGS.md").read_text(encoding="utf-8")
+    paper = (ROOT / "reports" / "paper.tex").read_text(encoding="utf-8")
+    assert "16.4%" not in findings
+    assert "nvidia/nemotron-3.5-bolt-e4b" in findings
+    assert "20261028T183042Z_a97ad68f" in findings
+    assert "does **not** replace" in findings or "does not replace" in findings.lower()
+    assert "0.4375" in paper
+    assert_findings_text_allowed(findings, live)
+
+
 def test_cli_benchmark_reporter_import_is_module_level():
     src = (ROOT / "rageval" / "cli.py").read_text(encoding="utf-8")
     matches = [
@@ -188,6 +211,8 @@ def test_tracked_text_has_no_live_credentials():
         if any(part in skip_dirs for part in path.parts):
             continue
         if path.suffix.lower() in skip_suffix:
+            continue
+        if path.name == ".env" or path.name.endswith(".env"):
             continue
         try:
             text = path.read_text(encoding="utf-8")

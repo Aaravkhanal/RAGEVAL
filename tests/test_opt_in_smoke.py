@@ -21,6 +21,41 @@ from rageval.server.jobs import resolve_config_path
 client = TestClient(app)
 
 
+def test_nvidia_nim_yaml_is_opt_in_without_secrets():
+    spec = load_experiment("configs/opt_in/smoke_llm_nvidia.yaml")
+    assert spec.experiment_id == "smoke_llm_nvidia"
+    assert spec.opt_in is True
+    assert spec.dataset_id == "smoke_v1"
+    assert spec.pipelines
+    gen = spec.pipelines[0].generator
+    assert gen.backend == "openai"
+    assert gen.api_key_env == "NVIDIA_API_KEY"
+    assert gen.base_url == "https://integrate.api.nvidia.com/v1"
+    assert gen.model_name == "nvidia/nemotron-3.5-bolt-e4b"
+    dumped = spec.model_dump_json()
+    assert "nvapi-" not in dumped
+    yaml_text = Path("configs/opt_in/nvidia_nim.yaml").read_text(encoding="utf-8")
+    assert "nvapi-" not in yaml_text
+    assert "api_key_env: NVIDIA_API_KEY" in yaml_text
+
+
+def test_nvidia_benchmark_yaml_is_opt_in_nli_without_secrets():
+    spec = load_experiment("configs/opt_in/benchmark_llm_nvidia.yaml")
+    assert spec.experiment_id == "nvidia_nim_v1"
+    assert spec.opt_in is True
+    assert spec.dataset_id == "benchmark_v1"
+    assert spec.label == "pilot"
+    gen = spec.pipelines[0].generator
+    assert gen.backend == "openai"
+    assert gen.api_key_env == "NVIDIA_API_KEY"
+    assert gen.model_name == "nvidia/nemotron-3.5-bolt-e4b"
+    assert spec.pipelines[0].evaluator.method == "nli"
+    dumped = spec.model_dump_json()
+    assert "nvapi-" not in dumped
+    yaml_text = Path("configs/opt_in/nvidia_nim_nli.yaml").read_text(encoding="utf-8")
+    assert "nvapi-" not in yaml_text
+
+
 def test_smoke_llm_yaml_is_opt_in_experiment():
     spec = load_experiment("configs/opt_in/smoke_llm.yaml")
     assert spec.experiment_id == "smoke_llm"
@@ -99,6 +134,18 @@ def test_http_does_not_resolve_smoke_llm():
     res = client.post("/experiments", json={"config": "smoke_llm", "max_items": 1})
     assert res.status_code == 400
     assert "Unknown experiment config" in res.json()["detail"]
+
+
+def test_http_does_not_resolve_smoke_llm_nvidia():
+    with pytest.raises(FileNotFoundError):
+        resolve_config_path("smoke_llm_nvidia")
+    res = client.post("/experiments", json={"config": "smoke_llm_nvidia", "max_items": 1})
+    assert res.status_code == 400
+    assert "Unknown experiment config" in res.json()["detail"]
+    with pytest.raises(FileNotFoundError):
+        resolve_config_path("nvidia_nim_v1")
+    res = client.post("/experiments", json={"config": "nvidia_nim_v1", "max_items": 1})
+    assert res.status_code == 400
 
 
 def test_http_refuses_opt_in_even_if_copied_into_experiments(tmp_path, monkeypatch):

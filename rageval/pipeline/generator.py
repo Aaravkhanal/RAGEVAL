@@ -58,7 +58,8 @@ def resolve_api_key(backend: str, api_key_env: Optional[str] = None) -> str:
     names: List[str] = []
     if api_key_env:
         names.append(api_key_env)
-    names.extend(["OPENAI_API_KEY", "RAGEVAL_API_KEY"])
+    if backend == "openai":
+        names.extend(["OPENAI_API_KEY", "NVIDIA_API_KEY", "RAGEVAL_API_KEY"])
     seen = set()
     for name in names:
         if name in seen:
@@ -69,8 +70,8 @@ def resolve_api_key(backend: str, api_key_env: Optional[str] = None) -> str:
             return value
     if backend == "openai":
         raise RuntimeError(
-            "openai backend requires OPENAI_API_KEY or RAGEVAL_API_KEY in the environment. "
-            "Do not put API keys in YAML or git."
+            "openai backend requires NVIDIA_API_KEY, OPENAI_API_KEY, or RAGEVAL_API_KEY "
+            "in the environment (or a gitignored .env). Do not put API keys in YAML or git."
         )
     return ""
 
@@ -164,7 +165,7 @@ class OpenAILikeGenerator(BaseGenerator):
         model: str = "gpt-4o-mini",
         temperature: float = 0.0,
         max_tokens: int = 512,
-        timeout: float = 30.0,
+        timeout: float = 60.0,
     ):
         self.api_key = api_key
         self.base_url = base_url.rstrip("/")
@@ -214,11 +215,15 @@ class OpenAILikeGenerator(BaseGenerator):
         except ValueError as exc:
             raise RuntimeError(f"LLM HTTP response from {url} was not JSON") from exc
         try:
-            answer = data["choices"][0]["message"]["content"]
+            message = data["choices"][0]["message"]
         except (KeyError, IndexError, TypeError) as exc:
-            raise RuntimeError(f"LLM HTTP response from {url} missing choices[0].message.content") from exc
-        if not isinstance(answer, str):
-            raise RuntimeError(f"LLM HTTP response from {url} returned a non-string answer")
+            raise RuntimeError(f"LLM HTTP response from {url} missing choices[0].message") from exc
+        answer = _message_text(message)
+        if not isinstance(answer, str) or not answer.strip():
+            raise RuntimeError(
+                f"LLM HTTP response from {url} had empty content "
+                "(and no reasoning_content)"
+            )
         usage = data.get("usage") if isinstance(data.get("usage"), dict) else {}
         prompt_tokens = int(usage.get("prompt_tokens") or len(prompt.split()))
         completion_tokens = int(usage.get("completion_tokens") or len(answer.split()))
@@ -295,6 +300,21 @@ class LocalHfGenerator(BaseGenerator):
         return answer, prompt_tokens, completion_tokens
 
 
+def _message_text(message: Any) -> str:
+    """OpenAI content, or NVIDIA reasoning_content when content is empty."""
+    if not isinstance(message, dict):
+        return ""
+    content = message.get("content")
+    if isinstance(content, str) and content.strip():
+        return content
+    reasoning = message.get("reasoning_content")
+    if isinstance(reasoning, str) and reasoning.strip():
+        return reasoning.strip()
+    if isinstance(content, str):
+        return content
+    return ""
+
+
 def _text_from_pipeline_output(outputs: Any) -> str:
     if isinstance(outputs, list) and outputs:
         first = outputs[0]
@@ -318,6 +338,7 @@ def get_generator(config: GeneratorConfig) -> BaseGenerator:
             model=config.model_name,
             temperature=config.temperature,
             max_tokens=config.max_tokens,
+            timeout=float(config.timeout_s or 60.0),
         )
     if backend == "local_hf":
         return LocalHfGenerator(

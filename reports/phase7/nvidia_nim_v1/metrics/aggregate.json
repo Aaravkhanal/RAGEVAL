@@ -1,0 +1,182 @@
+{
+  "schema": "rageval.metrics.v1",
+  "overall_score": null,
+  "note": "No official composite ranking score. Compare named metrics only.",
+  "independent_items_assumed": false,
+  "by_config": {
+    "OptIn_NVIDIA_NIM_NLI": {
+      "n": 32,
+      "overall_score": null,
+      "has_official_overall_score": false,
+      "claim_support_rate": {
+        "mean": 0.7188,
+        "bootstrap": {
+          "n": 32,
+          "mean": 0.7188,
+          "ci_low": 0.5728,
+          "ci_high": 0.8439,
+          "ci_level": 0.95,
+          "n_bootstrap": 1000,
+          "assumptions_met": false,
+          "assumption_notes": "Diagnostic only. n=32, independent=False. Confirmatory CI requires n>=30 i.i.d. query items (items that share documents are not independent)."
+        }
+      },
+      "unsupported_claim_rate": {
+        "mean": 0.2812
+      },
+      "contradiction_rate": {
+        "mean": 0.0
+      },
+      "recall_at_5": {
+        "mean": 0.8438
+      },
+      "mrr": {
+        "mean": 0.7812
+      },
+      "citation_existence_precision": {
+        "mean": 1.0
+      },
+      "citation_support_precision": {
+        "mean": 0.7188
+      },
+      "citation_marker_recall": {
+        "mean": 0.8125,
+        "legacy": true
+      },
+      "answer_em": {
+        "mean": 0.1875
+      },
+      "answer_f1": {
+        "mean": 0.7705
+      },
+      "abstention_accuracy": 1.0,
+      "mean_latency_ms": 1885.1472,
+      "total_estimated_cost_usd": null,
+      "official_metric_names": [
+        "recall_at_k",
+        "mrr",
+        "ndcg_at_k",
+        "noise_ratio",
+        "claim_support_rate",
+        "unsupported_claim_rate",
+        "contradiction_rate",
+        "claim_coverage",
+        "citation_existence_precision",
+        "citation_support_precision",
+        "citation_completeness",
+        "citation_marker_recall",
+        "exact_match",
+        "token_f1",
+        "abstention_accuracy",
+        "estimated_cost_usd",
+        "macro_f1"
+      ],
+      "by_scenario": {
+        "conflicting": {
+          "n": 3,
+          "claim_support_rate": 1.0,
+          "unsupported_claim_rate": 0.0,
+          "contradiction_rate": 0.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "answer_em": 0.0,
+          "answer_f1": 0.4268,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 1.0
+        },
+        "distractor": {
+          "n": 2,
+          "claim_support_rate": 0.5,
+          "unsupported_claim_rate": 0.5,
+          "contradiction_rate": 0.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "answer_em": 0.0,
+          "answer_f1": 0.7084,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 0.5
+        },
+        "empty_context": {
+          "n": 1,
+          "claim_support_rate": 1.0,
+          "unsupported_claim_rate": 0.0,
+          "contradiction_rate": 0.0,
+          "recall_at_5": 1.0,
+          "mrr": 0.0,
+          "answer_em": 1.0,
+          "answer_f1": 1.0,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 1.0
+        },
+        "instruction_like": {
+          "n": 1,
+          "claim_support_rate": 1.0,
+          "unsupported_claim_rate": 0.0,
+          "contradiction_rate": 0.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "answer_em": 0.0,
+          "answer_f1": 0.6667,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 1.0
+        },
+        "mixed_support": {
+          "n": 4,
+          "claim_support_rate": 0.75,
+          "unsupported_claim_rate": 0.25,
+          "contradiction_rate": 0.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "answer_em": 0.0,
+          "answer_f1": 0.7448,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 0.75
+        },
+        "numerical_negation": {
+          "n": 2,
+          "claim_support_rate": 0.1666,
+          "unsupported_claim_rate": 0.8334,
+          "contradiction_rate": 0.0,
+          "recall_at_5": 1.0,
+          "mrr": 1.0,
+          "answer_em": 0.0,
+          "answer_f1": 0.8889,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 0.1667
+        },
+        "standard": {
+          "n": 14,
+          "claim_support_rate": 0.619,
+          "unsupported_claim_rate": 0.381,
+          "contradiction_rate": 0.0,
+          "recall_at_5": 1.0,
+          "mrr": 0.9286,
+          "answer_em": 0.0,
+          "answer_f1": 0.7525,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 0.619
+        },
+        "unanswerable": {
+          "n": 5,
+          "claim_support_rate": 1.0,
+          "unsupported_claim_rate": 0.0,
+          "contradiction_rate": 0.0,
+          "recall_at_5": 0.0,
+          "mrr": 0.0,
+          "answer_em": 1.0,
+          "answer_f1": 1.0,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 1.0
+        }
+      }
+    }
+  },
+  "label": "pilot",
+  "experiment_id": "nvidia_nim_v1",
+  "dataset_id": "benchmark_v1",
+  "dataset_version": "1.2.0",
+  "git_commit": "0ab99963283a024877d9a779da19c8e26c040beb",
+  "timestamp_utc": "2026-10-30T05:27:49.476870+00:00",
+  "n_items": 32,
+  "n_documents": 21
+}

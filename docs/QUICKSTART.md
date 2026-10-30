@@ -30,7 +30,7 @@ python -m rageval.cli validate --dataset benchmark_v1
 python -m rageval.cli report --metrics reports/phase7/v1_matrix/metrics.json --output-dir /tmp/rageval-report
 ```
 
-First NLI/embedding calls download Hugging Face weights unless they are already cached. Official generation is a blinded mock. Opt-in LLM backends (`configs/opt_in/`) read `OPENAI_API_KEY` or `RAGEVAL_API_KEY` from the environment; pass `--allow-opt-in` on the CLI. HTTP errors raise instead of becoming the answer. HTTP jobs never run those YAMLs.
+First NLI/embedding calls download Hugging Face weights unless they are already cached. Official generation is a blinded mock. Opt-in LLM backends (`configs/opt_in/`) read `NVIDIA_API_KEY`, `OPENAI_API_KEY`, or `RAGEVAL_API_KEY` from the environment or a gitignored `.env`; pass `--allow-opt-in` on the CLI. HTTP errors raise instead of becoming the answer. HTTP jobs never run those YAMLs. Recorded NVIDIA smoke: `reports/opt_in_smoke_llm/STATUS.md`.
 
 ## Read a completed run
 
