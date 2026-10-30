@@ -20,4 +20,4 @@ rageval experiment --config configs/opt_in/smoke_llm.yaml --allow-opt-in --outpu
 - `estimated_cost_usd` stays null unless `evaluator.pricing_source` and both USD/million prices are set.
 - Official published tables remain blinded-mock run `20261028T183042Z_a97ad68f`.
 - CLI requires `--allow-opt-in`. HTTP jobs never list `configs/opt_in/` and refuse `opt_in: true` even if a file is copied into `configs/experiments/`.
-- Live NVIDIA NIM smoke on `smoke_v1`: run `20261030T052448Z_6df3afb9`. Companion on `benchmark_v1` 1.2.0: `20261030T052638Z_79a8b21d` (`reports/phase7/nvidia_nim_v1/`). Model `nvidia/nemotron-3.5-bolt-e4b`. Do not treat those as the published ablation.
+- Live NVIDIA NIM smoke on `smoke_v1`: run `20261030T052448Z_6df3afb9`. Sparse companion on `benchmark_v1` 1.2.0: `20261030T052638Z_79a8b21d` (`reports/phase7/nvidia_nim_v1/`). Dense+hybrid: `configs/opt_in/benchmark_llm_nvidia_retrieve.yaml`. Model `nvidia/nemotron-3.5-bolt-e4b`. Do not treat those as the published ablation.

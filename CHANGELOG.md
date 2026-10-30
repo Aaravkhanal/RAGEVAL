@@ -11,19 +11,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- NVIDIA NIM opt-in generator (`configs/opt_in/nvidia_nim.yaml`, `smoke_llm_nvidia.yaml`, `benchmark_llm_nvidia.yaml`). Keys from `NVIDIA_API_KEY` in the environment or a gitignored `.env` (`rageval.core.envfile`). Model used: `nvidia/nemotron-3.5-bolt-e4b`. Live smoke `20261030T052448Z_6df3afb9` on `smoke_v1` (n=8, heuristic). Live companion `20261030T052638Z_79a8b21d` on `benchmark_v1` 1.2.0 (n=32, DeBERTa NLI): faith 0.7188, R@5 0.8438, MRR 0.7812, abstention 1.0. Does not replace `a97ad68f`.
+- NVIDIA NIM opt-in generator (`configs/opt_in/nvidia_nim.yaml`, `smoke_llm_nvidia.yaml`, `benchmark_llm_nvidia.yaml`, `benchmark_llm_nvidia_retrieve.yaml`). Keys from `NVIDIA_API_KEY` in the environment or a gitignored `.env` (`rageval.core.envfile`). Model used: `nvidia/nemotron-3.5-bolt-e4b`. Live smoke `20261030T052448Z_6df3afb9` on `smoke_v1` (n=8, heuristic). Sparse companion `20261030T052638Z_79a8b21d` (faith 0.7188, R@5 0.8438, MRR 0.7812, abstention 1.0). Dense/hybrid companion `20261030T055224Z_388c5503` (dense faith 0.7396 / MRR 0.7344; hybrid faith 0.6458 / MRR 0.75; R@5 0.8438 and abstention 1.0 on both). Does not replace `a97ad68f`.
 - Disclosed LLM rater B (`data/gold/iaa/annotator_b_verifier_eval_v1.json`, annotator_id `rater_b_llm_grok`). Diagnostic kappa 0.9423 on n=24. Not confirmatory human IAA.
 - OpenAI-like generator reads NVIDIA `reasoning_content` when `content` is empty. `GeneratorConfig.timeout_s` default 60.
 - Companion `benchmark_v1` **1.1.0** six-config mock + DeBERTa NLI ablation (`20261029T165024Z_657c8089`, 18 documents, 28 items). Tables: `reports/phase7/v1_1_matrix/`. Official published tables remain `20261028T183042Z_a97ad68f`. n=28 is still underpowered.
-- R3: `configs/opt_in/smoke_llm.yaml` plus CLI `--allow-opt-in` on `rageval experiment` and `rageval benchmark`. HTTP jobs still list only `configs/experiments/` and refuse `opt_in: true`. Live LLM smoke was **not** run (no API key, empty Ollama models); see `reports/opt_in_smoke_llm/STATUS.md`.
-- R4: `rageval iaa` (Cohen's kappa, `rageval.iaa.v1`). Rater B is still missing; kappa on the template is null. Files: `data/gold/iaa/`.
+- R3: `configs/opt_in/smoke_llm.yaml` plus CLI `--allow-opt-in` on `rageval experiment` and `rageval benchmark`. HTTP jobs still list only `configs/experiments/` and refuse `opt_in: true`. Live NVIDIA NIM smoke is recorded (`reports/opt_in_smoke_llm/STATUS.md`).
+- R4: `rageval iaa` (Cohen's kappa, `rageval.iaa.v1`). Disclosed LLM rater B is diagnostic (kappa 0.9423); confirmatory IAA still needs a human. Files: `data/gold/iaa/`.
 - R4: `benchmark_v1` **1.2.0** — 21 documents, 32 items (24 dev / 8 test). New USGS Yellowstone FAQs and NASA ISS excerpt; new ids `v1_029`–`v1_032` are **dev**. Test ids remain frozen. HTTP `max_items` cap is 32.
 - R5: external RAG scorer — `rageval score --input answers.jsonl --output scores.jsonl` and `score_answer(question, answer, contexts)`. Question + chunks + answer in, `QueryEvaluationResult` out. Default verifier is heuristic. No retrieval, no generator, no gold in a prompt.
 - Companion `benchmark_v1` **1.2.0** six-config mock + DeBERTa NLI ablation (`20261029T173408Z_de870a29`, 21 documents, 32 items). Tables: `reports/phase7/v1_2_matrix/`. Recall@5 0.8438 identical; Dense faith 0.401; Sparse 0.4219; Hybrid 0.4635; Reranked 0.4583; abstention 0.1667. n=32 is still underpowered. Official published tables remain `a97ad68f`.
 - R7: `A_chunk` overlap-32 protocol on 1.2.0 (`20261029T173515Z_7e2b94a3`). Tables: `reports/phase7/A_chunk_overlap32/`. Three dense configs; faith 0.401 / R@5 0.8438 / MRR 0.7344 identical (matches the six-config dense rows). Does not replace `a97ad68f` or `v1_2_matrix`.
+- `rageval compare --left --right` for diagnostic per-item deltas between two `per_example.jsonl` files.
 
 ### Changed
 
+- `rageval findings` describes the generator/verifier from recorded `pipelines` identity instead of always saying "blinded mock". NVIDIA companion findings stay live-LLM text.
+- `rageval score` accepts run `predictions.jsonl` rows (`generated_answer` + `retrieved_chunks`).
+- OpenAI-like HTTP generator retries 429/502/503/504 (and connect errors) up to `max_retries` (default 2).
 - Significance tests are confirmatory only when n≥30 **and** items are treated as i.i.d. (`independent=True`). Default remains `independent=False` because recorded items share documents. The v1.2.0 Hybrid vs Dense faithfulness raw p=0.0435 is diagnostic; `is_significant` stays false.
 
 ### Fixed

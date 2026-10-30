@@ -4,6 +4,8 @@ import json
 
 from rageval.integrations.external import (
     SCHEMA,
+    normalize_score_record,
+    prediction_to_score_record,
     score_answer,
     score_file,
     score_records,
@@ -80,6 +82,33 @@ def test_score_jsonl_roundtrip(tmp_path):
     assert lines[0]["faithfulness_score"] == 1.0
     assert lines[1]["query_id"] == "a2"
     assert "api_key" not in json.dumps(lines)
+
+
+def test_predictions_jsonl_normalizes_to_score_record():
+    rec = prediction_to_score_record(
+        {
+            "query_id": "v1_001",
+            "question": "What was the margin?",
+            "generated_answer": "Gross margin was 78.2% [1].",
+            "retrieved_chunks": [
+                {
+                    "chunk": {
+                        "id": "c1",
+                        "doc_id": "d1",
+                        "text": "Gross margin reached 78.2% in Q3 2024.",
+                    },
+                    "score": 1.2,
+                }
+            ],
+        }
+    )
+    assert rec["id"] == "v1_001"
+    assert rec["answer"].startswith("Gross margin")
+    assert rec["contexts"][0]["text"].startswith("Gross margin")
+    normalized = normalize_score_record(
+        {"query_id": "x", "question": "Q", "generated_answer": "A", "retrieved_chunks": []}
+    )
+    assert normalized["answer"] == "A"
 
 
 def test_score_json_array(tmp_path):

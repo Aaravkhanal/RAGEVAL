@@ -159,9 +159,35 @@ def test_openai_http_success_blinds_and_passes_usage(monkeypatch):
     assert cost == pytest.approx((41 * 1.0 + 8 * 2.0) / 1_000_000.0)
 
 
+def test_openai_retries_then_succeeds_on_503(monkeypatch):
+    _clear_llm_keys(monkeypatch)
+    monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
+    monkeypatch.setattr("rageval.pipeline.generator.time.sleep", lambda s: None)
+    calls = {"n": 0}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls["n"] += 1
+        if calls["n"] == 1:
+            return httpx.Response(503, text="busy")
+        return httpx.Response(
+            200,
+            json={
+                "choices": [{"message": {"content": "Gross margin expanded to 78.2% [1]."}}],
+                "usage": {"prompt_tokens": 10, "completion_tokens": 8},
+            },
+        )
+
+    monkeypatch.setattr("rageval.pipeline.generator._httpx_client", _client_factory(handler))
+    gen = get_generator(GeneratorConfig(backend="openai", model_name="gpt-4o-mini"))
+    answer, _, _ = gen.generate("Q", [_chunk()])
+    assert "78.2%" in answer
+    assert calls["n"] == 2
+
+
 def test_openai_http_error_raises_not_answer(monkeypatch):
     _clear_llm_keys(monkeypatch)
     monkeypatch.setenv("OPENAI_API_KEY", "test-openai-key")
+    monkeypatch.setattr("rageval.pipeline.generator.time.sleep", lambda s: None)
 
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(500, text="upstream exploded")
@@ -176,6 +202,7 @@ def test_openai_http_error_raises_not_answer(monkeypatch):
 def test_openai_connect_error_raises(monkeypatch):
     _clear_llm_keys(monkeypatch)
     monkeypatch.setenv("RAGEVAL_API_KEY", "test-rageval-key")
+    monkeypatch.setattr("rageval.pipeline.generator.time.sleep", lambda s: None)
 
     def handler(request: httpx.Request) -> httpx.Response:
         raise httpx.ConnectError("connection refused", request=request)

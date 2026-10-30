@@ -157,6 +157,10 @@ def save_run(
         or (summaries[0].total_queries if summaries else 0),
         "n_documents": (extra_manifest or {}).get("n_documents"),
     }
+    if pipeline_configs:
+        from rageval.core.config import pipeline_identity
+
+        extra["pipelines"] = pipeline_identity(pipeline_configs)
     write_metrics_bundle(run_dir, summaries, independent=False, extra=extra)
     write_run_status(
         run_dir,

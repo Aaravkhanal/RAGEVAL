@@ -56,6 +56,19 @@ def test_nvidia_benchmark_yaml_is_opt_in_nli_without_secrets():
     assert "nvapi-" not in yaml_text
 
 
+def test_nvidia_retrieve_yaml_is_two_opt_in_pipelines():
+    spec = load_experiment("configs/opt_in/benchmark_llm_nvidia_retrieve.yaml")
+    assert spec.experiment_id == "nvidia_nim_retrieve"
+    assert spec.opt_in is True
+    assert spec.dataset_id == "benchmark_v1"
+    assert len(spec.pipelines) == 2
+    methods = {p.retriever.method for p in spec.pipelines}
+    assert methods == {"dense", "hybrid"}
+    assert all(p.generator.api_key_env == "NVIDIA_API_KEY" for p in spec.pipelines)
+    assert all(p.evaluator.method == "nli" for p in spec.pipelines)
+    assert "nvapi-" not in spec.model_dump_json()
+
+
 def test_smoke_llm_yaml_is_opt_in_experiment():
     spec = load_experiment("configs/opt_in/smoke_llm.yaml")
     assert spec.experiment_id == "smoke_llm"

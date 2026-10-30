@@ -92,6 +92,48 @@ def score_answer(
     )
 
 
+def prediction_to_score_record(row: Dict[str, Any]) -> Dict[str, Any]:
+    """Turn a run `predictions.jsonl` row into a `rageval score` record."""
+    contexts = []
+    for rc in row.get("retrieved_chunks") or []:
+        if isinstance(rc, str):
+            contexts.append(rc)
+            continue
+        if not isinstance(rc, dict):
+            continue
+        chunk = rc.get("chunk") if isinstance(rc.get("chunk"), dict) else rc
+        contexts.append(
+            {
+                "id": chunk.get("id"),
+                "doc_id": chunk.get("doc_id"),
+                "text": chunk.get("text") or chunk.get("content") or "",
+                "score": rc.get("score"),
+            }
+        )
+    if not contexts:
+        for key in ("contexts", "chunks", "context_chunks", "context"):
+            if key in row:
+                value = row[key]
+                contexts = [value] if isinstance(value, str) else list(value or [])
+                break
+    return {
+        "id": row.get("id") or row.get("query_id"),
+        "question": row.get("question") or row.get("query"),
+        "answer": row.get("answer") or row.get("generated_answer") or row.get("output"),
+        "contexts": contexts,
+        "gold_answer": row.get("gold_answer"),
+        "expected_abstention": bool(row.get("expected_abstention") or False),
+    }
+
+
+def normalize_score_record(row: Dict[str, Any]) -> Dict[str, Any]:
+    if not isinstance(row, dict):
+        raise TypeError("score record must be an object")
+    if "retrieved_chunks" in row or "generated_answer" in row:
+        return prediction_to_score_record(row)
+    return row
+
+
 def _contexts_from_record(row: Dict[str, Any]) -> List[Any]:
     for key in ("contexts", "chunks", "context_chunks", "context"):
         if key not in row:
@@ -139,6 +181,7 @@ def score_records(
     ev = evaluator or RAGEvalEvaluator(EvaluatorConfig(method=method, allow_heuristic_fallback=False))
     results: List[QueryEvaluationResult] = []
     for i, row in enumerate(records, start=1):
+        row = normalize_score_record(row)
         question = row.get("question") or row.get("query")
         answer = row.get("answer") or row.get("generated_answer") or row.get("output")
         if not question:

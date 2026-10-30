@@ -1,0 +1,26 @@
+{
+  "run_dir": "/Users/aaravkhanal/Desktop/RAGEVAL/experiments/runs/20261030T055224Z_388c5503",
+  "environment": {
+    "python": "3.13.13 | packaged by conda-forge | (main, Apr  8 2026, 02:29:07) [Clang 19.1.7 ]",
+    "platform": "macOS-14.5-arm64-arm-64bit-Mach-O",
+    "processor": "arm",
+    "git_commit": "ac8b644e3a6db31c76e0438fa70e7fc29ea7882e",
+    "timestamp_utc": "2026-10-30T05:54:12.573885+00:00"
+  },
+  "configs": [
+    "OptIn_NVIDIA_NIM_Dense_NLI",
+    "OptIn_NVIDIA_NIM_Hybrid_NLI"
+  ],
+  "label": "pilot",
+  "experiment_id": "nvidia_nim_retrieve",
+  "title": "Opt-in NVIDIA NIM dense and hybrid on benchmark_v1 1.2.0",
+  "family": "companion",
+  "data_dir": "data",
+  "dataset_id": "benchmark_v1",
+  "dataset_version": "1.2.0",
+  "split": "all",
+  "n_documents": 21,
+  "n_items": 32,
+  "resource_note": "Live NVIDIA NIM generator with dense MiniLM and hybrid RRF retrievers, DeBERTa NLI. Sparse NVIDIA companion is 20261030T052638Z_79a8b21d. Requires NVIDIA_API_KEY. Official tables remain a97ad68f. CLI --allow-opt-in. HTTP jobs refuse this file. No mock fallback.\n",
+  "max_items": null
+}

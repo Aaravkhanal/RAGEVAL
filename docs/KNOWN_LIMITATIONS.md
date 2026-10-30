@@ -2,7 +2,7 @@
 
 Longer threats list: `docs/RESEARCH_GAPS.md`. Published v1.0.0 write-up: `reports/20261028T183042Z_a97ad68f/FINDINGS.md`. Companion v1.1.0: `reports/20261029T165024Z_657c8089/FINDINGS.md`. Companion v1.2.0: `reports/20261029T173408Z_de870a29/FINDINGS.md`.
 
-- Official generator is a **blinded mock**, not an LLM. Live NVIDIA NIM companions: smoke `20261030T052448Z_6df3afb9` (`smoke_v1`) and `20261030T052638Z_79a8b21d` (`benchmark_v1` 1.2.0, faith 0.7188, R@5 0.8438, abstention 1.0). They are not the published ablation. Caller-supplied RAG answers are scored with `rageval score`.
+- Official generator is a **blinded mock**, not an LLM. Live NVIDIA NIM companions: smoke `20261030T052448Z_6df3afb9`; sparse `20261030T052638Z_79a8b21d` (faith 0.7188); dense/hybrid `20261030T055224Z_388c5503` (dense 0.7396, hybrid 0.6458). R@5 stays 0.8438. They are not the published ablation. `rageval score` accepts run `predictions.jsonl`. `rageval compare` diffs two `per_example.jsonl` files.
 - Official published ablation is **n=24** items / 16 documents (`20261028T183042Z_a97ad68f`); items share documents; tests are underpowered.
 - Companion v1.1.0 run `20261029T165024Z_657c8089` scores all 28 items (18 documents) with the same blinded mock + DeBERTa setup. n=28 is still underpowered. It does not replace the published table.
 - Current corpus is `benchmark_v1` **1.2.0** (21 documents, 32 items). Companion run `20261029T173408Z_de870a29` scores all 32 items (overlap 16/32/64). `A_chunk` overlap-32 is `20261029T173515Z_7e2b94a3`. n=32 is still underpowered. Neither replaces the published table.

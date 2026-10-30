@@ -69,7 +69,11 @@ rageval iaa --rater-a data/gold/iaa/annotator_a_verifier_eval_v1.json --rater-b 
 rageval experiment --config configs/opt_in/smoke_llm_nvidia.yaml --allow-opt-in --output-dir experiments/runs
 
 # Score an external RAG system's answers (no retrieval). Default verifier is heuristic.
+# Also accepts a run predictions.jsonl (generated_answer + retrieved_chunks).
 rageval score --input answers.jsonl --output scores.jsonl --method heuristic
+
+# Diagnostic per-item comparison of two per_example.jsonl files
+rageval compare --left reports/phase7/v1_2_matrix/metrics/per_example.jsonl --right reports/phase7/nvidia_nim_v1/metrics/per_example.jsonl --left-config Sparse_BM25_Chunk256 --right-config OptIn_NVIDIA_NIM_NLI --output reports/error_analysis_nvidia_v1.md
 
 # Single YAML config (repeat --config for a custom matrix)
 rageval benchmark --dataset smoke_v1 --config configs/ablation/sparse_bm25_256.yaml

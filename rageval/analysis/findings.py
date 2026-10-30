@@ -63,6 +63,38 @@ def assert_findings_text_allowed(text: str, metrics: Dict[str, Any]) -> None:
             )
 
 
+def describe_generator(metrics: Dict[str, Any]) -> str:
+    """Describe the generator from recorded pipeline identity. Default is the blinded mock."""
+    pipes = [p for p in (metrics.get("pipelines") or []) if isinstance(p, dict)]
+    backends = [str(p.get("generator_backend") or "") for p in pipes]
+    models = [str(p.get("generator_model") or "") for p in pipes]
+    live = [b for b in backends if b and b != "mock"]
+    if live:
+        uniq_b = sorted(set(live))
+        uniq_m = sorted({m for m, b in zip(models, backends) if b != "mock" and m})
+        bits = f"live generator backend {', '.join(uniq_b)}"
+        if uniq_m:
+            bits += f" (model {', '.join(uniq_m)})"
+        return bits + "."
+    names = list(metrics.get("by_config") or {})
+    exp = str(metrics.get("experiment_id") or "")
+    if any("NVIDIA" in n for n in names) or "nvidia" in exp.lower():
+        return "live NVIDIA NIM OpenAI-compatible HTTP generator."
+    return "blinded mock (`faithful`, abstain only on empty retrieval)."
+
+
+def describe_verifier(metrics: Dict[str, Any]) -> str:
+    pipes = [p for p in (metrics.get("pipelines") or []) if isinstance(p, dict)]
+    methods = [str(p.get("evaluator_method") or "") for p in pipes if p.get("evaluator_method")]
+    if methods and all(m == "heuristic" for m in methods):
+        return "lexical heuristic (`allow_heuristic_fallback=false`)."
+    if methods and all(m == "nli" for m in methods):
+        return "DeBERTa-v3 NLI (`allow_heuristic_fallback=false`)."
+    if methods:
+        return "verifier methods: " + ", ".join(sorted(set(methods))) + "."
+    return "DeBERTa-v3 NLI (`allow_heuristic_fallback=false`)."
+
+
 def write_findings(
     metrics: Dict[str, Any],
     output_dir: str,
@@ -102,6 +134,10 @@ def render_findings(
     exp_id = metrics.get("experiment_id") or ""
     if exp_id == "A_chunk":
         tables_rel = "reports/phase7/A_chunk_overlap32"
+    elif exp_id == "nvidia_nim_retrieve":
+        tables_rel = "reports/phase7/nvidia_nim_retrieve"
+    elif exp_id == "nvidia_nim_v1" or "nvidia" in exp_id.lower():
+        tables_rel = "reports/phase7/nvidia_nim_v1"
     elif version.startswith("1.2"):
         tables_rel = "reports/phase7/v1_2_matrix"
     elif version.startswith("1.1"):
@@ -121,8 +157,8 @@ def render_findings(
         "",
         "## What this run is",
         "",
-        "- Generator: blinded mock (`faithful`, abstain only on empty retrieval).",
-        "- Verifier: DeBERTa-v3 NLI (`allow_heuristic_fallback=false`).",
+        f"- Generator: {describe_generator(metrics)}",
+        f"- Verifier: {describe_verifier(metrics)}",
         "- Cost: null (no pricing_source).",
         "- Items share documents, so they are not i.i.d. Bootstrap CIs are diagnostic.",
         f"- Confirmatory tests require n≥30 i.i.d. This run has n={n_items}.",

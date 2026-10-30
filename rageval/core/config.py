@@ -46,6 +46,7 @@ class GeneratorConfig(BaseModel):
     temperature: float = 0.0
     max_tokens: int = 512
     timeout_s: float = 60.0
+    max_retries: int = 2
     mock_mode: str = "faithful"  # faithful, hallucinatory, contradictory, mixed
     abstention_policy: str = "empty_context"  # never, empty_context
     base_url: Optional[str] = None
@@ -107,6 +108,23 @@ class ExperimentSpec(BaseModel):
 
     def resolved_pipelines(self) -> List[PipelineConfig]:
         return list(self.pipelines)
+
+
+def pipeline_identity(configs: List[PipelineConfig]) -> List[dict]:
+    """Compact generator/retriever/evaluator identity for metrics.json."""
+    rows = []
+    for cfg in configs:
+        rows.append(
+            {
+                "name": cfg.name,
+                "generator_backend": cfg.generator.backend,
+                "generator_model": cfg.generator.model_name,
+                "retriever": cfg.retriever.method,
+                "evaluator_method": cfg.evaluator.method,
+                "opt_in": bool(cfg.opt_in),
+            }
+        )
+    return rows
 
 
 def load_yaml_config(path: str) -> dict:

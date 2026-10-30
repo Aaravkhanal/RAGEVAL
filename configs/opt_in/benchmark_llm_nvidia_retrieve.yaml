@@ -1,0 +1,15 @@
+experiment_id: nvidia_nim_retrieve
+label: pilot
+title: Opt-in NVIDIA NIM dense and hybrid on benchmark_v1 1.2.0
+family: companion
+dataset_id: benchmark_v1
+split: all
+opt_in: true
+resource_note: >
+  Live NVIDIA NIM generator with dense MiniLM and hybrid RRF retrievers,
+  DeBERTa NLI. Sparse NVIDIA companion is 20261030T052638Z_79a8b21d.
+  Requires NVIDIA_API_KEY. Official tables remain a97ad68f. CLI --allow-opt-in.
+  HTTP jobs refuse this file. No mock fallback.
+pipeline_paths:
+  - nvidia_nim_dense_nli.yaml
+  - nvidia_nim_hybrid_nli.yaml

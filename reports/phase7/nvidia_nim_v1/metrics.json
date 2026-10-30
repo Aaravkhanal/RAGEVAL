@@ -178,5 +178,15 @@
   "git_commit": "0ab99963283a024877d9a779da19c8e26c040beb",
   "timestamp_utc": "2026-10-30T05:27:49.476870+00:00",
   "n_items": 32,
-  "n_documents": 21
+  "n_documents": 21,
+  "pipelines": [
+    {
+      "name": "OptIn_NVIDIA_NIM_NLI",
+      "generator_backend": "openai",
+      "generator_model": "nvidia/nemotron-3.5-bolt-e4b",
+      "retriever": "sparse",
+      "evaluator_method": "nli",
+      "opt_in": true
+    }
+  ]
 }

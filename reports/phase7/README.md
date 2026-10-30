@@ -10,6 +10,8 @@
 
 **Live NVIDIA NIM companion:** `nvidia_nim_v1/` from run `20261030T052638Z_79a8b21d` (`benchmark_v1` 1.2.0, 21/32). One sparse BM25 config, generator `nvidia/nemotron-3.5-bolt-e4b`, DeBERTa NLI. Faith 0.7188, R@5 0.8438, MRR 0.7812, abstention 1.0. This does not replace `v1_matrix/`.
 
+**Live NVIDIA NIM retrieve:** `nvidia_nim_retrieve/` from run `20261030T055224Z_388c5503`. Dense MiniLM faith 0.7396 / MRR 0.7344; hybrid RRF faith 0.6458 / MRR 0.75. Recall@5 0.8438 and abstention 1.0 on both. This does not replace `v1_matrix/` or `nvidia_nim_v1/`.
+
 Named YAML in `configs/experiments/` (A–G) is the protocol. The six-config v1.0.0 / v1.1.0 / v1.2.0 snapshots used overlap 16/32/64 on dense chunk configs. Do not treat those YAML files as if they produced the six-config numbers.
 
 `significance.json` compares each config to `Dense_Chunk256_Baseline`. n<30, so `underpowered=true` and `is_significant=false` even when a raw paired t-test p-value is below 0.05.

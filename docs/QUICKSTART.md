@@ -16,6 +16,12 @@ python -m rageval.cli experiment \
   --config configs/experiments/smoke.yaml \
   --output-dir experiments/runs
 python -m rageval.cli score --input configs/examples/external_score.jsonl --output /tmp/scores.jsonl --method heuristic
+python -m rageval.cli compare \
+  --left reports/phase7/v1_2_matrix/metrics/per_example.jsonl \
+  --right reports/phase7/nvidia_nim_v1/metrics/per_example.jsonl \
+  --left-config Sparse_BM25_Chunk256 \
+  --right-config OptIn_NVIDIA_NIM_NLI \
+  --output /tmp/compare.md
 ```
 
 The smoke experiment uses BM25 + a blinded mock generator + a lexical heuristic. It is a CI fixture, not a publication result.

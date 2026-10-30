@@ -358,7 +358,7 @@ Embeddings beyond MiniLM and any paid LLM are **opt-in** after a resource note.
 **R6 (v1.2.0 companion NLI):** complete as `20261029T173408Z_de870a29`; does not replace `a97ad68f`.  
 **R7 (`A_chunk` overlap-32):** complete as `20261029T173515Z_7e2b94a3`; snapshot `reports/phase7/A_chunk_overlap32/`.
 
-Still blocked for confirmatory claims: independent second **human** annotator, n≥30 i.i.d. items. Official published SUT remains the blinded mock (`a97ad68f`). Live NVIDIA companion `20261030T052638Z_79a8b21d` is snapshotted as companion-only.
+Still blocked for confirmatory claims: independent second **human** annotator, n≥30 i.i.d. items. Official published SUT remains the blinded mock (`a97ad68f`). Live NVIDIA sparse companion `20261030T052638Z_79a8b21d` is snapshotted as companion-only. `rageval compare` records mock-sparse vs live-NVIDIA per item (`reports/error_analysis_nvidia_v1.md`).
 
 ---
 

@@ -20,5 +20,51 @@
     }
   ],
   "note": "Rater B is a disclosed LLM annotator. Cohen's kappa is diagnostic, not confirmatory human IAA. A template or self-repeat is not a second annotator.",
-  "n": 24
+  "n": 24,
+  "confusion": {
+    "labels": [
+      "supported",
+      "partially_supported",
+      "unsupported",
+      "contradicted",
+      "ambiguous"
+    ],
+    "matrix": [
+      [
+        10,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        3,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        4,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        5,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        1
+      ]
+    ]
+  }
 }

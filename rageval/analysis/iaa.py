@@ -11,7 +11,8 @@ import os
 from typing import Any, Dict, List, Optional
 
 from rageval.analysis.iaa_io import load_rater_labels
-from rageval.metrics.agreement import summarize_agreement
+from rageval.core.labels import EVAL_LABEL_ORDER
+from rageval.metrics.agreement import confusion_pairs, summarize_agreement
 
 SCHEMA = "rageval.iaa.v1"
 
@@ -75,6 +76,16 @@ def compare_raters(
         [b_map[i] for i in labeled],
     )
     payload.update(summary)
+    labels = list(EVAL_LABEL_ORDER)
+    matrix = confusion_pairs(
+        [a_map[i] for i in labeled],
+        [b_map[i] for i in labeled],
+        labels=labels,
+    )
+    payload["confusion"] = {
+        "labels": [lab.value for lab in labels],
+        "matrix": matrix,
+    }
     if unlabeled_b or missing_b:
         payload["complete"] = False
         payload["note"] = (
@@ -116,6 +127,18 @@ def render_iaa_markdown(result: Dict[str, Any]) -> str:
             lines.append(
                 f"| `{row.get('id')}` | {row.get('rater_a')} | {row.get('rater_b')} |"
             )
+        lines.append("")
+    confusion = result.get("confusion") or {}
+    labels = confusion.get("labels") or []
+    matrix = confusion.get("matrix") or []
+    if labels and matrix:
+        lines.append("**Confusion (rows = rater A, columns = rater B):**")
+        lines.append("")
+        header = "| A \\ B | " + " | ".join(labels) + " |"
+        lines.append(header)
+        lines.append("| --- | " + " | ".join("---" for _ in labels) + " |")
+        for lab, row in zip(labels, matrix):
+            lines.append("| " + lab + " | " + " | ".join(str(v) for v in row) + " |")
         lines.append("")
     return "\n".join(lines)
 

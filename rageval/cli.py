@@ -95,7 +95,21 @@ def main():
     findings_parser.add_argument("--metrics", default="reports/phase7/v1_matrix/metrics.json")
     findings_parser.add_argument("--output-dir", default="reports/20261028T183042Z_a97ad68f")
     findings_parser.add_argument("--run-id", default="20261028T183042Z_a97ad68f")
-    findings_parser.add_argument("--case-studies", default="reports/20261028T183042Z_a97ad68f/case_studies.json")
+    findings_parser.add_argument(
+        "--case-studies",
+        default=None,
+        help="Optional case_studies.json. Omitted when the file is not present.",
+    )
+
+    compare_parser = subparsers.add_parser(
+        "compare",
+        help="Compare two per_example.jsonl files on shared query ids (diagnostic)",
+    )
+    compare_parser.add_argument("--left", required=True, help="Left per_example.jsonl")
+    compare_parser.add_argument("--right", required=True, help="Right per_example.jsonl")
+    compare_parser.add_argument("--left-config", default=None)
+    compare_parser.add_argument("--right-config", default=None)
+    compare_parser.add_argument("--output", default="reports/compare.md")
 
     # Subcommand: evaluate
     eval_parser = subparsers.add_parser("evaluate", help="Perform claim-level evaluation on a specific answer")
@@ -252,7 +266,9 @@ def main():
         from rageval.analysis.paper_plots import generate_figures_from_metrics
 
         metrics = BenchmarkReporter.load_metrics(args.metrics)
-        cases = load_case_studies(args.case_studies) if args.case_studies else []
+        cases = []
+        if args.case_studies and os.path.isfile(args.case_studies):
+            cases = load_case_studies(args.case_studies)
         path = write_findings(
             metrics,
             args.output_dir,
@@ -262,6 +278,21 @@ def main():
         fig_dir = os.path.join(args.output_dir, "figures")
         generate_figures_from_metrics(metrics, fig_dir)
         print(f"Wrote {path}")
+
+    elif args.command == "compare":
+        from rageval.analysis.compare_runs import compare_files, write_compare_report
+
+        result = compare_files(
+            args.left,
+            args.right,
+            left_config=args.left_config,
+            right_config=args.right_config,
+        )
+        path = write_compare_report(result, args.output)
+        print(
+            f"Wrote {path} (n_shared={result.get('n_shared')}, "
+            f"mean_delta_faith={result.get('mean_delta_claim_support_rate')})"
+        )
 
     elif args.command == "evaluate":
         from rageval.integrations.external import result_to_jsonable, score_answer

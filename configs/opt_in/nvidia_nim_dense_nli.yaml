@@ -1,0 +1,28 @@
+name: OptIn_NVIDIA_NIM_Dense_NLI
+seed: 0
+opt_in: true
+resource_note: >
+  NVIDIA NIM nvidia/nemotron-3.5-bolt-e4b plus MiniLM dense retrieval and
+  DeBERTa NLI. Set NVIDIA_API_KEY. Companion only; official tables remain
+  20261028T183042Z_a97ad68f.
+chunker:
+  strategy: fixed
+  chunk_size: 256
+  chunk_overlap: 32
+retriever:
+  method: dense
+  top_k: 5
+reranker:
+  enabled: false
+generator:
+  backend: openai
+  model_name: nvidia/nemotron-3.5-bolt-e4b
+  temperature: 0.0
+  max_tokens: 256
+  timeout_s: 120
+  max_retries: 2
+  base_url: https://integrate.api.nvidia.com/v1
+  api_key_env: NVIDIA_API_KEY
+evaluator:
+  method: nli
+  allow_heuristic_fallback: false

@@ -190,6 +190,21 @@ def test_nvidia_companion_snapshot_does_not_replace_published_tables():
     assert "does **not** replace" in findings or "does not replace" in findings.lower()
     assert "0.4375" in paper
     assert_findings_text_allowed(findings, live)
+    compare = (ROOT / "reports" / "error_analysis_nvidia_v1.md").read_text(encoding="utf-8")
+    assert "0.2969" in compare
+    assert "20261028T183042Z_a97ad68f" in compare
+    assert "not a confirmatory ranking" in compare
+    retrieve = BenchmarkReporter.load_metrics(str(ROOT / "reports" / "phase7" / "nvidia_nim_retrieve" / "metrics.json"))
+    assert retrieve["n_items"] == 32
+    assert retrieve.get("experiment_id") == "nvidia_nim_retrieve"
+    assert retrieve["by_config"]["OptIn_NVIDIA_NIM_Dense_NLI"]["claim_support_rate"]["mean"] == 0.7396
+    assert retrieve["by_config"]["OptIn_NVIDIA_NIM_Hybrid_NLI"]["claim_support_rate"]["mean"] == 0.6458
+    assert retrieve["by_config"]["OptIn_NVIDIA_NIM_Dense_NLI"]["recall_at_5"]["mean"] == 0.8438
+    rfind = (ROOT / "reports" / "20261030T055224Z_388c5503" / "FINDINGS.md").read_text(encoding="utf-8")
+    assert "0.7396" in rfind and "0.6458" in rfind
+    assert "20261028T183042Z_a97ad68f" in rfind
+    assert "blinded mock" not in rfind.lower() or "Left: blinded mock" in rfind
+    assert_findings_text_allowed(rfind, retrieve)
 
 
 def test_cli_benchmark_reporter_import_is_module_level():

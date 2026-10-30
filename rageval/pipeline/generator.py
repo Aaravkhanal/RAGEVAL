@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import time
 import re
 from abc import ABC, abstractmethod
 from typing import Any, List, Optional, Tuple
@@ -166,6 +167,7 @@ class OpenAILikeGenerator(BaseGenerator):
         temperature: float = 0.0,
         max_tokens: int = 512,
         timeout: float = 60.0,
+        max_retries: int = 2,
     ):
         self.api_key = api_key
         self.base_url = base_url.rstrip("/")
@@ -173,6 +175,7 @@ class OpenAILikeGenerator(BaseGenerator):
         self.temperature = temperature
         self.max_tokens = max_tokens
         self.timeout = timeout
+        self.max_retries = max(0, int(max_retries))
 
     def generate(
         self,
@@ -202,11 +205,26 @@ class OpenAILikeGenerator(BaseGenerator):
             raise RuntimeError(
                 'openai/ollama backends require httpx. Install with pip install -e ".[api]"'
             ) from exc
-        try:
-            with _httpx_client(self.timeout) as client:
-                response = client.post(url, json=payload, headers=headers)
-        except httpx.RequestError as exc:
-            raise RuntimeError(f"LLM HTTP request failed for {url}: {exc}") from exc
+        retryable = {429, 502, 503, 504}
+        response = None
+        last_error: Optional[BaseException] = None
+        attempts = 1 + self.max_retries
+        for attempt in range(1, attempts + 1):
+            try:
+                with _httpx_client(self.timeout) as client:
+                    response = client.post(url, json=payload, headers=headers)
+            except httpx.RequestError as exc:
+                last_error = exc
+                if attempt < attempts:
+                    time.sleep(min(8.0, 0.25 * (2 ** attempt)))
+                    continue
+                raise RuntimeError(f"LLM HTTP request failed for {url}: {exc}") from exc
+            if response.status_code in retryable and attempt < attempts:
+                time.sleep(min(8.0, 0.25 * (2 ** attempt)))
+                continue
+            break
+        if response is None:
+            raise RuntimeError(f"LLM HTTP request failed for {url}: {last_error}")
         if response.status_code >= 400:
             snippet = (response.text or "")[:200]
             raise RuntimeError(f"LLM HTTP {response.status_code} from {url}: {snippet}")
@@ -339,6 +357,7 @@ def get_generator(config: GeneratorConfig) -> BaseGenerator:
             temperature=config.temperature,
             max_tokens=config.max_tokens,
             timeout=float(config.timeout_s or 60.0),
+            max_retries=int(config.max_retries if config.max_retries is not None else 2),
         )
     if backend == "local_hf":
         return LocalHfGenerator(

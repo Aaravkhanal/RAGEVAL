@@ -15,3 +15,13 @@ This is not Niu et al. 2024 RAGTruth. Labels measure evidence support.
 | id | rater A | rater B |
 | --- | --- | --- |
 | `ve_020` | unsupported | contradicted |
+
+**Confusion (rows = rater A, columns = rater B):**
+
+| A \ B | supported | partially_supported | unsupported | contradicted | ambiguous |
+| --- | --- | --- | --- | --- | --- |
+| supported | 10 | 0 | 0 | 0 | 0 |
+| partially_supported | 0 | 3 | 0 | 0 | 0 |
+| unsupported | 0 | 0 | 4 | 1 | 0 |
+| contradicted | 0 | 0 | 0 | 5 | 0 |
+| ambiguous | 0 | 0 | 0 | 0 | 1 |

@@ -6,6 +6,7 @@ import pytest
 
 from rageval.analysis.findings import (
     assert_findings_text_allowed,
+    describe_generator,
     recall_relative_lift_pct,
     render_findings,
     write_findings,
@@ -138,4 +139,16 @@ def test_achunk_findings_point_at_overlap32_tables():
     assert "A_chunk_overlap32" in text
     assert "v1_2_matrix" not in text
     assert "fixed at 32" in text
+    assert_findings_text_allowed(text, metrics)
+
+
+def test_nvidia_metrics_findings_are_live_not_mock():
+    metrics = BenchmarkReporter.load_metrics("reports/phase7/nvidia_nim_v1/metrics.json")
+    assert "live" in describe_generator(metrics)
+    assert "mock" not in describe_generator(metrics).lower()
+    text = render_findings(metrics, run_id="20261030T052638Z_79a8b21d", case_studies=[], significance=None)
+    assert "blinded mock" not in text.lower()
+    assert "nvidia/nemotron-3.5-bolt-e4b" in text
+    assert "nvidia_nim_v1" in text
+    assert "20261028T183042Z_a97ad68f" in text
     assert_findings_text_allowed(text, metrics)

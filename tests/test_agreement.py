@@ -47,6 +47,7 @@ def test_filled_llm_rater_b_is_complete_and_disclosed():
     assert result["complete"] is True
     assert result["n_labeled_both"] == 24
     assert result["cohen_kappa"] is not None
+    assert result.get("confusion", {}).get("matrix")
     assert "disclosed LLM" in result["note"] or "diagnostic" in result["note"].lower()
     assert "confirmatory human" in result["note"].lower() or "not confirmatory" in result["note"].lower()
     b = json.loads(Path("data/gold/iaa/annotator_b_verifier_eval_v1.json").read_text(encoding="utf-8"))
