@@ -7,7 +7,7 @@ name = "rageval"
 version = "0.2.1"
 description = "A research-grade benchmark and claim-level faithfulness evaluation system for RAG applications"
 readme = "README.md"
-license = { file = "LICENSE" }
+license = "MIT"
 requires-python = ">=3.10"
 dependencies = [
     "pydantic>=2.6.0",
@@ -68,6 +68,26 @@ include = ["rageval*"]
 
 [tool.setuptools.package-data]
 rageval = ["server/static/*"]
+
+[tool.setuptools.data-files]
+"share/rageval/data/raw" = ["data/raw/*.json"]
+"share/rageval/data/gold" = ["data/gold/*.json"]
+"share/rageval/data/gold/iaa" = ["data/gold/iaa/*.json", "data/gold/iaa/*.md"]
+"share/rageval/data/adversarial" = ["data/adversarial/*.json"]
+"share/rageval/data/cards" = ["data/cards/*.md"]
+"share/rageval/data/manifests" = ["data/manifests/*.json"]
+"share/rageval/data/datasets/benchmark_v1" = ["data/datasets/benchmark_v1/*.json"]
+"share/rageval/configs" = ["configs/*.yaml"]
+"share/rageval/configs/ablation" = ["configs/ablation/*.yaml"]
+"share/rageval/configs/experiments" = ["configs/experiments/*.yaml"]
+"share/rageval/configs/opt_in" = ["configs/opt_in/*.yaml"]
+"share/rageval/configs/examples" = ["configs/examples/*.jsonl"]
+"share/rageval/reports/phase7/v1_matrix" = ["reports/phase7/v1_matrix/metrics.json"]
+"share/rageval/reports/phase7/v1_1_matrix" = ["reports/phase7/v1_1_matrix/metrics.json"]
+"share/rageval/reports/phase7/v1_2_matrix" = ["reports/phase7/v1_2_matrix/metrics.json"]
+"share/rageval/reports/phase7/A_chunk_overlap32" = ["reports/phase7/A_chunk_overlap32/metrics.json"]
+"share/rageval/reports/phase7/nvidia_nim_v1" = ["reports/phase7/nvidia_nim_v1/metrics.json"]
+"share/rageval/reports/phase7/nvidia_nim_retrieve" = ["reports/phase7/nvidia_nim_retrieve/metrics.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

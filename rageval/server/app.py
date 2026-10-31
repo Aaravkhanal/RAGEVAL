@@ -1,18 +1,21 @@
-"""FastAPI application: live claim audit, catalog, and process-local experiment jobs."""
+"""FastAPI application: live claim audit, catalog, and durable experiment jobs."""
 
 from __future__ import annotations
 
 import os
+import hmac
+import json
 from typing import Any, Dict, List, Literal, Optional, Union
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from rageval import __version__
+from rageval.core.assets import resolve_asset
 from rageval.core.schemas import Chunk, QueryEvaluationResult, RetrievedChunk
 from rageval.integrations.external import SCHEMA as SCORE_SCHEMA
 from rageval.integrations.external import score_answer
@@ -41,7 +44,7 @@ app = FastAPI(
     title="RAGeval Evaluation API",
     description=(
         "Claim-level faithfulness evaluation, dataset/run catalog, and a "
-        "process-local job queue for allowlisted experiment YAML names. "
+        "durable job queue for allowlisted experiment YAML names. "
         "POST /experiments returns 202 and never runs BenchmarkSuite on the "
         "request thread. POST /benchmark/run stays 410. Live /evaluate/answer "
         "and /score default to method=heuristic. This project is not "
@@ -74,10 +77,17 @@ BENCHMARK_GONE = (
 
 
 class LiveEvaluationRequest(BaseModel):
-    question: str
-    answer: str
-    context_chunks: List[str] = Field(default_factory=list)
+    question: str = Field(max_length=2048)
+    answer: str = Field(max_length=16384)
+    context_chunks: List[str] = Field(default_factory=list, max_length=10)
     method: Literal["heuristic", "nli"] = "heuristic"
+
+    @field_validator("context_chunks")
+    @classmethod
+    def bound_chunks(cls, chunks: List[str]) -> List[str]:
+        if any(len(chunk) > 8192 for chunk in chunks):
+            raise ValueError("Each context chunk must be at most 8192 characters")
+        return chunks
 
 
 class LiveEvaluationResponse(BaseModel):
@@ -85,24 +95,49 @@ class LiveEvaluationResponse(BaseModel):
 
 
 class StreamEvaluationRequest(BaseModel):
-    question: str
-    tokens: List[str]
-    context_chunks: List[str] = Field(default_factory=list)
+    question: str = Field(max_length=2048)
+    tokens: List[str] = Field(max_length=2048)
+    context_chunks: List[str] = Field(default_factory=list, max_length=10)
     method: Literal["heuristic", "nli"] = "heuristic"
+
+    @field_validator("tokens")
+    @classmethod
+    def bound_tokens(cls, tokens: List[str]) -> List[str]:
+        if any(len(token) > 256 for token in tokens):
+            raise ValueError("Each token must be at most 256 characters")
+        return tokens
+
+    @field_validator("context_chunks")
+    @classmethod
+    def bound_chunks(cls, chunks: List[str]) -> List[str]:
+        return LiveEvaluationRequest.bound_chunks(chunks)
 
 
 class ScoreRequest(BaseModel):
-    question: str
-    answer: str
-    contexts: List[Union[str, Dict[str, Any]]] = Field(default_factory=list)
+    question: str = Field(max_length=2048)
+    answer: str = Field(max_length=16384)
+    contexts: List[Union[str, Dict[str, Any]]] = Field(default_factory=list, max_length=10)
     method: Literal["heuristic", "nli"] = "heuristic"
-    query_id: str = "live_query"
+    query_id: str = Field(default="live_query", max_length=128)
+
+    @field_validator("contexts")
+    @classmethod
+    def bound_contexts(cls, contexts: List[Union[str, Dict[str, Any]]]) -> List[Union[str, Dict[str, Any]]]:
+        if any(len(json.dumps(context)) > 8192 for context in contexts):
+            raise ValueError("Each context must be at most 8192 JSON characters")
+        return contexts
 
 
 class StartExperimentRequest(BaseModel):
     config: str = Field(..., min_length=1, description="Allowlisted YAML stem under configs/experiments/")
     max_items: Optional[int] = Field(default=None, ge=1, le=32)
     allow_heavy: bool = False
+
+
+def _http_evaluator(method: str):
+    if method == "nli" and os.environ.get("RAGEVAL_ENABLE_HTTP_NLI", "0").lower() not in {"1", "true", "yes"}:
+        raise HTTPException(status_code=403, detail="HTTP NLI is disabled; set RAGEVAL_ENABLE_HTTP_NLI=1 after provisioning the model")
+    return get_evaluator(method)
 
 
 def _health_payload() -> Dict[str, Any]:
@@ -122,18 +157,19 @@ def health_check():
 
 @app.get("/ready", tags=["meta"])
 def ready_check():
-    """Readiness. 200 when data/runs dirs exist; 503 otherwise."""
+    """Readiness. 200 when data exists and run storage is writable."""
     data_ok = os.path.isdir(data_dir())
     runs_ok = os.path.isdir(runs_root())
+    ready = data_ok and runs_ok and os.access(runs_root(), os.W_OK)
     payload = {
-        "status": "ready" if data_ok else "not_ready",
+        "status": "ready" if ready else "not_ready",
         "service": "rageval",
         "version": __version__,
         "busy": is_busy(),
         "data_ok": data_ok,
         "runs_ok": runs_ok,
     }
-    if not data_ok:
+    if not ready:
         return JSONResponse(status_code=503, content=payload)
     return payload
 
@@ -193,8 +229,13 @@ def experiment_results(run_id: str):
 
 
 @app.post("/experiments", tags=["experiments"], status_code=202)
-def start_experiment(req: StartExperimentRequest):
+def start_experiment(req: StartExperimentRequest, x_rageval_admin_token: Optional[str] = Header(default=None)):
     """Queue an allowlisted experiment. Default smoke; NLI/v1 needs allow_heavy."""
+    expected = os.environ.get("RAGEVAL_ADMIN_TOKEN")
+    if not expected:
+        raise HTTPException(status_code=503, detail="Experiment jobs are disabled until RAGEVAL_ADMIN_TOKEN is configured")
+    if not x_rageval_admin_token or not hmac.compare_digest(x_rageval_admin_token, expected):
+        raise HTTPException(status_code=401, detail="Invalid experiment admin token")
     try:
         return enqueue_experiment(
             req.config,
@@ -231,7 +272,7 @@ def get_metrics_summary() -> List[Dict[str, Any]]:
         except FileNotFoundError:
             continue
         return payload["table"]
-    snapshot = os.path.join("reports", "phase7", "v1_matrix", "metrics.json")
+    snapshot = resolve_asset(os.path.join("reports", "phase7", "v1_matrix", "metrics.json"))
     if os.path.isfile(snapshot):
         from rageval.benchmark.reporter import BenchmarkReporter
 
@@ -268,7 +309,7 @@ def evaluate_stream(req: StreamEvaluationRequest):
     session = StreamingVerificationSession(
         question=req.question,
         retrieved_chunks=retrieved_chunks,
-        verifier=get_evaluator(req.method).nli_verifier,
+        verifier=_http_evaluator(req.method).nli_verifier,
     )
     events = []
     for tok in req.tokens:
@@ -288,9 +329,9 @@ def evaluate_answer(req: LiveEvaluationRequest):
     """Decompose an answer and verify claims against caller-supplied context. Sync.
 
     Default method is heuristic so the dashboard does not download DeBERTa.
-    Pass method=nli for the research verifier.
+    Pass method=nli after explicitly enabling HTTP NLI and provisioning its model.
     """
-    res = get_evaluator(req.method).evaluate_query(
+    res = _http_evaluator(req.method).evaluate_query(
         question=req.question,
         generated_answer=req.answer,
         retrieved_chunks=_chunks_from_texts(req.context_chunks, "user_provided"),
@@ -307,7 +348,7 @@ def score_external(req: ScoreRequest):
         req.answer,
         req.contexts,
         method=req.method,
-        evaluator=get_evaluator(req.method),
+        evaluator=_http_evaluator(req.method),
         query_id=req.query_id,
     )
     global_metrics_collector.record_evaluation(res)

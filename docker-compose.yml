@@ -11,13 +11,17 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
+    restart: unless-stopped
+    mem_limit: 2g
+    cpus: "2"
     environment:
       RAGEVAL_RUNS_DIR: /app/experiments/runs
       RAGEVAL_DATA_DIR: /app/data
       RAGEVAL_CORS_ORIGINS: http://127.0.0.1:8000,http://localhost:8000
       RAGEVAL_ALLOWED_HOSTS: localhost,127.0.0.1,0.0.0.0
       RAGEVAL_RATE_LIMIT_PER_MINUTE: "60"
+      RAGEVAL_ADMIN_TOKEN: ${RAGEVAL_ADMIN_TOKEN:-}
     volumes:
       - rageval-runs:/app/experiments/runs
     healthcheck:
@@ -32,6 +36,21 @@ services:
       timeout: 5s
       retries: 3
       start_period: 20s
+
+  worker:
+    image: rageval:0.2.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["rageval", "worker", "--runs-dir", "/app/experiments/runs", "--data-dir", "/app/data"]
+    restart: unless-stopped
+    mem_limit: 4g
+    cpus: "2"
+    environment:
+      RAGEVAL_RUNS_DIR: /app/experiments/runs
+      RAGEVAL_DATA_DIR: /app/data
+    volumes:
+      - rageval-runs:/app/experiments/runs
 
 volumes:
   rageval-runs:

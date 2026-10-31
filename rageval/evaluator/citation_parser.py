@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 import re
-from typing import List, Tuple, Set
+from typing import List
 from rageval.core.schemas import AtomicClaim, ClaimVerification, RetrievedChunk, CitationMetric
 from rageval.core.labels import VerificationLabel
 from rageval.metrics.citation import (

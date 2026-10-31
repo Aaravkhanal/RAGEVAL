@@ -51,3 +51,4 @@ htmlcov/
 # Experiment run artifacts (keep directory via gitkeep)
 experiments/runs/*/
 !experiments/runs/.gitkeep
+experiments/runs/*.sqlite3*

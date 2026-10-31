@@ -64,7 +64,7 @@ Existing `rageval` modules are the implementation surface. New files are added o
 
 ## Phase 2 — Dataset construction and ground-truth design
 
-**Status:** Complete for the licensed pilot (`benchmark_v1` v1.2.0, 32 items). Expansion toward 50–150 items remains a later increment.
+**Status:** Complete for the licensed pilot (`benchmark_v1` v1.3.0, 40 items). Expansion toward 50–150 items remains a later increment.
 
 **Objective:** A versioned, licensed, small-but-valid benchmark plus retention of the current 8-item set as `smoke`.
 
@@ -353,7 +353,8 @@ Embeddings beyond MiniLM and any paid LLM are **opt-in** after a resource note.
 ## Research follow-on after 0.2.1
 
 **R3 (opt-in LLM smoke):** live NVIDIA NIM smoke complete as `20261030T052448Z_6df3afb9` on `smoke_v1` (heuristic). OpenAI/Ollama/local_hf YAMLs remain available.  
-**R4 (IAA + 1.2.0 corpus):** kappa CLI and 21/32 corpus complete; rater B is a disclosed LLM (`rater_b_llm_grok`, diagnostic kappa 0.9423). Independent human still missing.  
+**R4 (IAA + 1.2.0 corpus):** kappa CLI and 21/32 corpus complete; rater B is a disclosed LLM (`rater_b_llm_grok`, diagnostic kappa 0.9423). Independent human still missing (`rageval iaa-label` writes a human file when labels are supplied).  
+**R8 (1.3.0 corpus + independent slice):** 29/40 on disk plus `H_independent.yaml`. No v1.3 NLI companion recorded. Independent human still missing.  
 **R5 (external scorer):** `rageval score` / `score_answer` — question+chunks+answer in.  
 **R6 (v1.2.0 companion NLI):** complete as `20261029T173408Z_de870a29`; does not replace `a97ad68f`.  
 **R7 (`A_chunk` overlap-32):** complete as `20261029T173515Z_7e2b94a3`; snapshot `reports/phase7/A_chunk_overlap32/`.

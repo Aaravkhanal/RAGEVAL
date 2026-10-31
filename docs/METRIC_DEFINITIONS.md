@@ -82,7 +82,7 @@ Means over examples. There is **no official composite / overall score**. Compare
 
 Bootstrap percentile CIs (`rageval/metrics/bootstrap.py`) are **confirmatory** only when \(n \ge 30\) **and** items are treated as i.i.d. Items that share documents are not independent. Smaller \(n\) still emits an interval labeled `assumptions_met=false`. Significance p-values in `analysis/significance.py` are uncorrected; `confirmatory` is false when \(n < 30\).
 
-The smoke set (\(n=8\)) and `benchmark_v1` (v1.0.0 \(n=24\); v1.1.0 \(n=28\); v1.2.0 \(n=32\), items share documents) are underpowered for confirmatory inference.
+The smoke set (\(n=8\)) and `benchmark_v1` (v1.0.0 \(n=24\); v1.1.0 \(n=28\); v1.2.0 \(n=32\); v1.3.0 \(n=40\), items share documents on the full set) are underpowered for confirmatory inference.
 
 Robustness tables are **named-metric means sliced by `scenario_type`** (`rageval.metrics.aggregate.robustness_by_scenario_type`). They are not an overall score.
 

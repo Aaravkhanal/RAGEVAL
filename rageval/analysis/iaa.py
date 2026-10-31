@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import json
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 from rageval.analysis.iaa_io import load_rater_labels
 from rageval.core.labels import EVAL_LABEL_ORDER

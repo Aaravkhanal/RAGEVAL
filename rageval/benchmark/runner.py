@@ -12,7 +12,6 @@ from rageval.core.schemas import (
     TestType,
 )
 from rageval.benchmark.run_store import git_commit
-from rageval.core.config import PipelineConfig
 from rageval.metrics.aggregate import robustness_by_scenario_type
 from rageval.pipeline.rag import RAGPipeline
 from rageval.evaluator.evaluator import RAGEvalEvaluator

@@ -1,0 +1,982 @@
+[
+  {
+    "id": "v1_001",
+    "domain": "space",
+    "question": "When did Apollo 11 launch, and who were the three crew members?",
+    "gold_answer": "Apollo 11 launched from Cape Kennedy on July 16, 1969, carrying Neil Armstrong, Michael Collins, and Edwin \"Buzz\" Aldrin.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nasa_apollo11_objective",
+        "span": "Apollo 11 launched from Cape Kennedy on July 16, 1969, carrying Commander Neil Armstrong, Command Module Pilot Michael Collins and Lunar Module Pilot Edwin \"Buzz\" Aldrin",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Apollo 11 launched on July 16, 1969",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_apollo11_objective"
+        ]
+      },
+      {
+        "claim": "The crew included Neil Armstrong, Michael Collins, and Edwin Buzz Aldrin",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_apollo11_objective"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {}
+  },
+  {
+    "id": "v1_002",
+    "domain": "space",
+    "question": "Where did the Eagle land on the Moon?",
+    "gold_answer": "The Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nasa_apollo11_landing",
+        "span": "the Eagle landed in the Sea of Tranquility in Site 2 at 0 degrees, 41 minutes, 15 seconds north latitude and 23 degrees, 26 minutes east longitude.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The Eagle landed in the Sea of Tranquility",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_apollo11_landing"
+        ]
+      },
+      {
+        "claim": "The landing site was Site 2",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_apollo11_landing"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {}
+  },
+  {
+    "id": "v1_003",
+    "domain": "public_health",
+    "question": "Which influenza virus types cause seasonal epidemics in people in the United States?",
+    "gold_answer": "Influenza A and B viruses cause seasonal epidemics of disease in people almost every winter in the United States.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cdc_flu_types",
+        "span": "Influenza A and B viruses cause seasonal epidemics of disease in people (known as flu season) almost every winter in the United States.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Influenza A viruses cause seasonal epidemics in people",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_flu_types"
+        ]
+      },
+      {
+        "claim": "Influenza B viruses cause seasonal epidemics in people",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_flu_types"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {}
+  },
+  {
+    "id": "v1_005",
+    "domain": "parks",
+    "question": "Why was Yellowstone National Park established, and how large is the Greater Yellowstone Ecosystem?",
+    "gold_answer": "Yellowstone was established primarily to protect hydrothermal areas that contain about half the world's active geysers. The Greater Yellowstone Ecosystem is 28,000 square miles.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_yellowstone_ecosystem",
+        "span": "Established primarily to protect hydrothermal areas that contain about half the world's active geysers, the park also forms the core of the Greater Yellowstone Ecosystem. At 28,000 square miles, it is one of the largest, nearly intact temperate-zone ecosystems on Earth.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Yellowstone was established primarily to protect hydrothermal areas",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yellowstone_ecosystem"
+        ]
+      },
+      {
+        "claim": "Those areas contain about half the world's active geysers",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yellowstone_ecosystem"
+        ]
+      },
+      {
+        "claim": "The Greater Yellowstone Ecosystem is 28,000 square miles",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yellowstone_ecosystem"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {}
+  },
+  {
+    "id": "v1_006",
+    "domain": "parks",
+    "question": "How many mammal and bird species does Yellowstone preserve according to the Nature page?",
+    "gold_answer": "The Nature page lists 67 mammals and 285 birds.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_yellowstone_wildlife",
+        "span": "Learn about the park's abundant and diverse species\u201467 mammals, 285 birds, 16 fish, 5 amphibians, and 6 reptiles.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The park has 67 mammal species",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yellowstone_wildlife"
+        ]
+      },
+      {
+        "claim": "The park has 285 bird species",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yellowstone_wildlife"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {}
+  },
+  {
+    "id": "v1_007",
+    "domain": "finance",
+    "question": "What was HarborNet's Q2 2025 subscription revenue and monthly churn?",
+    "gold_answer": "HarborNet reported subscription revenue of $412 million for Q2 2025 and monthly churn of 1.8%.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_harbornet_q2",
+        "span": "HarborNet reported subscription revenue of $412 million for the second quarter of 2025, a 9% increase from $378 million in Q2 2024. Average revenue per user was $54.10. Monthly churn was 1.8%.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "HarborNet Q2 2025 subscription revenue was $412 million",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_q2"
+        ]
+      },
+      {
+        "claim": "Monthly churn was 1.8%",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_q2"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": "pair_harbornet_q2",
+    "pair_role": "control",
+    "reviewed": false,
+    "metadata": {
+      "pair_id": "pair_harbornet_q2",
+      "pair_role": "control"
+    }
+  },
+  {
+    "id": "v1_008",
+    "domain": "finance",
+    "question": "How much senior notes does HarborNet have, when do they mature, and how much of the May 2025 repurchase was executed?",
+    "gold_answer": "HarborNet issued $640 million of senior notes due March 2031. Of an $80 million Class B repurchase authorization, $22 million was executed.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_harbornet_balance",
+        "span": "issued $640 million of senior notes due March 2031 at a 5.25% coupon. In May 2025 the board authorized an $80 million repurchase of Class B shares, of which $22 million was executed.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "HarborNet issued $640 million of senior notes due March 2031",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_balance"
+        ]
+      },
+      {
+        "claim": "$22 million of the Class B repurchase was executed",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_balance"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {}
+  },
+  {
+    "id": "v1_009",
+    "domain": "systems",
+    "question": "What are LumenGrid's median and p99 GET latencies under the reported read-heavy workload?",
+    "gold_answer": "Median GET latency was 2.1 ms and p99 GET latency was 9.6 ms.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_lumengrid_latency",
+        "span": "median GET latency was 2.1 ms and p99 GET latency was 9.6 ms.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "LumenGrid median GET latency was 2.1 ms",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_lumengrid_latency"
+        ]
+      },
+      {
+        "claim": "LumenGrid p99 GET latency was 9.6 ms",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_lumengrid_latency"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {}
+  },
+  {
+    "id": "v1_010",
+    "domain": "systems",
+    "question": "How long did LumenGrid crash recovery take on a 200 GB shard, and what is the heartbeat timeout?",
+    "gold_answer": "Crash recovery on a 200 GB shard completed in 6.4 seconds. Failure detection uses a 300 ms heartbeat timeout.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_lumengrid_recovery",
+        "span": "LumenGrid crash recovery on a 200 GB shard completed in 6.4 seconds on NVMe. Failure detection uses a 300 ms heartbeat timeout",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Recovery of a 200 GB shard completed in 6.4 seconds",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_lumengrid_recovery"
+        ]
+      },
+      {
+        "claim": "Heartbeat timeout is 300 ms",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_lumengrid_recovery"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {}
+  },
+  {
+    "id": "v1_011",
+    "domain": "biomedical",
+    "question": "What was median PFS and confirmed ORR for Nerexin plus pembrolizumab in SHORELINE?",
+    "gold_answer": "Median progression-free survival was 11.2 months and confirmed objective response rate was 44.0% in the combination arm.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nerexin_trial",
+        "span": "Nerexin plus pembrolizumab produced median progression-free survival of 11.2 months versus 6.4 months with pembrolizumab alone (hazard ratio 0.72; 95% CI 0.58-0.89). Confirmed objective response rate was 44.0% versus 27.5%.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Median PFS was 11.2 months for Nerexin plus pembrolizumab",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nerexin_trial"
+        ]
+      },
+      {
+        "claim": "Confirmed ORR was 44.0% in the combination arm",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nerexin_trial"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {}
+  },
+  {
+    "id": "v1_012",
+    "domain": "finance",
+    "question": "What subscription revenue range did HarborNet guide for Q3 2025?",
+    "gold_answer": "HarborNet expects subscription revenue of $420 million to $428 million for Q3 2025.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_harbornet_guidance",
+        "span": "For Q3 2025 HarborNet expects subscription revenue of $420 million to $428 million",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Q3 2025 subscription revenue guidance is $420 million to $428 million",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_harbornet_guidance"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {}
+  },
+  {
+    "id": "v1_017",
+    "domain": "transit",
+    "question": "Did CedarRail operate unsupervised light-rail cars in Tacoma without licensed operators?",
+    "gold_answer": "Sources conflict. The press note says CedarRail opened unsupervised service with 40 driverless cars. The Pierce County audit required a licensed operator in every cab and suspended unsupervised service.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cedarrail_pr",
+        "span": "CedarRail opened unsupervised light-rail service in Tacoma in March 2025 with 40 driverless cars",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_cedarrail_audit",
+        "span": "required a licensed operator in every cab after three platform overruns in April 2025. Unsupervised service was suspended.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The press note claimed unsupervised driverless service",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cedarrail_pr"
+        ]
+      },
+      {
+        "claim": "The audit required a licensed operator in every cab",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cedarrail_audit"
+        ]
+      }
+    ],
+    "test_type": "conflicting",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "conflicting",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "conflict_docs": [
+        "doc_cedarrail_pr",
+        "doc_cedarrail_audit"
+      ],
+      "reviewer_notes": "Hand-checked: unsupervised PR vs licensed-operator audit cannot both be true.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_029",
+    "domain": "parks",
+    "question": "When was the most recent volcanic activity at Yellowstone, and which flow formed the Pitchstone Plateau?",
+    "gold_answer": "The most recent volcanic activity consisted of rhyolitic lava flows about 70,000 years ago. The largest of those flows formed the Pitchstone Plateau in southwestern Yellowstone National Park.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_usgs_yellowstone_last_eruption",
+        "span": "The most recent volcanic activity at Yellowstone consisted of rhyolitic lava flows that erupted approximately 70,000 years ago.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_usgs_yellowstone_last_eruption",
+        "span": "The largest of these flows formed the Pitchstone Plateau in southwestern Yellowstone National Park.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The most recent volcanic activity at Yellowstone was about 70,000 years ago",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_usgs_yellowstone_last_eruption"
+        ]
+      },
+      {
+        "claim": "The largest of those flows formed the Pitchstone Plateau",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_usgs_yellowstone_last_eruption"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked USGS last-eruption FAQ. Gold is the 70,000-year rhyolite flows and Pitchstone Plateau; not the 631,000-year caldera.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_030",
+    "domain": "parks",
+    "question": "About how many eruptions have occurred at Yellowstone since the most recent giant caldera-forming eruption, and how do they split by type?",
+    "gold_answer": "Approximately 80 relatively nonexplosive eruptions have occurred since the giant eruption 631,000 years ago: at least 27 rhyolite flows in the caldera, 13 rhyolite flows outside the caldera, and 40 basalt vents outside the caldera.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_usgs_yellowstone_post_caldera",
+        "span": "Since the most recent giant (caldera-forming) eruption 631,000 years ago, approximately 80 relatively nonexplosive eruptions have occurred.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_usgs_yellowstone_post_caldera",
+        "span": "at least 27 were rhyolite lava flows in the caldera, 13 were rhyolite lava flows outside the caldera, and 40 were basalt vents outside the caldera.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Approximately 80 relatively nonexplosive eruptions have occurred since the giant eruption 631,000 years ago",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_usgs_yellowstone_post_caldera"
+        ]
+      },
+      {
+        "claim": "At least 27 of those eruptions were rhyolite lava flows in the caldera",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_usgs_yellowstone_post_caldera"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "numerical_negation",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked numerical item on the USGS post-caldera FAQ counts (~80 / 27 / 13 / 40). Test split is unchanged.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_031",
+    "domain": "space",
+    "question": "When did the International Space Station mark 25 years of continuous human presence, and which space agencies are the program principals?",
+    "gold_answer": "November 2, 2025 marked 25 years of continuous human presence. The principals are the space agencies of the United States, Russia, Europe, Japan, and Canada.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nasa_iss",
+        "span": "November 2, 2025, marked a historic milestone: 25 years of continuous human presence aboard the International Space Station.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_nasa_iss",
+        "span": "The principals are the space agencies of the United States, Russia, Europe, Japan, and Canada.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "November 2, 2025 marked 25 years of continuous human presence on the ISS",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_iss"
+        ]
+      },
+      {
+        "claim": "The principal agencies are the United States, Russia, Europe, Japan, and Canada",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_iss"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NASA ISS page excerpt fetched 2026-10-29.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_033",
+    "domain": "public_health",
+    "question": "How contagious is measles among unprotected close contacts, and how effective are one and two MMR doses?",
+    "gold_answer": "If one person has measles, up to 9 out of 10 unprotected close contacts become infected. Two MMR doses are about 97% effective; one dose is about 93% effective.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cdc_measles",
+        "span": "If one person has it, up to 9 out of 10 people who come into close contact with that person will become infected if they are not protected.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_cdc_measles",
+        "span": "Two doses of MMR vaccine are about 97% effective at preventing measles; one dose is about 93% effective.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Up to 9 out of 10 unprotected close contacts of a measles case become infected",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_measles"
+        ]
+      },
+      {
+        "claim": "Two MMR doses are about 97% effective at preventing measles",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_measles"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked CDC About Measles page fetched 2026-10-30.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_034",
+    "domain": "parks",
+    "question": "How large is Grand Canyon National Park, and how deep and long is the canyon on average?",
+    "gold_answer": "The park encompasses 1,218,375 acres. The canyon averages 4,000 feet deep for 277 miles.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_grand_canyon",
+        "span": "encompasses 1,218,375 acres and lies on the Colorado Plateau in northwestern Arizona.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_nps_grand_canyon",
+        "span": "averaging 4,000 feet deep for its entire 277 miles.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Grand Canyon National Park encompasses 1,218,375 acres",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_grand_canyon"
+        ]
+      },
+      {
+        "claim": "The canyon averages 4,000 feet deep for 277 miles",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_grand_canyon"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "numerical_negation",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NPS Grand Canyon Nature page fetched 2026-10-30.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_035",
+    "domain": "parks",
+    "question": "How large is Yosemite National Park, what share is designated Wilderness, and when was it listed as a World Heritage Site?",
+    "gold_answer": "Yosemite covers 747,956 acres, nearly 95 percent designated Wilderness, and was listed as a World Heritage Site in 1984.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_yosemite",
+        "span": "Yosemite's 747,956 acres (1,169 square miles), nearly 95 percent of which are designated Wilderness",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_nps_yosemite",
+        "span": "Designated a World Heritage Site in 1984",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Yosemite covers 747,956 acres",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yosemite"
+        ]
+      },
+      {
+        "claim": "Yosemite was designated a World Heritage Site in 1984",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yosemite"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NPS Yosemite Nature page fetched 2026-10-30.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_036",
+    "domain": "space",
+    "question": "In which years did Voyager 1 and Voyager 2 reach the interstellar boundary?",
+    "gold_answer": "Voyager 1 reached the interstellar boundary in 2012 and Voyager 2 reached it in 2018.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nasa_voyager",
+        "span": "Voyager 1 reached the interstellar boundary in 2012, while Voyager 2 (traveling slower and in a different direction than its twin) reached it in 2018.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Voyager 1 reached the interstellar boundary in 2012",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_voyager"
+        ]
+      },
+      {
+        "claim": "Voyager 2 reached the interstellar boundary in 2018",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_voyager"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NASA Science Voyager page fetched 2026-10-30.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_037",
+    "domain": "space",
+    "question": "When did the Hubble Space Telescope launch?",
+    "gold_answer": "Hubble launched on April 24, 1990.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nasa_hubble",
+        "span": "Launch APR 24, 1990.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Hubble launched on April 24, 1990",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_hubble"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NASA Science Hubble page fetched 2026-10-30.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_038",
+    "domain": "space",
+    "question": "When did the James Webb Space Telescope launch, and where does it orbit?",
+    "gold_answer": "Webb launched on December 25, 2021 and orbits the Sun 1.5 million kilometers from Earth at L2.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nasa_webb",
+        "span": "Webb launched on Dec. 25th 2021.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_nasa_webb",
+        "span": "it orbits the Sun 1.5 million kilometers (1 million miles) away from the Earth at what is called the second Lagrange point or L2.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Webb launched on December 25, 2021",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_webb"
+        ]
+      },
+      {
+        "claim": "Webb orbits the Sun 1.5 million kilometers from Earth at L2",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_webb"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NASA Science Webb page fetched 2026-10-30.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_039",
+    "domain": "public_health",
+    "question": "How long should you scrub your hands, and what alcohol content should hand sanitizer have if soap and water are unavailable?",
+    "gold_answer": "Scrub for at least 20 seconds. If soap and water are not available, use a sanitizer with at least 60% alcohol.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cdc_handwashing",
+        "span": "use a hand sanitizer with at least 60% alcohol to clean your hands.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_cdc_handwashing",
+        "span": "Scrub your hands for at least 20 seconds.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Hands should be scrubbed for at least 20 seconds",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_handwashing"
+        ]
+      },
+      {
+        "claim": "Hand sanitizer should contain at least 60% alcohol when soap and water are unavailable",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_handwashing"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked CDC About Handwashing page fetched 2026-10-30.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_040",
+    "domain": "parks",
+    "question": "When did the Everglades form, and on what kind of bedrock?",
+    "gold_answer": "The Everglades formed 5,000 years ago atop a bedrock of porous limestone.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_everglades",
+        "span": "The Everglades formed 5,000 years ago atop a bedrock of porous limestone.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The Everglades formed 5,000 years ago on porous limestone bedrock",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_everglades"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NPS Everglades Nature page fetched 2026-10-30.",
+      "reviewed": true
+    }
+  }
+]

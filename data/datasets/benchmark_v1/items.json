@@ -1210,5 +1210,357 @@
       "reviewer_notes": "Hand-checked unanswerable item. Thanksgiving dinner is absent from the stored NASA excerpt.",
       "reviewed": true
     }
+  },
+  {
+    "id": "v1_033",
+    "domain": "public_health",
+    "question": "How contagious is measles among unprotected close contacts, and how effective are one and two MMR doses?",
+    "gold_answer": "If one person has measles, up to 9 out of 10 unprotected close contacts become infected. Two MMR doses are about 97% effective; one dose is about 93% effective.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cdc_measles",
+        "span": "If one person has it, up to 9 out of 10 people who come into close contact with that person will become infected if they are not protected.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_cdc_measles",
+        "span": "Two doses of MMR vaccine are about 97% effective at preventing measles; one dose is about 93% effective.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Up to 9 out of 10 unprotected close contacts of a measles case become infected",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_measles"
+        ]
+      },
+      {
+        "claim": "Two MMR doses are about 97% effective at preventing measles",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_measles"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked CDC About Measles page fetched 2026-10-30.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_034",
+    "domain": "parks",
+    "question": "How large is Grand Canyon National Park, and how deep and long is the canyon on average?",
+    "gold_answer": "The park encompasses 1,218,375 acres. The canyon averages 4,000 feet deep for 277 miles.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_grand_canyon",
+        "span": "encompasses 1,218,375 acres and lies on the Colorado Plateau in northwestern Arizona.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_nps_grand_canyon",
+        "span": "averaging 4,000 feet deep for its entire 277 miles.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Grand Canyon National Park encompasses 1,218,375 acres",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_grand_canyon"
+        ]
+      },
+      {
+        "claim": "The canyon averages 4,000 feet deep for 277 miles",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_grand_canyon"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "numerical_negation",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NPS Grand Canyon Nature page fetched 2026-10-30.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_035",
+    "domain": "parks",
+    "question": "How large is Yosemite National Park, what share is designated Wilderness, and when was it listed as a World Heritage Site?",
+    "gold_answer": "Yosemite covers 747,956 acres, nearly 95 percent designated Wilderness, and was listed as a World Heritage Site in 1984.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_yosemite",
+        "span": "Yosemite's 747,956 acres (1,169 square miles), nearly 95 percent of which are designated Wilderness",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_nps_yosemite",
+        "span": "Designated a World Heritage Site in 1984",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Yosemite covers 747,956 acres",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yosemite"
+        ]
+      },
+      {
+        "claim": "Yosemite was designated a World Heritage Site in 1984",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_yosemite"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NPS Yosemite Nature page fetched 2026-10-30.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_036",
+    "domain": "space",
+    "question": "In which years did Voyager 1 and Voyager 2 reach the interstellar boundary?",
+    "gold_answer": "Voyager 1 reached the interstellar boundary in 2012 and Voyager 2 reached it in 2018.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nasa_voyager",
+        "span": "Voyager 1 reached the interstellar boundary in 2012, while Voyager 2 (traveling slower and in a different direction than its twin) reached it in 2018.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Voyager 1 reached the interstellar boundary in 2012",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_voyager"
+        ]
+      },
+      {
+        "claim": "Voyager 2 reached the interstellar boundary in 2018",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_voyager"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NASA Science Voyager page fetched 2026-10-30.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_037",
+    "domain": "space",
+    "question": "When did the Hubble Space Telescope launch?",
+    "gold_answer": "Hubble launched on April 24, 1990.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nasa_hubble",
+        "span": "Launch APR 24, 1990.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Hubble launched on April 24, 1990",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_hubble"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NASA Science Hubble page fetched 2026-10-30.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_038",
+    "domain": "space",
+    "question": "When did the James Webb Space Telescope launch, and where does it orbit?",
+    "gold_answer": "Webb launched on December 25, 2021 and orbits the Sun 1.5 million kilometers from Earth at L2.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nasa_webb",
+        "span": "Webb launched on Dec. 25th 2021.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_nasa_webb",
+        "span": "it orbits the Sun 1.5 million kilometers (1 million miles) away from the Earth at what is called the second Lagrange point or L2.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Webb launched on December 25, 2021",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_webb"
+        ]
+      },
+      {
+        "claim": "Webb orbits the Sun 1.5 million kilometers from Earth at L2",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_webb"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NASA Science Webb page fetched 2026-10-30.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_039",
+    "domain": "public_health",
+    "question": "How long should you scrub your hands, and what alcohol content should hand sanitizer have if soap and water are unavailable?",
+    "gold_answer": "Scrub for at least 20 seconds. If soap and water are not available, use a sanitizer with at least 60% alcohol.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cdc_handwashing",
+        "span": "use a hand sanitizer with at least 60% alcohol to clean your hands.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_cdc_handwashing",
+        "span": "Scrub your hands for at least 20 seconds.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Hands should be scrubbed for at least 20 seconds",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_handwashing"
+        ]
+      },
+      {
+        "claim": "Hand sanitizer should contain at least 60% alcohol when soap and water are unavailable",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_handwashing"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked CDC About Handwashing page fetched 2026-10-30.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_040",
+    "domain": "parks",
+    "question": "When did the Everglades form, and on what kind of bedrock?",
+    "gold_answer": "The Everglades formed 5,000 years ago atop a bedrock of porous limestone.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_everglades",
+        "span": "The Everglades formed 5,000 years ago atop a bedrock of porous limestone.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The Everglades formed 5,000 years ago on porous limestone bedrock",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_everglades"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NPS Everglades Nature page fetched 2026-10-30.",
+      "reviewed": true
+    }
   }
 ]

@@ -15,16 +15,28 @@ def test_benchmark_v1_integrity_and_licenses():
         docs, items, require_license=True, require_verbatim_spans=True, require_reviewed_scenarios=True
     )
     assert report["valid"] is True, report["errors"]
-    assert len(docs) == 21
-    assert len(items) == 32
+    assert len(docs) == 29
+    assert len(items) == 40
     assert all(doc.license for doc in docs)
     n_dev = sum(1 for item in items if item.split == "dev")
     n_test = sum(1 for item in items if item.split == "test")
-    assert n_dev == 24
+    assert n_dev == 32
     assert n_test == 8
     ids = [item.id for item in items]
-    assert ids[-4:] == ["v1_029", "v1_030", "v1_031", "v1_032"]
-    assert all(item.split == "dev" for item in items if item.id in {"v1_029", "v1_030", "v1_031", "v1_032"})
+    assert ids[-8:] == [
+        "v1_033",
+        "v1_034",
+        "v1_035",
+        "v1_036",
+        "v1_037",
+        "v1_038",
+        "v1_039",
+        "v1_040",
+    ]
+    new_ids = {f"v1_{i:03d}" for i in range(29, 41)}
+    assert all(item.split == "dev" for item in items if item.id in new_ids)
+    frozen_test = {"v1_002", "v1_006", "v1_008", "v1_012", "v1_016", "v1_018", "v1_020", "v1_024"}
+    assert {item.id for item in items if item.split == "test"} == frozen_test
 
 
 def test_benchmark_v1_builder_matches_files():
@@ -50,7 +62,7 @@ def test_validate_cli_benchmark_v1():
     assert proc.returncode == 0, proc.stderr
     report = json.loads(proc.stdout)
     assert report["valid"] is True
-    assert report["total_benchmark_items"] == 32
+    assert report["total_benchmark_items"] == 40
 
 
 def test_smoke_loader_still_defaults():
@@ -73,3 +85,25 @@ def test_mixed_support_items_have_rq3_gap_on_example_answers():
         assert mixed_support_answer_gap(f1, labels) is True
         assert VerificationLabel.SUPPORTED in labels
         assert any(s != VerificationLabel.SUPPORTED for s in labels)
+
+
+def test_independent_slice_has_disjoint_gold_docs():
+    from rageval.dataset.benchmark_v1 import select_independent_items
+
+    loader = DatasetLoader("data", dataset_id=DATASET_ID)
+    items = loader.load_benchmark("all")
+    independent = loader.load_benchmark("independent")
+    built = select_independent_items(items)
+    assert [item.id for item in independent] == [item.id for item in built]
+    assert independent
+    assert len(independent) == 23
+    seen = set()
+    for item in independent:
+        docs = {ev.doc_id for ev in item.gold_evidence_spans}
+        assert docs, item.id
+        assert docs.isdisjoint(seen)
+        seen.update(docs)
+    hubble = next(item for item in items if item.id == "v1_037")
+    corpus = {doc.id: doc.text for doc in loader.load_corpus()}
+    assert "Launch APR 24, 1990." in corpus["doc_nasa_hubble"]
+    assert hubble.gold_evidence_spans[0].span in corpus["doc_nasa_hubble"]

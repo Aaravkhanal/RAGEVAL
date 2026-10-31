@@ -1,6 +1,6 @@
 # Inter-annotator agreement — disclosed LLM rater B
 
-Schema: `rageval.iaa.v1`. CLI: `rageval iaa --rater-a … --rater-b … --output reports/iaa/iaa.md`.
+Schema: `rageval.iaa.v1`. CLI: `rageval iaa --rater-a … --rater-b … --output reports/iaa/iaa.md`. Apply human labels with `rageval iaa-label --template data/gold/iaa/annotator_b_template.json --output data/gold/iaa/annotator_b_human.json --set ve_001=supported` (repeat `--set`; does not invent labels).
 
 | File | Role |
 | --- | --- |

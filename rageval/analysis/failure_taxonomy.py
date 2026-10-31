@@ -8,7 +8,6 @@ from __future__ import annotations
 
 from typing import Any, Dict, Iterable, List, Optional
 
-from rageval.core.labels import VerificationLabel
 from rageval.core.schemas import BenchmarkItem, QueryEvaluationResult, RetrievedChunk, TestType
 
 TAXONOMY_STAGES = (

@@ -41,6 +41,19 @@ def test_experiment_yamls_load():
         "F_ablate",
         "G_claim_vs_answer",
     ]
+
+
+def test_h_independent_yaml_is_companion_slice():
+    spec = load_experiment("configs/experiments/H_independent.yaml")
+    assert spec.experiment_id == "H_independent"
+    assert spec.label == "companion"
+    assert spec.split == "independent"
+    assert spec.dataset_id == "benchmark_v1"
+    assert len(spec.pipelines) == 3
+    assert spec.resource_note
+
+
+def test_experiment_yamls_load_matrix():
     a = load_experiment("configs/experiments/A_chunk.yaml")
     assert len(a.pipelines) == 3
     assert all(p.chunker.chunk_overlap == 32 for p in a.pipelines)

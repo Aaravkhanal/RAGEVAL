@@ -1,5 +1,7 @@
 # Release checklist
 
+The production hardening in `CHANGELOG.md` under **Unreleased** is not part of the v0.2.1 tag. Before the next tag, run the new lint/build/clean-wheel CI gates, verify Docker Compose with a configured admin token and worker, and repeat the model-dependent tests.
+
 Use before tagging. Version on this branch: **0.2.1** (tag `v0.2.1`). This is a **software** release. Official ablation tables remain blinded-mock run `20261028T183042Z_a97ad68f`. Do not claim SOTA or confirmatory RAG rankings.
 
 - [x] `pyproject.toml` version matches `rageval/__init__.py` (and FastAPI `app.version`)
@@ -23,6 +25,8 @@ Use before tagging. Version on this branch: **0.2.1** (tag `v0.2.1`). This is a 
 - [x] `GET /health` includes version; `GET /ready` is 200 when data dir exists
 - [x] `POST /evaluate/answer` default `method=heuristic` (no model download); `method=nli` still opt-in
 - [x] CORS default is localhost (not `*` + credentials); Docker `HEALTHCHECK` + `docker-compose.yml`
+- [x] Compose worker + `RAGEVAL_ADMIN_TOKEN`; HTTP NLI opt-in; Caddy overlay documented in `docs/PRODUCTION.md`
+- [x] `rageval iaa-label` does not invent labels; human rater B file is still unfilled
 - [ ] `twine upload dist/*` — **maintainer only**, needs a PyPI token. Not run in CI. Do not treat the GitHub tag as a PyPI publish.
 
 Rebuild a local wheel after extras change; regenerate locks first.

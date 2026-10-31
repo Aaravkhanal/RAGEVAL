@@ -7,6 +7,7 @@ from typing import List, Optional
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
+from rageval.core.assets import resolve_asset
 
 
 class ChunkerConfig(BaseModel):
@@ -89,8 +90,11 @@ class BenchmarkSuiteConfig(BaseModel):
     pipelines: List[PipelineConfig] = Field(default_factory=list)
 
 
+ALLOWED_EXPERIMENT_LABELS = frozenset({"v1", "pilot", "companion"})
+
+
 class ExperimentSpec(BaseModel):
-    """Named Phase 7 matrix slice. `label` is `v1` or `pilot`."""
+    """Named experiment YAML. `label` is `v1`, `pilot`, or `companion`."""
 
     experiment_id: str
     label: str = "pilot"
@@ -128,6 +132,7 @@ def pipeline_identity(configs: List[PipelineConfig]) -> List[dict]:
 
 
 def load_yaml_config(path: str) -> dict:
+    path = resolve_asset(path)
     if not os.path.exists(path):
         raise FileNotFoundError(f"Config file not found at: {path}")
     with open(path, "r", encoding="utf-8") as f:
@@ -140,6 +145,7 @@ def pipeline_config_from_yaml(path: str) -> PipelineConfig:
 
 
 def experiment_spec_from_yaml(path: str) -> ExperimentSpec:
+    path = resolve_asset(path)
     data = load_yaml_config(path)
     raw_paths = list(data.pop("pipeline_paths", []) or [])
     spec = ExperimentSpec.model_validate(data)
@@ -152,6 +158,8 @@ def experiment_spec_from_yaml(path: str) -> ExperimentSpec:
             os.path.join(cwd, rel),
             os.path.join(base_dir, rel),
             os.path.normpath(os.path.join(base_dir, rel)),
+            resolve_asset(rel),
+            resolve_asset(os.path.normpath(os.path.join("configs", "experiments", rel))),
         ]
         resolved = next((c for c in candidates if os.path.isfile(c)), None)
         if resolved is None:
@@ -159,6 +167,7 @@ def experiment_spec_from_yaml(path: str) -> ExperimentSpec:
         configs.append(pipeline_config_from_yaml(resolved))
     spec.pipelines = configs
     spec.pipeline_paths = raw_paths
-    if spec.label not in {"v1", "pilot"}:
-        raise ValueError(f"experiment label must be 'v1' or 'pilot', got {spec.label!r}")
+    if spec.label not in ALLOWED_EXPERIMENT_LABELS:
+        allowed = ", ".join(sorted(ALLOWED_EXPERIMENT_LABELS))
+        raise ValueError(f"experiment label must be one of {allowed}, got {spec.label!r}")
     return spec

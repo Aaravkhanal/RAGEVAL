@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 import threading
-from typing import List, Dict, Any
+from typing import List
 import numpy as np
 from rageval.core.schemas import QueryEvaluationResult
 

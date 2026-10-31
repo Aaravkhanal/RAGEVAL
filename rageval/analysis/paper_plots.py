@@ -4,7 +4,6 @@ from __future__ import annotations
 import os
 from typing import List
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
 from rageval.core.schemas import BenchmarkRunSummary
 
@@ -68,10 +67,10 @@ def generate_all_paper_figures(summaries: List[BenchmarkRunSummary], output_dir:
     x = np.arange(len(configs))
     width = 0.55
 
-    p_ent = ax.bar(x, faiths, width, label="Entailed (Supported)", color="#10b981", edgecolor="black", linewidth=0.8)
-    p_neu = ax.bar(x, hallucs, width, bottom=faiths, label="Neutral (Unsupported / Hallucinated)", color="#f59e0b", edgecolor="black", linewidth=0.8)
+    ax.bar(x, faiths, width, label="Entailed (Supported)", color="#10b981", edgecolor="black", linewidth=0.8)
+    ax.bar(x, hallucs, width, bottom=faiths, label="Neutral (Unsupported / Hallucinated)", color="#f59e0b", edgecolor="black", linewidth=0.8)
     bottom_contra = [f + h for f, h in zip(faiths, hallucs)]
-    p_con = ax.bar(x, contras, width, bottom=bottom_contra, label="Contradicted (Factual Conflict)", color="#ef4444", edgecolor="black", linewidth=0.8)
+    ax.bar(x, contras, width, bottom=bottom_contra, label="Contradicted (Factual Conflict)", color="#ef4444", edgecolor="black", linewidth=0.8)
 
     ax.set_ylabel("Claim Proportion (%)")
     ax.set_title("Claim-Level Attribution Breakdown across RAG Pipeline Ablations", pad=12, fontweight="bold")
@@ -93,9 +92,9 @@ def generate_all_paper_figures(summaries: List[BenchmarkRunSummary], output_dir:
     x_indices = np.arange(len(configs))
     bar_w = 0.35
 
-    rects1 = ax1.bar(x_indices - bar_w/2, recalls, bar_w, label="Recall@5 (%)", color=color1, edgecolor="black", linewidth=0.8)
+    ax1.bar(x_indices - bar_w/2, recalls, bar_w, label="Recall@5 (%)", color=color1, edgecolor="black", linewidth=0.8)
     ax2 = ax1.twinx()
-    rects2 = ax2.bar(x_indices + bar_w/2, mrrs, bar_w, label="MRR", color=color2, edgecolor="black", linewidth=0.8)
+    ax2.bar(x_indices + bar_w/2, mrrs, bar_w, label="MRR", color=color2, edgecolor="black", linewidth=0.8)
 
     ax1.set_xlabel("Pipeline Configuration")
     ax1.set_ylabel("Recall@5 (%)", color=color1)

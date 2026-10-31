@@ -1,0 +1,11 @@
+experiment_id: H_independent
+label: companion
+title: One-item-per-gold-document slice on benchmark_v1 (companion)
+family: independent
+dataset_id: benchmark_v1
+split: independent
+resource_note: "Companion slice. Each item uses gold documents unused by other items in the slice. Not a replacement for a97ad68f. Confirmatory significance still requires treating items as i.i.d. on this slice only."
+pipeline_paths:
+  - ../ablation/sparse_bm25_256.yaml
+  - ../ablation/dense_chunk256.yaml
+  - ../ablation/hybrid_rrf_256.yaml

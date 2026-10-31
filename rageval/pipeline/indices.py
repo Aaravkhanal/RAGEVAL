@@ -1,9 +1,8 @@
 """FAISS vector indexing and dense nearest neighbor retrieval."""
 
 from __future__ import annotations
-from typing import List, Tuple
+from typing import List
 import faiss
-import numpy as np
 from rageval.core.schemas import Chunk, RetrievedChunk
 from rageval.pipeline.embedders import SentenceTransformerEmbedder
 

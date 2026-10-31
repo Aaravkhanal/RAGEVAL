@@ -17,6 +17,7 @@ from rageval.evaluator.evaluator import RAGEvalEvaluator
 
 DEFAULT_CORS = "http://127.0.0.1:8000,http://localhost:8000"
 RATE_LIMITED_PREFIXES = ("/evaluate/", "/score")
+MAX_REQUEST_BYTES = 65536
 _evaluators: Dict[str, RAGEvalEvaluator] = {}
 _eval_lock = threading.Lock()
 _hits: Dict[str, List[float]] = {}
@@ -103,11 +104,19 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         if request.method == "OPTIONS":
             return await call_next(request)
         path = request.url.path
-        if not any(path == prefix.rstrip("/") or path.startswith(prefix) for prefix in RATE_LIMITED_PREFIXES):
+        limited = any(path == prefix.rstrip("/") or path.startswith(prefix) for prefix in RATE_LIMITED_PREFIXES)
+        job_start = request.method == "POST" and path == "/experiments"
+        if not limited and not job_start:
             return await call_next(request)
+        if request.method == "POST":
+            body = await request.body()
+            if len(body) > MAX_REQUEST_BYTES:
+                return JSONResponse(status_code=413, content={"detail": "Request body exceeds 64 KiB"})
         limit = rate_limit_per_minute()
+        if job_start:
+            limit = min(limit, 6) if limit else 6
         client = request.client.host if request.client else "unknown"
-        if not allow_request(client, limit):
+        if not allow_request(f"{client}:{'jobs' if job_start else 'evaluation'}", limit):
             return JSONResponse(
                 status_code=429,
                 content={"detail": f"Rate limit exceeded ({limit}/minute on evaluate and score)."},

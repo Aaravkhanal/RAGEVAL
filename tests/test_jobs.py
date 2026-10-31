@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 import time
 from pathlib import Path
 
@@ -12,12 +13,12 @@ from fastapi.testclient import TestClient
 from rageval.server.app import app
 from rageval.server.jobs import (
     LIGHT_CONFIGS,
-    _job_lock,
-    is_busy,
     list_named_configs,
     reset_job_state_for_tests,
     resolve_config_path,
+    run_next_job,
 )
+from rageval.server.runtime import reset_runtime_for_tests
 
 client = TestClient(app)
 
@@ -26,15 +27,18 @@ client = TestClient(app)
 def _isolate_jobs(tmp_path, monkeypatch):
     monkeypatch.setenv("RAGEVAL_RUNS_DIR", str(tmp_path))
     monkeypatch.setenv("RAGEVAL_INCLUDE_SNAPSHOTS", "0")
+    monkeypatch.setenv("RAGEVAL_ADMIN_TOKEN", "test-admin-token")
+    client.headers.update({"X-RAGEVAL-ADMIN-TOKEN": "test-admin-token"})
+    reset_runtime_for_tests()
     reset_job_state_for_tests()
     yield
-    deadline = time.monotonic() + 60
-    while is_busy() and time.monotonic() < deadline:
-        time.sleep(0.05)
     reset_job_state_for_tests()
+    client.headers.pop("X-RAGEVAL-ADMIN-TOKEN", None)
+    reset_runtime_for_tests()
 
 
 def _poll_until_terminal(run_id: str, timeout: float = 60.0) -> dict:
+    run_next_job()
     deadline = time.monotonic() + timeout
     last = {}
     while time.monotonic() < deadline:
@@ -55,6 +59,7 @@ def test_named_configs_include_smoke_and_heavy():
     names = {row["name"]: row["heavy"] for row in list_named_configs()}
     assert names["smoke"] is False
     assert names["C_retrieve"] is True
+    assert names["H_independent"] is True
     assert "smoke" in LIGHT_CONFIGS
     assert "smoke_llm" not in names
 
@@ -107,14 +112,11 @@ def test_post_analysis_only_400():
 
 
 def test_second_post_while_busy_409():
-    acquired = _job_lock.acquire(blocking=False)
-    assert acquired
-    try:
-        res = client.post("/experiments", json={"config": "smoke", "max_items": 1})
-        assert res.status_code == 409
-        assert "already" in res.json()["detail"].lower()
-    finally:
-        _job_lock.release()
+    first = client.post("/experiments", json={"config": "smoke", "max_items": 1})
+    assert first.status_code == 202
+    res = client.post("/experiments", json={"config": "smoke", "max_items": 1})
+    assert res.status_code == 409
+    assert "already" in res.json()["detail"].lower()
 
 
 def test_post_smoke_completes_and_writes_metrics(tmp_path):
@@ -144,3 +146,13 @@ def test_post_smoke_completes_and_writes_metrics(tmp_path):
     assert metrics.get("experiment_id") == "smoke"
     assert (tmp_path / run_id / "metrics.json").is_file()
     assert (tmp_path / run_id / "status.json").is_file()
+
+
+def test_expired_running_job_is_recovered(tmp_path):
+    res = client.post("/experiments", json={"config": "smoke", "max_items": 1})
+    assert res.status_code == 202
+    run_id = res.json()["id"]
+    with sqlite3.connect(tmp_path / "jobs.sqlite3") as conn:
+        conn.execute("UPDATE jobs SET state='running',lease_until=0 WHERE id=?", (run_id,))
+    assert run_next_job() is True
+    assert client.get(f"/experiments/{run_id}").json()["state"] == "complete"

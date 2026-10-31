@@ -1,7 +1,7 @@
 """LlamaIndex integration handler for RAGeval evaluation."""
 
 from __future__ import annotations
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional
 from rageval.core.schemas import Chunk, RetrievedChunk, QueryEvaluationResult
 from rageval.evaluator.evaluator import RAGEvalEvaluator
 

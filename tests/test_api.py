@@ -46,6 +46,38 @@ def test_ready_check():
     assert body["version"] == __version__
 
 
+def test_ready_requires_runs_directory(tmp_path, monkeypatch):
+    monkeypatch.setenv("RAGEVAL_DATA_DIR", str(tmp_path))
+    monkeypatch.setenv("RAGEVAL_RUNS_DIR", str(tmp_path / "missing"))
+    res = client.get("/ready")
+    assert res.status_code == 503
+    assert res.json()["runs_ok"] is False
+
+
+def test_experiment_start_requires_admin_token(monkeypatch):
+    monkeypatch.delenv("RAGEVAL_ADMIN_TOKEN", raising=False)
+    res = client.post("/experiments", json={"config": "smoke"})
+    assert res.status_code == 503
+    monkeypatch.setenv("RAGEVAL_ADMIN_TOKEN", "test-admin-token")
+    res = client.post("/experiments", json={"config": "smoke"})
+    assert res.status_code == 401
+    res = client.post("/experiments", json={"config": "smoke"}, headers={"X-RAGEVAL-ADMIN-TOKEN": "wrong"})
+    assert res.status_code == 401
+
+
+def test_large_evaluation_request_rejected():
+    res = client.post("/evaluate/answer", json={"question": "q", "answer": "x" * 70000})
+    assert res.status_code == 413
+
+
+def test_dashboard_escapes_untrusted_claim_and_context():
+    html = client.get("/").text
+    assert "escapeHtml(v.claim_text)" in html
+    assert "escapeHtml(v.explanation || '')" in html
+    assert "marked.textContent = verif.evidence_exact_text" in html
+    assert "span.textContent = contextText" in html
+
+
 def test_evaluate_answer_heuristic_default():
     payload = {
         "question": "What was ApexCloud gross margin?",
@@ -73,6 +105,12 @@ def test_evaluate_answer_rejects_unknown_method():
         },
     )
     assert res.status_code == 422
+
+
+def test_http_nli_is_opt_in(monkeypatch):
+    monkeypatch.delenv("RAGEVAL_ENABLE_HTTP_NLI", raising=False)
+    res = client.post("/evaluate/answer", json={"question": "q", "answer": "a", "method": "nli"})
+    assert res.status_code == 403
 
 
 def test_score_endpoint_heuristic():
@@ -114,7 +152,8 @@ def test_cors_origins_helper():
 
 
 @pytest.mark.hf
-def test_evaluate_answer_api():
+def test_evaluate_answer_api(monkeypatch):
+    monkeypatch.setenv("RAGEVAL_ENABLE_HTTP_NLI", "1")
     pytest.importorskip("torch")
     pytest.importorskip("transformers")
     payload = {
@@ -158,7 +197,8 @@ def test_datasets_index_and_detail():
     detail = client.get("/datasets/benchmark_v1")
     assert detail.status_code == 200
     body = detail.json()
-    assert body["n_items"] == 32
+    assert body["n_items"] == 40
+    assert body["version"] == "1.3.0"
     assert any("Apollo" in item["question"] or "influenza" in item["question"].lower() for item in body["items"])
     assert "api_key" not in json.dumps(body)
 

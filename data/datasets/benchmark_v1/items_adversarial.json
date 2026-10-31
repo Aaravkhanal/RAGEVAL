@@ -637,5 +637,53 @@
       "reviewer_notes": "Hand-checked unanswerable item. Thanksgiving dinner is absent from the stored NASA excerpt.",
       "reviewed": true
     }
+  },
+  {
+    "id": "v1_034",
+    "domain": "parks",
+    "question": "How large is Grand Canyon National Park, and how deep and long is the canyon on average?",
+    "gold_answer": "The park encompasses 1,218,375 acres. The canyon averages 4,000 feet deep for 277 miles.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_grand_canyon",
+        "span": "encompasses 1,218,375 acres and lies on the Colorado Plateau in northwestern Arizona.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_nps_grand_canyon",
+        "span": "averaging 4,000 feet deep for its entire 277 miles.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Grand Canyon National Park encompasses 1,218,375 acres",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_grand_canyon"
+        ]
+      },
+      {
+        "claim": "The canyon averages 4,000 feet deep for 277 miles",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_grand_canyon"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "numerical_negation",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NPS Grand Canyon Nature page fetched 2026-10-30.",
+      "reviewed": true
+    }
   }
 ]

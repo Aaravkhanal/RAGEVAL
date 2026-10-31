@@ -3,7 +3,7 @@
 from __future__ import annotations
 import json
 import os
-from typing import List, Dict, Tuple
+from typing import List, Tuple
 from rageval.core.schemas import (
     Document,
     BenchmarkItem,

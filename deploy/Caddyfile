@@ -1,0 +1,8 @@
+# Reverse proxy for RAGeval. Set RAGEVAL_DOMAIN in the environment.
+# Local: RAGEVAL_DOMAIN=localhost
+# Production: RAGEVAL_DOMAIN=eval.example.com  (Caddy obtains a certificate)
+
+{$RAGEVAL_DOMAIN:localhost} {
+	encode gzip
+	reverse_proxy rageval:8000
+}

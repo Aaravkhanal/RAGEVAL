@@ -6,7 +6,6 @@ import time
 from typing import List, Optional
 
 from rageval.core.config import EvaluatorConfig
-from rageval.core.labels import VerificationLabel
 from rageval.core.schemas import (
     BenchmarkItem,
     QueryEvaluationResult,

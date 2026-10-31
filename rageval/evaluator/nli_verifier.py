@@ -1,10 +1,8 @@
 """PyTorch Natural Language Inference (NLI) Verifier for Claim-Level Evidence Attribution."""
 
 from __future__ import annotations
-import math
 import re
 from typing import List, Tuple, Dict, Optional
-import numpy as np
 from rageval.core.schemas import (
     AtomicClaim,
     RetrievedChunk,

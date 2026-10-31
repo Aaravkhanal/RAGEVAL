@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Sequence
 
 
 def citation_existence_precision(n_valid: int, n_total: int) -> float:

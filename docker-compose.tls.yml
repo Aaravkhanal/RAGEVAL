@@ -1,0 +1,25 @@
+# TLS reverse proxy. Use with the base compose file:
+#   RAGEVAL_DOMAIN=localhost docker compose -f docker-compose.yml -f docker-compose.tls.yml up --build
+# Production:
+#   RAGEVAL_DOMAIN=eval.example.com RAGEVAL_CORS_ORIGINS=https://eval.example.com \
+#     docker compose -f docker-compose.yml -f docker-compose.tls.yml up -d
+services:
+  caddy:
+    image: caddy:2.8-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      RAGEVAL_DOMAIN: ${RAGEVAL_DOMAIN:-localhost}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      rageval:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  caddy-data:
+  caddy-config:

@@ -1,10 +1,9 @@
 """Real-time streaming claim verification and hallucination guardrail protocol."""
 
 from __future__ import annotations
-import json
 import re
-from typing import AsyncGenerator, List, Dict, Any, Optional
-from rageval.core.schemas import Chunk, RetrievedChunk, VerificationLabel
+from typing import List, Dict, Any, Optional
+from rageval.core.schemas import RetrievedChunk, VerificationLabel
 from rageval.evaluator.decomposer import AtomicClaimDecomposer
 from rageval.evaluator.nli_verifier import NLIVerifier
 

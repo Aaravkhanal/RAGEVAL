@@ -1,7 +1,7 @@
 """Confidence calibration, Expected Calibration Error (ECE), and temperature scaling for NLI."""
 
 from __future__ import annotations
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any
 import numpy as np
 
 

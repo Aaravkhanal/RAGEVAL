@@ -10,7 +10,7 @@ This project was previously prototyped under the name RAGTruth. It is **not** th
 - Atomic claim decomposition and NLI verification (`supported` / `unsupported` / `contradicted`, plus `partially_supported` and `ambiguous` in the schema).
 - Citation existence and support-conditioned citation metrics.
 - A **synthetic smoke dataset** (8 documents, 8 questions). It is author-written fiction, not SEC/NEJM/OSDI source text.
-- A **licensed benchmark_v1** (21 documents, 32 questions in v1.2.0): short U.S. government public-domain excerpts plus original CC-BY-4.0 fiction. See `data/cards/benchmark_v1.md`. The committed ablation tables used v1.0.0 (16/24). Companion mock+NLI scored v1.1.0 (18/28) and v1.2.0 (21/32).
+- A **licensed benchmark_v1** (29 documents, 40 questions in v1.3.0): short U.S. government public-domain excerpts plus original CC-BY-4.0 fiction. See `data/cards/benchmark_v1.md`. The committed ablation tables used v1.0.0 (16/24). Companion mock+NLI scored v1.1.0 (18/28) and v1.2.0 (21/32). v1.3.0 is on-disk only until a new companion run is recorded.
 - Answer-level EM / token F1 alongside claim-level support (RQ3).
 - Official metric registry (`rageval.metrics.registry`) with no composite overall score.
 - Adversarial scenarios with a failure taxonomy (`docs/FAILURE_TAXONOMY.md`) and robustness means by `scenario_type`.
@@ -64,6 +64,8 @@ rageval verifier-eval --gold data/gold/verifier_eval_v1.json --method nli --outp
 
 # IAA (disclosed LLM rater B is diagnostic; confirmatory IAA still needs an independent human)
 rageval iaa --rater-a data/gold/iaa/annotator_a_verifier_eval_v1.json --rater-b data/gold/iaa/annotator_b_verifier_eval_v1.json --output reports/iaa/iaa.md
+# Apply human labels onto the blank template (does not invent labels)
+rageval iaa-label --template data/gold/iaa/annotator_b_template.json --output data/gold/iaa/annotator_b_human.json --set ve_001=supported
 
 # Opt-in live NVIDIA NIM (requires NVIDIA_API_KEY in .env; HTTP jobs refuse this)
 rageval experiment --config configs/opt_in/smoke_llm_nvidia.yaml --allow-opt-in --output-dir experiments/runs
@@ -88,7 +90,12 @@ rageval report --metrics reports/phase7/v1_matrix/metrics.json --output-dir /tmp
 rageval findings --metrics reports/phase7/v1_matrix/metrics.json --output-dir reports/20261028T183042Z_a97ad68f --run-id 20261028T183042Z_a97ad68f --case-studies reports/20261028T183042Z_a97ad68f/case_studies.json
 
 # Dashboard (Start queues POST /experiments; live /evaluate/answer stays sync)
+export RAGEVAL_ADMIN_TOKEN="choose-a-long-random-token"
 rageval serve --port 8000 --runs-dir experiments/runs --data-dir data
+# In a second terminal, with the same run and data directories:
+rageval worker --runs-dir experiments/runs --data-dir data
+# Docker with TLS reverse proxy: see docs/PRODUCTION.md
+# docker compose -f docker-compose.yml -f docker-compose.tls.yml up --build
 ```
 
 HTTP after `rageval serve`:
@@ -96,7 +103,7 @@ HTTP after `rageval serve`:
 - `GET /datasets`, `GET /datasets/{id}`
 - `GET /experiment-configs` (allowlisted YAML names under `configs/experiments/`)
 - `GET /experiments`, `GET /experiments/{id}`, `GET /experiments/{id}/results`
-- `POST /experiments` → 202 `{id, status, poll}` then poll `GET /experiments/{id}`. Default config is `smoke`. NLI / full v1 names need `"allow_heavy": true`. One job at a time (409 if busy).
+- `POST /experiments` requires `X-RAGEVAL-ADMIN-TOKEN` matching `RAGEVAL_ADMIN_TOKEN` and returns 202 `{id, status, poll}`. The separate worker executes the job; poll `GET /experiments/{id}`. Default config is `smoke`. NLI / full v1 names need `"allow_heavy": true`. One job at a time (409 if busy).
 - `GET /health` (liveness: version, busy), `GET /ready`
 - `POST /evaluate/answer` (caller-supplied context, sync; default `method=heuristic`)
 - `POST /score` (external RAG scorer, same contract as `rageval score`)

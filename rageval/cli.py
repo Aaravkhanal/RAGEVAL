@@ -5,6 +5,7 @@ import argparse
 import os
 import sys
 import json
+from rageval.core.assets import resolve_asset
 from rageval.dataset.loader import DatasetLoader
 from rageval.benchmark.suite import BenchmarkSuite
 from rageval.benchmark.reporter import BenchmarkReporter
@@ -32,7 +33,7 @@ def main():
     bench_parser.add_argument(
         "--split",
         default="all",
-        help="Item split: all, standard, adversarial, dev, or test",
+        help="Item split: all, standard, adversarial, dev, test, or independent",
     )
     bench_parser.add_argument(
         "--output-dir",
@@ -91,6 +92,34 @@ def main():
     iaa_parser.add_argument("--rater-b", required=True, help="Rater B JSON; unfilled labels yield kappa=null")
     iaa_parser.add_argument("--output", default="reports/iaa/iaa.md")
 
+    iaa_label_parser = subparsers.add_parser(
+        "iaa-label",
+        help="Apply human-supplied labels onto the rater-B template (does not invent labels)",
+    )
+    iaa_label_parser.add_argument(
+        "--template",
+        default="data/gold/iaa/annotator_b_template.json",
+        help="Blank rater-B template",
+    )
+    iaa_label_parser.add_argument(
+        "--output",
+        required=True,
+        help="Destination JSON, e.g. data/gold/iaa/annotator_b_human.json",
+    )
+    iaa_label_parser.add_argument(
+        "--set",
+        action="append",
+        default=None,
+        dest="set_flags",
+        help="Claim assignment id=label (repeatable). Labels are not invented.",
+    )
+    iaa_label_parser.add_argument("--annotator-id", default="rater_b_human")
+    iaa_label_parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Overwrite --output if it already exists",
+    )
+
     findings_parser = subparsers.add_parser("findings", help="Write FINDINGS.md from metrics.json")
     findings_parser.add_argument("--metrics", default="reports/phase7/v1_matrix/metrics.json")
     findings_parser.add_argument("--output-dir", default="reports/20261028T183042Z_a97ad68f")
@@ -138,6 +167,10 @@ def main():
     serve_parser.add_argument("--reload", action="store_true", help="Enable hot reload")
     serve_parser.add_argument("--runs-dir", default="experiments/runs", help="Experiment run root for GET /experiments")
     serve_parser.add_argument("--data-dir", default="data", help="Dataset root for GET /datasets")
+
+    worker_parser = subparsers.add_parser("worker", help="Run the durable experiment worker")
+    worker_parser.add_argument("--runs-dir", default="experiments/runs")
+    worker_parser.add_argument("--data-dir", default="data")
 
     args = parser.parse_args()
 
@@ -251,6 +284,35 @@ def main():
             f"complete={result.get('complete')})"
         )
 
+    elif args.command == "iaa-label":
+        from rageval.analysis.iaa_label import apply_and_write
+
+        try:
+            result = apply_and_write(
+                resolve_asset(args.template),
+                args.output,
+                args.set_flags,
+                annotator_id=args.annotator_id,
+                force=args.force,
+            )
+        except (ValueError, FileExistsError, FileNotFoundError) as exc:
+            print(exc, file=sys.stderr)
+            sys.exit(2)
+        if not result.get("wrote"):
+            print(json.dumps({"unlabeled": result.get("unlabeled"), "n_applied": 0}))
+            print("No --set flags; nothing written. Supply id=label pairs from a human rater.")
+        else:
+            print(
+                json.dumps(
+                    {
+                        "wrote": result.get("path"),
+                        "n_applied": result.get("n_applied"),
+                        "unlabeled": result.get("unlabeled"),
+                        "annotator_id": result.get("annotator_id"),
+                    }
+                )
+            )
+
     elif args.command == "report":
         report_path = run_and_generate_paper_analysis(
             output_dir=args.output_dir,
@@ -265,7 +327,7 @@ def main():
         from rageval.analysis.findings import load_case_studies, write_findings
         from rageval.analysis.paper_plots import generate_figures_from_metrics
 
-        metrics = BenchmarkReporter.load_metrics(args.metrics)
+        metrics = BenchmarkReporter.load_metrics(resolve_asset(args.metrics))
         cases = []
         if args.case_studies and os.path.isfile(args.case_studies):
             cases = load_case_studies(args.case_studies)
@@ -309,15 +371,20 @@ def main():
     elif args.command == "score":
         from rageval.integrations.external import score_file
 
-        path = score_file(args.input, args.output, method=args.method)
+        path = score_file(resolve_asset(args.input), args.output, method=args.method)
         print(f"Wrote {path}")
 
     elif args.command == "serve":
         import uvicorn
 
         os.environ["RAGEVAL_RUNS_DIR"] = args.runs_dir
-        os.environ["RAGEVAL_DATA_DIR"] = args.data_dir
+        os.environ["RAGEVAL_DATA_DIR"] = resolve_asset(args.data_dir)
         uvicorn.run("rageval.server.app:app", host=args.host, port=args.port, reload=args.reload)
+
+    elif args.command == "worker":
+        from rageval.server.jobs import worker_forever
+
+        worker_forever(args.runs_dir, args.data_dir)
 
 
 if __name__ == "__main__":

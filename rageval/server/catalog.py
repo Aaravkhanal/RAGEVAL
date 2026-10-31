@@ -8,6 +8,7 @@ import re
 from typing import Any, Dict, List, Optional, Tuple
 
 from rageval.dataset.loader import DatasetLoader
+from rageval.core.assets import resolve_asset
 
 SECRET_KEY = re.compile(
     r"(secret|token|password|api[_-]?key|authorization|credential|private[_-]?key)",
@@ -30,7 +31,7 @@ def runs_root() -> str:
 
 
 def data_dir() -> str:
-    return os.environ.get("RAGEVAL_DATA_DIR", "data")
+    return resolve_asset(os.environ.get("RAGEVAL_DATA_DIR", "data"))
 
 
 def snapshots_enabled() -> bool:
@@ -104,6 +105,7 @@ def list_datasets(root: Optional[str] = None) -> List[Dict[str, Any]]:
                 "license": manifest.get("license"),
                 "n_documents": manifest.get("n_documents"),
                 "n_items": manifest.get("n_items"),
+                "n_independent": manifest.get("n_independent"),
                 "split_policy": manifest.get("split_policy"),
             }
         )
@@ -144,6 +146,7 @@ def get_dataset(dataset_id: str, root: Optional[str] = None, include_items: bool
         "n_items": manifest.get("n_items"),
         "n_dev": manifest.get("n_dev"),
         "n_test": manifest.get("n_test"),
+        "n_independent": manifest.get("n_independent"),
         "split_policy": manifest.get("split_policy"),
         "notes": manifest.get("notes"),
         "annotator": manifest.get("annotator"),
@@ -205,6 +208,7 @@ def _snapshot_roots() -> List[Tuple[str, str]]:
         return []
     found: List[Tuple[str, str]] = []
     for run_id, rel in COMMITTED_SNAPSHOTS:
+        rel = resolve_asset(rel)
         if os.path.isfile(os.path.join(rel, "metrics.json")):
             found.append((run_id, rel))
     return found

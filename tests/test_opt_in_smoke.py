@@ -17,8 +17,19 @@ from rageval.core.config import (
 )
 from rageval.server.app import app
 from rageval.server.jobs import resolve_config_path
+from rageval.server.runtime import reset_runtime_for_tests
 
 client = TestClient(app)
+
+
+@pytest.fixture(autouse=True)
+def _job_auth(monkeypatch):
+    reset_runtime_for_tests()
+    monkeypatch.setenv("RAGEVAL_ADMIN_TOKEN", "test-admin-token")
+    client.headers.update({"X-RAGEVAL-ADMIN-TOKEN": "test-admin-token"})
+    yield
+    client.headers.pop("X-RAGEVAL-ADMIN-TOKEN", None)
+    reset_runtime_for_tests()
 
 
 def test_nvidia_nim_yaml_is_opt_in_without_secrets():

@@ -623,6 +623,10 @@
             <div class="panel" style="margin-bottom: 1.5rem;">
                 <div class="job-form">
                     <div class="input-group">
+                        <label for="admin-token">Job admin token</label>
+                        <input type="password" id="admin-token" autocomplete="off" placeholder="Required to start a job">
+                    </div>
+                    <div class="input-group">
                         <label for="config-select">Config</label>
                         <select id="config-select"></select>
                     </div>
@@ -833,11 +837,11 @@
 
                 card.innerHTML = `
                     <div class="claim-card-header">
-                        <span class="claim-id">${v.claim_id}</span>
+                        <span class="claim-id">${escapeHtml(v.claim_id)}</span>
                         <span class="status-pill ${pillClass}">${pillText} (${Math.round(v.confidence * 100)}%)</span>
                     </div>
-                    <div class="claim-text">${v.claim_text}</div>
-                    <div class="claim-explanation">${v.explanation || ''}</div>
+                    <div class="claim-text">${escapeHtml(v.claim_text)}</div>
+                    <div class="claim-explanation">${escapeHtml(v.explanation || '')}</div>
                 `;
 
                 // Interactive Span Highlighting on Click
@@ -862,16 +866,26 @@
             const highlightBox = document.getElementById('context-highlight-box');
 
             if (!verif.evidence_exact_text || !contextText.includes(verif.evidence_exact_text)) {
-                highlightBox.innerHTML = `<span>${contextText}</span><br><br><em style="color:var(--text-dim);">(No verbatim evidence span aligned for this claim)</em>`;
+                highlightBox.replaceChildren();
+                const span = document.createElement('span');
+                span.textContent = contextText;
+                const note = document.createElement('em');
+                note.style.color = 'var(--text-dim)';
+                note.textContent = '(No verbatim evidence span aligned for this claim)';
+                highlightBox.append(span, document.createElement('br'), document.createElement('br'), note);
                 return;
             }
 
             const cssClass = (verif.label === 'supported' || verif.label === 'ENTAILEMENT') ? 'highlight-support' : 'highlight-contra';
-            const highlightedHtml = contextText.replace(
-                verif.evidence_exact_text,
-                `<span class="${cssClass}">${verif.evidence_exact_text}</span>`
+            const start = contextText.indexOf(verif.evidence_exact_text);
+            const marked = document.createElement('span');
+            marked.className = cssClass;
+            marked.textContent = verif.evidence_exact_text;
+            highlightBox.replaceChildren(
+                document.createTextNode(contextText.slice(0, start)),
+                marked,
+                document.createTextNode(contextText.slice(start + verif.evidence_exact_text.length))
             );
-            highlightBox.innerHTML = highlightedHtml;
         }
 
         function fmtPct(v) {
@@ -968,6 +982,7 @@
             const config = document.getElementById("config-select").value;
             const maxItems = Number(document.getElementById("max-items").value);
             const allowHeavy = document.getElementById("allow-heavy").checked;
+            const adminToken = document.getElementById("admin-token").value;
             if (!config) {
                 status.textContent = "Choose a config from GET /experiment-configs.";
                 return;
@@ -978,7 +993,7 @@
             try {
                 const resp = await fetch("/experiments", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "application/json", "X-RAGEVAL-ADMIN-TOKEN": adminToken },
                     body: JSON.stringify({
                         config: config,
                         max_items: maxItems,

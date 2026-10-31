@@ -1,179 +1,161 @@
-"""Process-local experiment jobs.
-
-The HTTP request thread never runs BenchmarkSuite. A single background thread
-does, writing status.json under experiments/runs/<id>/.
-"""
-
+"""Durable experiment queue shared by API and worker processes."""
 from __future__ import annotations
 
 import glob
 import os
 import re
+import sqlite3
 import threading
+import time
 import traceback
+from contextlib import closing
 from typing import Any, Dict, List, Optional
 
 from rageval.benchmark.experiments import load_experiment, run_experiment
-from rageval.benchmark.run_store import create_run_dir, new_run_id, write_run_status
+from rageval.benchmark.run_store import create_run_dir, new_run_id, read_run_status, write_run_status
 from rageval.server.catalog import data_dir, runs_root
+from rageval.core.assets import resolve_asset
 
 SAFE_NAME = re.compile(r"^[A-Za-z0-9_-]+$")
-EXPERIMENTS_DIR = os.path.join("configs", "experiments")
+EXPERIMENTS_DIR = resolve_asset(os.path.join("configs", "experiments"))
 LIGHT_CONFIGS = frozenset({"smoke"})
 DEFAULT_HTTP_MAX_ITEMS = 2
 MAX_HTTP_ITEMS = 32
-
-_job_lock = threading.Lock()
-_busy = False
-_busy_lock = threading.Lock()
+LEASE_SECONDS = 30.0
 
 
-def _set_busy(value: bool) -> None:
-    global _busy
-    with _busy_lock:
-        _busy = value
+def _connect(root: Optional[str] = None) -> sqlite3.Connection:
+    root = root or runs_root()
+    os.makedirs(root, exist_ok=True)
+    conn = sqlite3.connect(os.path.join(root, "jobs.sqlite3"), timeout=10)
+    conn.execute("PRAGMA busy_timeout=10000")
+    conn.execute("CREATE TABLE IF NOT EXISTS jobs (id TEXT PRIMARY KEY, config TEXT NOT NULL, "
+                 "max_items INTEGER NOT NULL, state TEXT NOT NULL, "
+                 "lease_until REAL NOT NULL DEFAULT 0, updated REAL NOT NULL)")
+    conn.commit()
+    return conn
 
 
 def is_busy() -> bool:
-    with _busy_lock:
-        return _busy
+    if not os.path.isdir(runs_root()):
+        return False
+    try:
+        with closing(_connect()) as conn, conn:
+            return conn.execute("SELECT 1 FROM jobs WHERE state='queued' OR "
+                                "(state='running' AND lease_until>?) LIMIT 1",
+                                (time.time(),)).fetchone() is not None
+    except (OSError, sqlite3.Error):
+        return False
 
 
 def reset_job_state_for_tests() -> None:
-    """Drop the in-process lock. Tests only; not an HTTP API."""
-    _set_busy(False)
-    if _job_lock.locked():
-        _job_lock.release()
+    """Tests isolate the queue through RAGEVAL_RUNS_DIR."""
 
 
 def list_named_configs(root: Optional[str] = None) -> List[Dict[str, Any]]:
-    root = root or EXPERIMENTS_DIR
-    rows: List[Dict[str, Any]] = []
-    for path in sorted(glob.glob(os.path.join(root, "*.yaml"))):
-        name = os.path.splitext(os.path.basename(path))[0]
-        heavy = name not in LIGHT_CONFIGS
-        rows.append({"name": name, "heavy": heavy})
-    return rows
+    root = resolve_asset(root or EXPERIMENTS_DIR)
+    names = [os.path.splitext(os.path.basename(p))[0]
+             for p in sorted(glob.glob(os.path.join(root, "*.yaml")))]
+    return [{"name": name, "heavy": name not in LIGHT_CONFIGS} for name in names]
 
 
 def resolve_config_path(name: str, root: Optional[str] = None) -> str:
-    root = root or EXPERIMENTS_DIR
-    if not SAFE_NAME.match(name):
+    root = resolve_asset(root or EXPERIMENTS_DIR)
+    if not SAFE_NAME.fullmatch(name):
         raise ValueError("invalid config name")
-    path = os.path.normpath(os.path.join(root, f"{name}.yaml"))
-    root_abs = os.path.abspath(root)
-    if not os.path.abspath(path).startswith(root_abs + os.sep) and os.path.abspath(path) != root_abs:
-        raise ValueError("invalid config name")
+    path = os.path.join(root, f"{name}.yaml")
     if not os.path.isfile(path):
         raise FileNotFoundError(name)
     return path
 
 
-def enqueue_experiment(
-    config_name: str,
-    *,
-    max_items: Optional[int] = None,
-    allow_heavy: bool = False,
-    output_root: Optional[str] = None,
-    data_root: Optional[str] = None,
-) -> Dict[str, Any]:
-    """Create a queued run dir and start a background worker. Returns 202 payload fields."""
-    path = resolve_config_path(config_name)
-    spec = load_experiment(path)
+def enqueue_experiment(config_name: str, *, max_items: Optional[int] = None,
+                       allow_heavy: bool = False, output_root: Optional[str] = None,
+                       data_root: Optional[str] = None) -> Dict[str, Any]:
+    """Validate and durably queue a job; a separate worker executes it."""
+    spec = load_experiment(resolve_config_path(config_name))
     if spec.opt_in or any(p.opt_in for p in spec.pipelines):
-        raise PermissionError(
-            "HTTP jobs cannot run opt-in LLM configs. Use the CLI with --allow-opt-in. "
-            "configs/opt_in/ is not on this allowlist."
-        )
+        raise PermissionError("HTTP jobs cannot run opt-in LLM configs. Use the CLI with --allow-opt-in.")
     if not spec.pipelines:
-        raise ValueError(
-            f"Experiment {config_name!r} has no pipelines (analysis-only). Use GET /experiments results."
-        )
+        raise ValueError(f"Experiment {config_name!r} has no pipelines (analysis-only). Use GET /experiments results.")
     heavy = config_name not in LIGHT_CONFIGS
     if heavy and not allow_heavy:
-        raise PermissionError(
-            f"Config {config_name!r} is a heavy NLI/v1 job. Pass allow_heavy=true or run the CLI."
-        )
-    if max_items is None:
-        max_items = DEFAULT_HTTP_MAX_ITEMS
-    max_items = int(max_items)
-    if max_items < 1 or max_items > MAX_HTTP_ITEMS:
+        raise PermissionError(f"Config {config_name!r} is a heavy job. Pass allow_heavy=true or run the CLI.")
+    max_items = DEFAULT_HTTP_MAX_ITEMS if max_items is None else int(max_items)
+    if not 1 <= max_items <= MAX_HTTP_ITEMS:
         raise ValueError(f"max_items must be between 1 and {MAX_HTTP_ITEMS}")
-
-    acquired = _job_lock.acquire(blocking=False)
-    if not acquired:
-        raise RuntimeError("A job is already queued or running")
-    _set_busy(True)
-    try:
-        output_root = output_root or runs_root()
-        data_root = data_root or data_dir()
+    output_root = output_root or runs_root()
+    if not os.path.isdir(data_root or data_dir()):
+        raise FileNotFoundError(data_root or data_dir())
+    with closing(_connect(output_root)) as conn, conn:
+        conn.execute("BEGIN IMMEDIATE")
+        if conn.execute("SELECT 1 FROM jobs WHERE state='queued' OR "
+                        "(state='running' AND lease_until>?) LIMIT 1",
+                        (time.time(),)).fetchone():
+            raise RuntimeError("A job is already queued or running")
         run_id = new_run_id()
         run_dir = create_run_dir(output_root, run_id=run_id)
-        write_run_status(
-            run_dir,
-            "queued",
-            extra={"config": config_name, "max_items": max_items, "allow_heavy": allow_heavy},
-        )
-    except Exception:
-        _set_busy(False)
-        _job_lock.release()
-        raise
-
-    thread = threading.Thread(
-        target=_run_worker,
-        kwargs={
-            "spec": spec,
-            "run_dir": run_dir,
-            "data_root": data_root,
-            "output_root": output_root,
-            "max_items": max_items,
-            "config_name": config_name,
-        },
-        name=f"rageval-job-{run_id}",
-        daemon=True,
-    )
-    thread.start()
-    return {
-        "id": run_id,
-        "status": "queued",
-        "poll": f"/experiments/{run_id}",
-        "config": config_name,
-        "max_items": max_items,
-        "heavy": heavy,
-    }
+        write_run_status(run_dir, "queued", extra={"config": config_name, "max_items": max_items})
+        conn.execute("INSERT INTO jobs(id,config,max_items,state,updated) VALUES (?,?,?,?,?)",
+                     (run_id, config_name, max_items, "queued", time.time()))
+    return {"id": run_id, "status": "queued", "poll": f"/experiments/{run_id}",
+            "config": config_name, "max_items": max_items, "heavy": heavy}
 
 
-def _run_worker(
-    *,
-    spec,
-    run_dir: str,
-    data_root: str,
-    output_root: str,
-    max_items: int,
-    config_name: str,
-) -> None:
+def run_next_job(output_root: Optional[str] = None, data_root: Optional[str] = None) -> bool:
+    """Claim and execute one job; an expired lease makes a crashed job retryable."""
+    output_root, data_root = output_root or runs_root(), data_root or data_dir()
+    with closing(_connect(output_root)) as conn, conn:
+        conn.execute("BEGIN IMMEDIATE")
+        now = time.time()
+        if conn.execute("SELECT 1 FROM jobs WHERE state='running' AND lease_until>? LIMIT 1",
+                        (now,)).fetchone():
+            return False
+        row = conn.execute("SELECT id,config,max_items FROM jobs WHERE state='queued' OR "
+                           "(state='running' AND lease_until<=?) ORDER BY updated LIMIT 1",
+                           (now,)).fetchone()
+        if row is None:
+            return False
+        run_id, config_name, max_items = row
+        conn.execute("UPDATE jobs SET state='running',lease_until=?,updated=? WHERE id=?",
+                     (now + LEASE_SECONDS, now, run_id))
+    run_dir = os.path.join(output_root, run_id)
+    if (read_run_status(run_dir) or {}).get("state") == "complete":
+        with closing(_connect(output_root)) as conn, conn:
+            conn.execute("UPDATE jobs SET state='complete',lease_until=0,updated=? WHERE id=?",
+                         (time.time(), run_id))
+        return True
+    stopped = threading.Event()
+
+    def heartbeat() -> None:
+        while not stopped.wait(LEASE_SECONDS / 3):
+            with closing(_connect(output_root)) as conn, conn:
+                conn.execute("UPDATE jobs SET lease_until=?,updated=? WHERE id=? AND state='running'",
+                             (time.time() + LEASE_SECONDS, time.time(), run_id))
+
+    pulse = threading.Thread(target=heartbeat, daemon=True)
+    pulse.start()
+    state = "complete"
     try:
         write_run_status(run_dir, "running", extra={"config": config_name, "max_items": max_items})
-        run_experiment(
-            spec,
-            data_dir=data_root,
-            output_root=output_root,
-            max_items=max_items,
-            existing_run_dir=run_dir,
-        )
+        run_experiment(load_experiment(resolve_config_path(config_name)), data_dir=data_root,
+                       output_root=output_root, max_items=max_items, existing_run_dir=run_dir)
         write_run_status(run_dir, "complete", extra={"config": config_name, "max_items": max_items})
     except Exception as exc:
-        write_run_status(
-            run_dir,
-            "failed",
-            extra={
-                "config": config_name,
-                "error": str(exc),
-                "error_type": type(exc).__name__,
-            },
-        )
+        state = "failed"
+        write_run_status(run_dir, "failed", extra={"config": config_name, "error": str(exc),
+                                                    "error_type": type(exc).__name__})
         traceback.print_exc()
     finally:
-        _set_busy(False)
-        if _job_lock.locked():
-            _job_lock.release()
+        stopped.set()
+        pulse.join(timeout=1)
+        with closing(_connect(output_root)) as conn, conn:
+            conn.execute("UPDATE jobs SET state=?,lease_until=0,updated=? WHERE id=?",
+                         (state, time.time(), run_id))
+    return True
+
+
+def worker_forever(output_root: Optional[str] = None, data_root: Optional[str] = None) -> None:
+    while True:
+        if not run_next_job(output_root, data_root):
+            time.sleep(1)

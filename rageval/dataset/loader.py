@@ -9,6 +9,7 @@ from typing import Dict, List, Optional
 from rageval.core.schemas import Document, BenchmarkItem
 from rageval.dataset.generator import save_benchmark_data
 from rageval.dataset.pairs import PairedScenario, group_paired_items
+from rageval.core.assets import resolve_asset
 
 
 SMOKE_DATASET_ID = "smoke_v1"
@@ -26,6 +27,7 @@ class DatasetLoader:
     """Loads and caches corpus documents and benchmark evaluation items."""
 
     def __init__(self, data_dir: str = "data", dataset_id: str = DEFAULT_DATASET_ID):
+        data_dir = resolve_asset(data_dir)
         self.data_dir = data_dir
         self.dataset_id = dataset_id
         self.raw_dir = os.path.join(data_dir, "raw")
@@ -54,6 +56,7 @@ class DatasetLoader:
             "adversarial": "items_adversarial.json",
             "dev": "items_dev.json",
             "test": "items_test.json",
+            "independent": "items_independent.json",
         }[kind]
         return os.path.join(self.dataset_dir, filename)
 
@@ -69,9 +72,13 @@ class DatasetLoader:
         return [Document(**doc) for doc in data]
 
     def load_benchmark(self, split: str = "all") -> List[BenchmarkItem]:
-        """Loads benchmark items: 'all', 'standard', 'adversarial', 'dev', or 'test'."""
+        """Loads benchmark items: all, standard, adversarial, dev, test, or independent."""
         self.ensure_data_exists()
-        key = split if split in {"all", "standard", "adversarial", "dev", "test"} else "all"
+        if split not in {"all", "standard", "adversarial", "dev", "test", "independent"}:
+            raise ValueError(f"Unknown benchmark split {split!r}")
+        key = split
+        if key == "independent" and self._legacy_smoke():
+            raise ValueError("smoke_v1 has no independent split")
         if key in {"dev", "test"} and self._legacy_smoke():
             items = self._read_items(self._path("all"))
             return [item for item in items if item.split == key] or items

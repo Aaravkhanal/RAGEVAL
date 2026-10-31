@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 import re
-from typing import List, Tuple, Optional, Dict
+from typing import List, Tuple, Optional
 from pydantic import BaseModel
-from rageval.core.schemas import AtomicClaim, Chunk
+from rageval.core.schemas import Chunk
 
 
 class EvidenceSpanMatch(BaseModel):

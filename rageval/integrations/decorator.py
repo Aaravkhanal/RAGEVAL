@@ -3,8 +3,8 @@
 from __future__ import annotations
 import functools
 import inspect
-from typing import Callable, Any, Optional, List, Dict
-from rageval.core.schemas import Chunk, RetrievedChunk, QueryEvaluationResult
+from typing import Callable, Optional, List
+from rageval.core.schemas import Chunk, RetrievedChunk
 from rageval.evaluator.evaluator import RAGEvalEvaluator
 
 

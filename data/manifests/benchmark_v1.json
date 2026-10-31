@@ -1,6 +1,6 @@
 {
   "dataset_id": "benchmark_v1",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "synthetic": false,
   "license": "mixed: US-government-work-public-domain-17USC105 and CC-BY-4.0 original fiction",
   "documents": "data/datasets/benchmark_v1/corpus.json",
@@ -8,12 +8,14 @@
   "items_dev": "data/datasets/benchmark_v1/items_dev.json",
   "items_test": "data/datasets/benchmark_v1/items_test.json",
   "items_paired": "data/datasets/benchmark_v1/items_paired.json",
-  "n_documents": 21,
-  "n_items": 32,
-  "n_dev": 24,
+  "n_documents": 29,
+  "n_items": 40,
+  "n_dev": 32,
   "n_test": 8,
-  "split_policy": "Documented 24/8 dev/test split. Test ids are frozen from v1.0.0. v1.2.0 items v1_029\u2013v1_032 are all dev. n_test=8 is underpowered. Test items were not used to choose metrics or NLI thresholds.",
+  "n_independent": 23,
+  "items_independent": "data/datasets/benchmark_v1/items_independent.json",
+  "split_policy": "Documented 24/8 dev/test split from v1.0.0; test ids stay frozen. v1.2.0\u2013v1.3.0 items are all dev. n_test=8 is underpowered. The independent slice keeps one item per unused gold document and is a companion, not a replacement for a97ad68f. Test items were not used to choose metrics or NLI thresholds.",
   "annotator": "single-author, disclosed",
-  "retrieved_date": "2026-10-29",
-  "notes": "Public-domain excerpts are short US government passages with URL provenance. HarborNet, LumenGrid, Nerexin, CedarRail, Millford, the HarborNet restatement, and the instruction-like document are original fiction (CC-BY-4.0). NASA quotes were ASCII-normalized. This is not the Niu et al. 2024 RAGTruth corpus. v1.1.0 added reviewed numerical/negation, empty-context, instruction-like, and paired conflict items. v1.2.0 adds USGS Yellowstone FAQs and a NASA ISS excerpt; those items are scored in companion run 20261029T173408Z_de870a29. Official tables remain 20261028T183042Z_a97ad68f (v1.0.0 n=24)."
+  "retrieved_date": "2026-10-30",
+  "notes": "Public-domain excerpts are short US government passages with URL provenance. HarborNet, LumenGrid, Nerexin, CedarRail, Millford, the HarborNet restatement, and the instruction-like document are original fiction (CC-BY-4.0). NASA quotes were ASCII-normalized. This is not the Niu et al. 2024 RAGTruth corpus. v1.3.0 adds eight unique-URL US government documents (CDC measles/handwashing, NPS Grand Canyon/Yosemite/Everglades, NASA Voyager/Hubble/Webb) as v1_033\u2013v1_040. Official tables remain 20261028T183042Z_a97ad68f (v1.0.0 n=24)."
 }

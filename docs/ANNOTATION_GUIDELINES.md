@@ -2,7 +2,7 @@
 
 Single-author annotation. Disclosed. Not a multi-rater gold standard.
 
-A second independent human is required for confirmatory IAA. Export rater A and a blank rater-B template live under `data/gold/iaa/`. `rageval iaa` reports Cohen's kappa on aligned 5-way labels; unfilled B yields `kappa=null`, not 0. A self-repeat is not a second annotator. The filled file `annotator_b_verifier_eval_v1.json` is a disclosed LLM annotator (`rater_b_llm_grok`); treat that kappa as diagnostic.
+A second independent human is required for confirmatory IAA. Export rater A and a blank rater-B template live under `data/gold/iaa/`. `rageval iaa` reports Cohen's kappa on aligned 5-way labels; unfilled B yields `kappa=null`, not 0. `rageval iaa-label` writes a human file from `--set id=label` pairs; it does not invent labels. Write a **new** file such as `annotator_b_human.json`. A self-repeat is not a second annotator. The filled file `annotator_b_verifier_eval_v1.json` is a disclosed LLM annotator (`rater_b_llm_grok`); treat that kappa as diagnostic.
 
 ## Document rules
 
