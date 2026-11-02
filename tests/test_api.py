@@ -61,16 +61,25 @@ def test_public_mode_fails_closed_without_token(monkeypatch):
 
 
 def test_nonlocal_serve_requires_public_auth(monkeypatch):
+    import os
     import subprocess
     import sys
 
     monkeypatch.delenv("RAGEVAL_REQUIRE_AUTH", raising=False)
     monkeypatch.delenv("RAGEVAL_PUBLIC_TOKEN", raising=False)
+    env = {
+        key: value
+        for key, value in os.environ.items()
+        if key not in {"RAGEVAL_REQUIRE_AUTH", "RAGEVAL_PUBLIC_TOKEN", "RAGEVAL_ADMIN_TOKEN"}
+    }
+    env["RAGEVAL_REQUIRE_AUTH"] = "0"
+    env["RAGEVAL_PUBLIC_TOKEN"] = "unset-for-test"
     result = subprocess.run(
         [sys.executable, "-m", "rageval.cli", "serve", "--host", "0.0.0.0"],
         capture_output=True,
         text=True,
         timeout=15,
+        env=env,
     )
     assert result.returncode != 0
     assert "requires RAGEVAL_REQUIRE_AUTH=1" in result.stderr
