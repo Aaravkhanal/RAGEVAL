@@ -21,6 +21,7 @@ COPY rageval ./rageval
 COPY data ./data
 COPY configs ./configs
 COPY reports ./reports
+COPY scripts ./scripts
 COPY experiments/runs/.gitkeep experiments/runs/.gitkeep
 
 RUN python -m pip install --upgrade pip setuptools wheel \
@@ -34,5 +35,5 @@ RUN useradd --create-home --uid 1000 rageval \
 USER rageval
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4)"
+    CMD python -c "import os, urllib.request; urllib.request.urlopen('http://127.0.0.1:' + os.environ.get('PORT', '8000') + '/health', timeout=4)"
 CMD ["rageval", "serve", "--host", "0.0.0.0", "--port", "8000"]
