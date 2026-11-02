@@ -35,6 +35,7 @@ class RerankerConfig(BaseModel):
     enabled: bool = False
     model_name: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
     top_k: int = 3
+    device: str = "cpu"
 
 
 class GeneratorConfig(BaseModel):

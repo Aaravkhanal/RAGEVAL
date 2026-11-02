@@ -1,0 +1,405 @@
+{
+  "schema": "rageval.metrics.v2",
+  "overall_score": null,
+  "note": "No official composite ranking score. Compare named metrics only.",
+  "retrieval_metric_policy": "Document Recall@5 and MRR use only items with gold evidence. Evidence Recall@5 requires a full gold span within one retrieved chunk. No-gold retrieval is reported separately.",
+  "independent_items_assumed": false,
+  "by_config": {
+    "Embed_MiniLM": {
+      "n": 40,
+      "overall_score": null,
+      "has_official_overall_score": false,
+      "claim_support_rate": {
+        "mean": 0.4292,
+        "bootstrap": {
+          "n": 40,
+          "mean": 0.4292,
+          "ci_low": 0.3417,
+          "ci_high": 0.5168,
+          "ci_level": 0.95,
+          "n_bootstrap": 1000,
+          "assumptions_met": false,
+          "assumption_notes": "Diagnostic only. n=40, independent=False. Confirmatory CI requires n>=30 i.i.d. query items (items that share documents are not independent)."
+        }
+      },
+      "unsupported_claim_rate": {
+        "mean": 0.2417
+      },
+      "contradiction_rate": {
+        "mean": 0.3292
+      },
+      "recall_at_5": {
+        "mean": 1.0,
+        "n": 34
+      },
+      "evidence_recall_at_5": {
+        "mean": 1.0,
+        "n": 34
+      },
+      "no_answer_empty_retrieval_rate": {
+        "mean": 0.1667,
+        "n": 6
+      },
+      "mrr": {
+        "mean": 0.9265,
+        "n": 34
+      },
+      "citation_existence_precision": {
+        "mean": 1.0
+      },
+      "citation_support_precision": {
+        "mean": 0.7625
+      },
+      "citation_marker_recall": {
+        "mean": 0.6458,
+        "legacy": true
+      },
+      "answer_em": {
+        "mean": 0.025
+      },
+      "answer_f1": {
+        "mean": 0.4477
+      },
+      "abstention_accuracy": 0.16666666666666666,
+      "mean_latency_ms": 807.332,
+      "total_estimated_cost_usd": null,
+      "official_metric_names": [
+        "recall_at_k",
+        "evidence_recall_at_5",
+        "no_answer_empty_retrieval_rate",
+        "mrr",
+        "ndcg_at_k",
+        "noise_ratio",
+        "claim_support_rate",
+        "unsupported_claim_rate",
+        "contradiction_rate",
+        "claim_coverage",
+        "citation_existence_precision",
+        "citation_support_precision",
+        "citation_completeness",
+        "citation_marker_recall",
+        "exact_match",
+        "token_f1",
+        "abstention_accuracy",
+        "estimated_cost_usd",
+        "macro_f1"
+      ],
+      "by_scenario": {
+        "conflicting": {
+          "n": 3,
+          "claim_support_rate": 0.4444,
+          "unsupported_claim_rate": 0.3333,
+          "contradiction_rate": 0.2222,
+          "recall_at_5": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "no_answer_empty_retrieval_rate": null,
+          "mrr": 1.0,
+          "answer_em": 0.0,
+          "answer_f1": 0.4642,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 1.0
+        },
+        "distractor": {
+          "n": 2,
+          "claim_support_rate": 0.4166,
+          "unsupported_claim_rate": 0.0,
+          "contradiction_rate": 0.5834,
+          "recall_at_5": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "no_answer_empty_retrieval_rate": null,
+          "mrr": 0.625,
+          "answer_em": 0.0,
+          "answer_f1": 0.2384,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 1.0
+        },
+        "empty_context": {
+          "n": 1,
+          "claim_support_rate": 1.0,
+          "unsupported_claim_rate": 0.0,
+          "contradiction_rate": 0.0,
+          "recall_at_5": null,
+          "evidence_recall_at_5": null,
+          "no_answer_empty_retrieval_rate": 1.0,
+          "mrr": null,
+          "answer_em": 1.0,
+          "answer_f1": 1.0,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 1.0
+        },
+        "instruction_like": {
+          "n": 1,
+          "claim_support_rate": 0.3333,
+          "unsupported_claim_rate": 0.0,
+          "contradiction_rate": 0.6667,
+          "recall_at_5": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "no_answer_empty_retrieval_rate": null,
+          "mrr": 0.25,
+          "answer_em": 0.0,
+          "answer_f1": 0.129,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 1.0
+        },
+        "mixed_support": {
+          "n": 4,
+          "claim_support_rate": 0.4583,
+          "unsupported_claim_rate": 0.125,
+          "contradiction_rate": 0.4167,
+          "recall_at_5": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "no_answer_empty_retrieval_rate": null,
+          "mrr": 0.875,
+          "answer_em": 0.0,
+          "answer_f1": 0.5689,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 0.75
+        },
+        "numerical_negation": {
+          "n": 3,
+          "claim_support_rate": 0.4444,
+          "unsupported_claim_rate": 0.3889,
+          "contradiction_rate": 0.1667,
+          "recall_at_5": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "no_answer_empty_retrieval_rate": null,
+          "mrr": 1.0,
+          "answer_em": 0.0,
+          "answer_f1": 0.5412,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 0.8333
+        },
+        "standard": {
+          "n": 21,
+          "claim_support_rate": 0.4365,
+          "unsupported_claim_rate": 0.254,
+          "contradiction_rate": 0.3095,
+          "recall_at_5": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "no_answer_empty_retrieval_rate": null,
+          "mrr": 0.9762,
+          "answer_em": 0.0,
+          "answer_f1": 0.5243,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 0.7143
+        },
+        "unanswerable": {
+          "n": 5,
+          "claim_support_rate": 0.2667,
+          "unsupported_claim_rate": 0.3333,
+          "contradiction_rate": 0.4,
+          "recall_at_5": null,
+          "evidence_recall_at_5": null,
+          "no_answer_empty_retrieval_rate": 0.0,
+          "mrr": null,
+          "answer_em": 0.0,
+          "answer_f1": 0.0,
+          "abstention_accuracy": 0.0,
+          "citation_support_precision": 0.6
+        }
+      }
+    },
+    "Embed_MPNet": {
+      "n": 40,
+      "overall_score": null,
+      "has_official_overall_score": false,
+      "claim_support_rate": {
+        "mean": 0.3917,
+        "bootstrap": {
+          "n": 40,
+          "mean": 0.3917,
+          "ci_low": 0.3124,
+          "ci_high": 0.4792,
+          "ci_level": 0.95,
+          "n_bootstrap": 1000,
+          "assumptions_met": false,
+          "assumption_notes": "Diagnostic only. n=40, independent=False. Confirmatory CI requires n>=30 i.i.d. query items (items that share documents are not independent)."
+        }
+      },
+      "unsupported_claim_rate": {
+        "mean": 0.3042
+      },
+      "contradiction_rate": {
+        "mean": 0.3042
+      },
+      "recall_at_5": {
+        "mean": 1.0,
+        "n": 34
+      },
+      "evidence_recall_at_5": {
+        "mean": 1.0,
+        "n": 34
+      },
+      "no_answer_empty_retrieval_rate": {
+        "mean": 0.1667,
+        "n": 6
+      },
+      "mrr": {
+        "mean": 0.9314,
+        "n": 34
+      },
+      "citation_existence_precision": {
+        "mean": 1.0
+      },
+      "citation_support_precision": {
+        "mean": 0.7125
+      },
+      "citation_marker_recall": {
+        "mean": 0.6458,
+        "legacy": true
+      },
+      "answer_em": {
+        "mean": 0.025
+      },
+      "answer_f1": {
+        "mean": 0.4429
+      },
+      "abstention_accuracy": 0.16666666666666666,
+      "mean_latency_ms": 1172.5187,
+      "total_estimated_cost_usd": null,
+      "official_metric_names": [
+        "recall_at_k",
+        "evidence_recall_at_5",
+        "no_answer_empty_retrieval_rate",
+        "mrr",
+        "ndcg_at_k",
+        "noise_ratio",
+        "claim_support_rate",
+        "unsupported_claim_rate",
+        "contradiction_rate",
+        "claim_coverage",
+        "citation_existence_precision",
+        "citation_support_precision",
+        "citation_completeness",
+        "citation_marker_recall",
+        "exact_match",
+        "token_f1",
+        "abstention_accuracy",
+        "estimated_cost_usd",
+        "macro_f1"
+      ],
+      "by_scenario": {
+        "conflicting": {
+          "n": 3,
+          "claim_support_rate": 0.2778,
+          "unsupported_claim_rate": 0.3333,
+          "contradiction_rate": 0.3889,
+          "recall_at_5": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "no_answer_empty_retrieval_rate": null,
+          "mrr": 1.0,
+          "answer_em": 0.0,
+          "answer_f1": 0.4642,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 1.0
+        },
+        "distractor": {
+          "n": 2,
+          "claim_support_rate": 0.4166,
+          "unsupported_claim_rate": 0.25,
+          "contradiction_rate": 0.3333,
+          "recall_at_5": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "no_answer_empty_retrieval_rate": null,
+          "mrr": 0.6667,
+          "answer_em": 0.0,
+          "answer_f1": 0.2384,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 1.0
+        },
+        "empty_context": {
+          "n": 1,
+          "claim_support_rate": 1.0,
+          "unsupported_claim_rate": 0.0,
+          "contradiction_rate": 0.0,
+          "recall_at_5": null,
+          "evidence_recall_at_5": null,
+          "no_answer_empty_retrieval_rate": 1.0,
+          "mrr": null,
+          "answer_em": 1.0,
+          "answer_f1": 1.0,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 1.0
+        },
+        "instruction_like": {
+          "n": 1,
+          "claim_support_rate": 0.3333,
+          "unsupported_claim_rate": 0.0,
+          "contradiction_rate": 0.6667,
+          "recall_at_5": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "no_answer_empty_retrieval_rate": null,
+          "mrr": 0.3333,
+          "answer_em": 0.0,
+          "answer_f1": 0.129,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 1.0
+        },
+        "mixed_support": {
+          "n": 4,
+          "claim_support_rate": 0.3333,
+          "unsupported_claim_rate": 0.25,
+          "contradiction_rate": 0.4167,
+          "recall_at_5": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "no_answer_empty_retrieval_rate": null,
+          "mrr": 0.875,
+          "answer_em": 0.0,
+          "answer_f1": 0.5689,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 0.75
+        },
+        "numerical_negation": {
+          "n": 3,
+          "claim_support_rate": 0.4444,
+          "unsupported_claim_rate": 0.3889,
+          "contradiction_rate": 0.1667,
+          "recall_at_5": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "no_answer_empty_retrieval_rate": null,
+          "mrr": 1.0,
+          "answer_em": 0.0,
+          "answer_f1": 0.5412,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 0.8333
+        },
+        "standard": {
+          "n": 21,
+          "claim_support_rate": 0.4127,
+          "unsupported_claim_rate": 0.3095,
+          "contradiction_rate": 0.2778,
+          "recall_at_5": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "no_answer_empty_retrieval_rate": null,
+          "mrr": 0.9762,
+          "answer_em": 0.0,
+          "answer_f1": 0.5152,
+          "abstention_accuracy": 1.0,
+          "citation_support_precision": 0.6667
+        },
+        "unanswerable": {
+          "n": 5,
+          "claim_support_rate": 0.2667,
+          "unsupported_claim_rate": 0.4,
+          "contradiction_rate": 0.3333,
+          "recall_at_5": null,
+          "evidence_recall_at_5": null,
+          "no_answer_empty_retrieval_rate": 0.0,
+          "mrr": null,
+          "answer_em": 0.0,
+          "answer_f1": 0.0,
+          "abstention_accuracy": 0.0,
+          "citation_support_precision": 0.4
+        }
+      }
+    }
+  },
+  "experiment_id": "B_embed",
+  "label": "diagnostic",
+  "dataset_id": "benchmark_v1",
+  "dataset_version": "1.3.0",
+  "n_documents": 29,
+  "n_items": 40,
+  "source_run_id": "20261102T042621Z_c0f578dd",
+  "source_note": "Matched MiniLM/MPNet mock+NLI run; diagnostic because items share documents."
+}

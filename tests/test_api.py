@@ -37,6 +37,57 @@ def test_health_echoes_request_id():
     assert res.headers.get("x-request-id") == "req-test-1"
 
 
+def test_public_mode_protects_data_results_and_evaluation(monkeypatch):
+    monkeypatch.setenv("RAGEVAL_REQUIRE_AUTH", "1")
+    monkeypatch.setenv("RAGEVAL_PUBLIC_TOKEN", "test-public-token")
+    for method, path in [
+        ("get", "/datasets/benchmark_v1"),
+        ("get", "/experiments/example/results"),
+        ("get", "/metrics/summary"),
+        ("post", "/evaluate/answer"),
+        ("post", "/score"),
+    ]:
+        assert getattr(client, method)(path).status_code == 401
+    assert client.get("/health").status_code == 200
+    headers = {"X-RAGEVAL-API-TOKEN": "test-public-token"}
+    assert client.get("/datasets/benchmark_v1", headers=headers).status_code == 200
+    assert client.get("/experiments/example/results", headers=headers).status_code == 404
+
+
+def test_public_mode_fails_closed_without_token(monkeypatch):
+    monkeypatch.setenv("RAGEVAL_REQUIRE_AUTH", "1")
+    monkeypatch.delenv("RAGEVAL_PUBLIC_TOKEN", raising=False)
+    assert client.get("/datasets").status_code == 503
+
+
+def test_nonlocal_serve_requires_public_auth(monkeypatch):
+    import subprocess
+    import sys
+
+    monkeypatch.delenv("RAGEVAL_REQUIRE_AUTH", raising=False)
+    monkeypatch.delenv("RAGEVAL_PUBLIC_TOKEN", raising=False)
+    result = subprocess.run(
+        [sys.executable, "-m", "rageval.cli", "serve", "--host", "0.0.0.0"],
+        capture_output=True,
+        text=True,
+        timeout=15,
+    )
+    assert result.returncode != 0
+    assert "requires RAGEVAL_REQUIRE_AUTH=1" in result.stderr
+
+
+def test_public_read_rate_limit(monkeypatch):
+    monkeypatch.setenv("RAGEVAL_REQUIRE_AUTH", "1")
+    monkeypatch.setenv("RAGEVAL_PUBLIC_TOKEN", "test-public-token")
+    monkeypatch.setenv("RAGEVAL_READ_RATE_LIMIT_PER_MINUTE", "2")
+    headers = {"X-RAGEVAL-API-TOKEN": "test-public-token"}
+    assert client.get("/datasets", headers=headers).status_code == 200
+    assert client.get("/datasets", headers=headers).status_code == 200
+    limited = client.get("/datasets", headers=headers)
+    assert limited.status_code == 429
+    assert limited.headers["retry-after"] == "60"
+
+
 def test_ready_check():
     res = client.get("/ready")
     assert res.status_code == 200
@@ -290,8 +341,8 @@ def test_dashboard_html_is_api_backed():
     assert "/benchmark/run" not in html
     assert "GET /datasets" in html
     assert "/experiments/" in html
-    assert 'fetch("/experiments"' in html
-    assert 'fetch("/experiment-configs")' in html
+    assert 'apiFetch("/experiments"' in html
+    assert 'apiFetch("/experiment-configs")' in html
     assert 'method: "POST"' in html
     assert "allow_heavy" in html
     assert "Allow heavy (NLI / full v1)" in html

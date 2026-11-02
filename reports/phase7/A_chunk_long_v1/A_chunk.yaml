@@ -1,0 +1,62 @@
+experiment_id: A_chunk
+label: v1
+title: Chunk size with dense MiniLM, overlap fixed at 32, rerank off
+family: chunk
+dataset_id: chunk_benchmark_v1
+split: all
+resource_note: "Pinned long NASA/CDC documents; evidence-span Recall@5. CPU MiniLM + blinded mock, overlap 32 words, no paid LLM. Diagnostic n=30."
+pipelines:
+  - name: Dense_Chunk128_overlap32
+    seed: 0
+    chunker:
+      strategy: fixed
+      chunk_size: 128
+      chunk_overlap: 32
+    retriever:
+      method: dense
+      top_k: 5
+    reranker:
+      enabled: false
+    generator:
+      backend: mock
+      mock_mode: faithful
+      abstention_policy: empty_context
+    evaluator:
+      method: nli
+      allow_heuristic_fallback: false
+  - name: Dense_Chunk256_Baseline
+    seed: 0
+    chunker:
+      strategy: fixed
+      chunk_size: 256
+      chunk_overlap: 32
+    retriever:
+      method: dense
+      top_k: 5
+    reranker:
+      enabled: false
+    generator:
+      backend: mock
+      mock_mode: faithful
+      abstention_policy: empty_context
+    evaluator:
+      method: nli
+      allow_heuristic_fallback: false
+  - name: Dense_Chunk512_overlap32
+    seed: 0
+    chunker:
+      strategy: fixed
+      chunk_size: 512
+      chunk_overlap: 32
+    retriever:
+      method: dense
+      top_k: 5
+    reranker:
+      enabled: false
+    generator:
+      backend: mock
+      mock_mode: faithful
+      abstention_policy: empty_context
+    evaluator:
+      method: nli
+      allow_heuristic_fallback: false

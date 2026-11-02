@@ -7,7 +7,7 @@ This project does **not** claim that claim-level evaluation is novel. See `RELAT
 
 ## Research questions
 
-**RQ1.** How do chunk size, retrieval family (dense / BM25 / hybrid), and reranking affect document-level Recall@k / MRR and claim-support rates on a frozen set?
+**RQ1.** How do chunk size, retrieval family (dense / BM25 / hybrid), and reranking affect document-level Recall@k / MRR, evidence-span Recall@5, and claim-support rates on a frozen set? The chunk-size treatment uses the pinned long-document `chunk_benchmark_v1` slice; document Recall alone cannot distinguish chunks from the same source.
 
 **RQ2.** How accurately can an automated verifier classify claims as supported, partially supported, unsupported, contradicted, or ambiguous relative to gold labels (per-class P/R/F1 and macro-F1)?
 

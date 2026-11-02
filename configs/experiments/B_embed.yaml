@@ -1,14 +1,25 @@
 experiment_id: B_embed
 label: v1
-title: Embedder — MiniLM only
+title: Embedder comparison — MiniLM versus MPNet
 family: embed
 dataset_id: benchmark_v1
 split: all
-resource_note: "Official matrix uses sentence-transformers/all-MiniLM-L6-v2 on CPU. Larger embedders are opt-in."
-opt_in: false
-opt_in_embedders:
-  - model_name: sentence-transformers/all-mpnet-base-v2
-    approved: false
-    note: Do not run without a separate resource note.
-pipeline_paths:
-  - ../ablation/dense_chunk256.yaml
+resource_note: "CPU embedding comparison on frozen benchmark_v1; MPNet downloads model weights and is opt-in. Same chunks, retrieval, generator, and verifier."
+opt_in: true
+pipelines:
+  - name: Embed_MiniLM
+    seed: 0
+    chunker: {strategy: fixed, chunk_size: 256, chunk_overlap: 32}
+    embedder: {model_name: sentence-transformers/all-MiniLM-L6-v2, device: cpu}
+    retriever: {method: dense, top_k: 5}
+    reranker: {enabled: false}
+    generator: {backend: mock, mock_mode: faithful, abstention_policy: empty_context}
+    evaluator: {method: nli, allow_heuristic_fallback: false}
+  - name: Embed_MPNet
+    seed: 0
+    chunker: {strategy: fixed, chunk_size: 256, chunk_overlap: 32}
+    embedder: {model_name: sentence-transformers/all-mpnet-base-v2, device: cpu}
+    retriever: {method: dense, top_k: 5}
+    reranker: {enabled: false}
+    generator: {backend: mock, mock_mode: faithful, abstention_policy: empty_context}
+    evaluator: {method: nli, allow_heuristic_fallback: false}

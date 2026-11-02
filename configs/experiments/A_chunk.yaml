@@ -2,9 +2,9 @@ experiment_id: A_chunk
 label: v1
 title: Chunk size with dense MiniLM, overlap fixed at 32, rerank off
 family: chunk
-dataset_id: benchmark_v1
+dataset_id: chunk_benchmark_v1
 split: all
-resource_note: "CPU MiniLM + blinded mock. Overlap fixed at 32 tokens. No paid LLM."
+resource_note: "Pinned long NASA/CDC documents; evidence-span Recall@5. CPU MiniLM + blinded mock, overlap 32 words, no paid LLM. Diagnostic n=30."
 pipelines:
   - name: Dense_Chunk128_overlap32
     seed: 0

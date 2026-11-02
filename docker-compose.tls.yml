@@ -4,6 +4,17 @@
 #   RAGEVAL_DOMAIN=eval.example.com RAGEVAL_CORS_ORIGINS=https://eval.example.com \
 #     docker compose -f docker-compose.yml -f docker-compose.tls.yml up -d
 services:
+  rageval:
+    environment:
+      RAGEVAL_RUNS_DIR: /app/experiments/runs
+      RAGEVAL_DATA_DIR: /app/data
+      RAGEVAL_CORS_ORIGINS: ${RAGEVAL_CORS_ORIGINS:-https://localhost}
+      RAGEVAL_ALLOWED_HOSTS: ${RAGEVAL_DOMAIN:-localhost}
+      RAGEVAL_RATE_LIMIT_PER_MINUTE: "60"
+      RAGEVAL_ADMIN_TOKEN: ${RAGEVAL_ADMIN_TOKEN:-}
+      RAGEVAL_REQUIRE_AUTH: "1"
+      RAGEVAL_PUBLIC_TOKEN: ${RAGEVAL_PUBLIC_TOKEN:-}
+      RAGEVAL_READ_RATE_LIMIT_PER_MINUTE: "120"
   caddy:
     image: caddy:2.8-alpine
     ports:

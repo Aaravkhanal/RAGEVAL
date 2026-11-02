@@ -31,8 +31,8 @@ def generate_all_paper_figures(summaries: List[BenchmarkRunSummary], output_dir:
     faiths = [s.mean_faithfulness * 100 for s in summaries]
     hallucs = [s.mean_hallucination_rate * 100 for s in summaries]
     contras = [s.mean_contradiction_rate * 100 for s in summaries]
-    recalls = [s.mean_recall_at_5 * 100 for s in summaries]
-    mrrs = [s.mean_mrr for s in summaries]
+    recalls = [s.mean_recall_at_5 * 100 if s.mean_recall_at_5 is not None else float("nan") for s in summaries]
+    mrrs = [s.mean_mrr if s.mean_mrr is not None else float("nan") for s in summaries]
     latencies = [s.mean_latency_ms for s in summaries]
     abstentions = [s.abstention_accuracy * 100 for s in summaries]
 

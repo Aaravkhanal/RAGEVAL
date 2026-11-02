@@ -1,0 +1,18 @@
+{
+  "base_url": "http://127.0.0.1:8765",
+  "requests": 20,
+  "concurrency": 5,
+  "health": 200,
+  "ready": 200,
+  "unauthorized_read": 401,
+  "authorized_read": 200,
+  "response_codes": {
+    "200": 20
+  },
+  "latency_ms": {
+    "p50": 5.62,
+    "p95": 10.72,
+    "p99": 11.41
+  },
+  "note": "End-to-end HTTP timing from the probe client; no TLS or external network unless base_url uses them."
+}

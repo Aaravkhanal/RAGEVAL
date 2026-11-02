@@ -1,0 +1,155 @@
+{
+  "dataset_id": "benchmark_v2",
+  "version": "2.0.0",
+  "split": "test",
+  "machine": "macOS-14.5-arm64-arm-64bit",
+  "n_documents": 13,
+  "n_test_items": 22,
+  "n_answerable": 18,
+  "note": "Single-author labels; retrieval-only matrix. Timing is local, sequential, after one warm query. No generation, NLI, or API cost included.",
+  "configs": [
+    {
+      "name": "sparse_128",
+      "n": 18,
+      "n_chunks": 128,
+      "index_ms_cold": 18.595,
+      "document_recall_at_5": 0.8889,
+      "evidence_recall_at_5": 0.6667,
+      "warm_retrieval_ms": {
+        "p50": 0.134,
+        "p95": 0.184,
+        "p99": 0.192
+      }
+    },
+    {
+      "name": "sparse_256",
+      "n": 18,
+      "n_chunks": 59,
+      "index_ms_cold": 4.015,
+      "document_recall_at_5": 0.8889,
+      "evidence_recall_at_5": 0.8333,
+      "warm_retrieval_ms": {
+        "p50": 0.074,
+        "p95": 0.11,
+        "p99": 0.114
+      }
+    },
+    {
+      "name": "sparse_512",
+      "n": 18,
+      "n_chunks": 31,
+      "index_ms_cold": 3.541,
+      "document_recall_at_5": 1.0,
+      "evidence_recall_at_5": 1.0,
+      "warm_retrieval_ms": {
+        "p50": 0.055,
+        "p95": 0.085,
+        "p99": 0.089
+      }
+    },
+    {
+      "name": "dense_128",
+      "n": 18,
+      "n_chunks": 128,
+      "index_ms_cold": 5765.319,
+      "document_recall_at_5": 1.0,
+      "evidence_recall_at_5": 0.7222,
+      "warm_retrieval_ms": {
+        "p50": 7.05,
+        "p95": 7.292,
+        "p99": 7.371
+      }
+    },
+    {
+      "name": "dense_256",
+      "n": 18,
+      "n_chunks": 59,
+      "index_ms_cold": 2022.548,
+      "document_recall_at_5": 1.0,
+      "evidence_recall_at_5": 0.9444,
+      "warm_retrieval_ms": {
+        "p50": 7.053,
+        "p95": 7.711,
+        "p99": 8.708
+      }
+    },
+    {
+      "name": "dense_512",
+      "n": 18,
+      "n_chunks": 31,
+      "index_ms_cold": 1488.715,
+      "document_recall_at_5": 0.8889,
+      "evidence_recall_at_5": 0.8333,
+      "warm_retrieval_ms": {
+        "p50": 7.555,
+        "p95": 12.309,
+        "p99": 13.373
+      }
+    },
+    {
+      "name": "hybrid_128",
+      "n": 18,
+      "n_chunks": 128,
+      "index_ms_cold": 3053.971,
+      "document_recall_at_5": 1.0,
+      "evidence_recall_at_5": 0.7778,
+      "warm_retrieval_ms": {
+        "p50": 9.473,
+        "p95": 12.957,
+        "p99": 13.373
+      }
+    },
+    {
+      "name": "hybrid_256",
+      "n": 18,
+      "n_chunks": 59,
+      "index_ms_cold": 2116.202,
+      "document_recall_at_5": 1.0,
+      "evidence_recall_at_5": 1.0,
+      "warm_retrieval_ms": {
+        "p50": 9.198,
+        "p95": 12.927,
+        "p99": 12.981
+      }
+    },
+    {
+      "name": "hybrid_512",
+      "n": 18,
+      "n_chunks": 31,
+      "index_ms_cold": 1521.769,
+      "document_recall_at_5": 0.9444,
+      "evidence_recall_at_5": 0.8889,
+      "warm_retrieval_ms": {
+        "p50": 7.95,
+        "p95": 10.865,
+        "p99": 11.467
+      }
+    },
+    {
+      "name": "dense_256_mpnet",
+      "n": 18,
+      "n_chunks": 59,
+      "index_ms_cold": 12794.68,
+      "document_recall_at_5": 1.0,
+      "evidence_recall_at_5": 1.0,
+      "warm_retrieval_ms": {
+        "p50": 51.096,
+        "p95": 62.007,
+        "p99": 68.665
+      }
+    },
+    {
+      "name": "hybrid_256_reranked",
+      "n": 18,
+      "n_chunks": 59,
+      "index_ms_cold": 1968.999,
+      "document_recall_at_5": 1.0,
+      "evidence_recall_at_5": 1.0,
+      "warm_retrieval_ms": {
+        "p50": 150.686,
+        "p95": 178.86,
+        "p99": 187.398
+      }
+    }
+  ]
+}

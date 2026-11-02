@@ -29,19 +29,40 @@ class SignificanceAnalyzer:
         """
         if len(baseline.results) != len(treatment.results):
             raise ValueError("Baseline and treatment must have identical query evaluation counts.")
+        pairs = list(zip(baseline.results, treatment.results))
+        if any(left.query_id != right.query_id for left, right in pairs):
+            raise ValueError("Baseline and treatment query ids must match in order.")
+
+        if metric in {"recall", "evidence_recall"}:
+            pairs = [
+                (left, right)
+                for left, right in pairs
+                if left.test_type.value != "unanswerable"
+                and right.test_type.value != "unanswerable"
+                and left.retrieval_metrics.no_answer_empty_retrieval is None
+                and right.retrieval_metrics.no_answer_empty_retrieval is None
+            ]
+            if not pairs:
+                raise ValueError("No answerable paired queries for retrieval comparison.")
 
         if metric == "faithfulness":
-            vals_a = [r.faithfulness_score for r in baseline.results]
-            vals_b = [r.faithfulness_score for r in treatment.results]
+            vals_a = [left.faithfulness_score for left, _ in pairs]
+            vals_b = [right.faithfulness_score for _, right in pairs]
         elif metric == "recall":
-            vals_a = [r.retrieval_metrics.recall_at_5 for r in baseline.results]
-            vals_b = [r.retrieval_metrics.recall_at_5 for r in treatment.results]
+            vals_a = [left.retrieval_metrics.recall_at_5 for left, _ in pairs]
+            vals_b = [right.retrieval_metrics.recall_at_5 for _, right in pairs]
+        elif metric == "evidence_recall":
+            pairs = [(left, right) for left, right in pairs if left.retrieval_metrics.evidence_recall_at_5 is not None and right.retrieval_metrics.evidence_recall_at_5 is not None]
+            if not pairs:
+                raise ValueError("No paired evidence-recall scores.")
+            vals_a = [left.retrieval_metrics.evidence_recall_at_5 for left, _ in pairs]
+            vals_b = [right.retrieval_metrics.evidence_recall_at_5 for _, right in pairs]
         elif metric == "latency":
-            vals_a = [r.total_latency_ms for r in baseline.results]
-            vals_b = [r.total_latency_ms for r in treatment.results]
+            vals_a = [left.total_latency_ms for left, _ in pairs]
+            vals_b = [right.total_latency_ms for _, right in pairs]
         else:
-            vals_a = [r.hallucination_rate for r in baseline.results]
-            vals_b = [r.hallucination_rate for r in treatment.results]
+            vals_a = [left.hallucination_rate for left, _ in pairs]
+            vals_b = [right.hallucination_rate for _, right in pairs]
 
         diffs = np.array(vals_b) - np.array(vals_a)
         mean_diff = float(np.mean(diffs))
@@ -62,6 +83,24 @@ class SignificanceAnalyzer:
             )
         else:
             note = None
+
+        if n < 2:
+            return {
+                "metric": metric,
+                "baseline_name": baseline.config_name,
+                "treatment_name": treatment.config_name,
+                "n": n,
+                "mean_baseline": round(float(np.mean(vals_a)), 4),
+                "mean_treatment": round(float(np.mean(vals_b)), 4),
+                "mean_diff": round(mean_diff, 4),
+                "p_value_ttest": None,
+                "p_value_wilcoxon": None,
+                "is_significant": False,
+                "underpowered": True,
+                "confirmatory": False,
+                "independent_items_assumed": independent,
+                "note": "A paired significance test requires at least two answerable queries.",
+            }
 
         # If identical values across all queries, p-value is 1.0
         if np.all(diffs == 0):

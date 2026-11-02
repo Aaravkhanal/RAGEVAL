@@ -520,6 +520,10 @@
     </header>
 
     <main>
+        <div class="input-group" style="max-width:24rem; margin-bottom:1rem;">
+            <label for="api-token">API access token</label>
+            <input type="password" id="api-token" autocomplete="off" placeholder="Required when public API access is enabled">
+        </div>
         <div class="hero-section">
             <h1 class="hero-title">RAG Faithfulness & Claim Attribution Engine</h1>
             <p class="hero-subtitle">
@@ -703,6 +707,12 @@
     </main>
 
     <script>
+        function apiFetch(url, options = {}) {
+            const headers = new Headers(options.headers || {});
+            const token = document.getElementById("api-token").value;
+            if (token) headers.set("X-RAGEVAL-API-TOKEN", token);
+            return fetch(url, { ...options, headers });
+        }
         const PRESETS = {
             faithful: {
                 question: "What was ApexCloud's Q3 2024 gross margin, and what drove margin expansion?",
@@ -773,7 +783,7 @@
                 const chunks = contextText.split("\n\n").filter(c => c.trim().length > 0);
                 const methodEl = document.getElementById("eval-method");
                 const method = methodEl ? methodEl.value : "heuristic";
-                const resp = await fetch("/evaluate/answer", {
+                const resp = await apiFetch("/evaluate/answer", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -910,7 +920,7 @@
         async function loadNamedConfigs() {
             const status = document.getElementById("job-status");
             try {
-                const resp = await fetch("/experiment-configs");
+                const resp = await apiFetch("/experiment-configs");
                 if (!resp.ok) throw new Error("GET /experiment-configs failed");
                 const payload = await resp.json();
                 namedConfigs = payload.configs || [];
@@ -991,7 +1001,7 @@
             setJobBusy(true);
             status.textContent = "POST /experiments …";
             try {
-                const resp = await fetch("/experiments", {
+                const resp = await apiFetch("/experiments", {
                     method: "POST",
                     headers: { "Content-Type": "application/json", "X-RAGEVAL-ADMIN-TOKEN": adminToken },
                     body: JSON.stringify({
@@ -1019,7 +1029,7 @@
 
         async function pollJobOnce(runId) {
             try {
-                const resp = await fetch("/experiments/" + encodeURIComponent(runId));
+                const resp = await apiFetch("/experiments/" + encodeURIComponent(runId));
                 if (resp.ok) {
                     const info = await resp.json();
                     renderJobStatus(info);
@@ -1045,7 +1055,7 @@
             const tbody = document.getElementById("benchmark-tbody");
             const meta = document.getElementById("experiment-meta");
             try {
-                const resp = await fetch("/experiments");
+                const resp = await apiFetch("/experiments");
                 if (!resp.ok) throw new Error("GET /experiments failed");
                 const payload = await resp.json();
                 const experiments = payload.experiments || [];
@@ -1076,8 +1086,8 @@
             tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-dim);">Loading ${escapeHtml(runId)}…</td></tr>`;
             try {
                 const [infoRes, resultRes] = await Promise.all([
-                    fetch("/experiments/" + encodeURIComponent(runId)),
-                    fetch("/experiments/" + encodeURIComponent(runId) + "/results"),
+                    apiFetch("/experiments/" + encodeURIComponent(runId)),
+                    apiFetch("/experiments/" + encodeURIComponent(runId) + "/results"),
                 ]);
                 if (!infoRes.ok) throw new Error("GET /experiments/" + runId + " failed");
                 const info = await infoRes.json();
@@ -1132,7 +1142,7 @@
             const container = document.getElementById("dataset-items-container");
             const meta = document.getElementById("dataset-meta");
             try {
-                const resp = await fetch("/datasets");
+                const resp = await apiFetch("/datasets");
                 if (!resp.ok) throw new Error("GET /datasets failed");
                 const payload = await resp.json();
                 const datasets = payload.datasets || [];
@@ -1164,7 +1174,7 @@
             const meta = document.getElementById("dataset-meta");
             container.innerHTML = `<p style="color:var(--text-dim);">Loading ${escapeHtml(datasetId)}…</p>`;
             try {
-                const resp = await fetch("/datasets/" + encodeURIComponent(datasetId) + "?include_items=true");
+                const resp = await apiFetch("/datasets/" + encodeURIComponent(datasetId) + "?include_items=true");
                 if (!resp.ok) throw new Error("GET /datasets/" + datasetId + " failed");
                 const ds = await resp.json();
                 meta.textContent = [

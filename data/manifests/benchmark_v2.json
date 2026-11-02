@@ -1,0 +1,16 @@
+{
+  "dataset_id": "benchmark_v2",
+  "version": "2.0.0",
+  "synthetic": true,
+  "license": "Mixed: public-domain US government snapshots plus two synthetic perturbations",
+  "documents": "data/datasets/benchmark_v2/corpus.json",
+  "items_all": "data/datasets/benchmark_v2/items.json",
+  "n_documents": 13,
+  "n_items": 52,
+  "n_dev": 30,
+  "n_test": 22,
+  "split_policy": "Source URL separated: Apollo 8/9/10/17 only in test; seven other NASA/CDC pages only in dev. Test documents remain in retrieval corpus as required.",
+  "annotator": "single author; no independent human review",
+  "retrieved_date": "2026-11-02",
+  "notes": "Frozen long-document retrieval slice. Four unanswerable and two benchmark-authored conflicting-document cases. No confirmatory or human-validated claims."
+}

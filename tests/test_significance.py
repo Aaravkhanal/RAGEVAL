@@ -75,3 +75,14 @@ def test_n32_shared_documents_is_not_confirmatory():
     )
     assert opt_in["confirmatory"] is True
     assert opt_in["is_significant"] is True
+
+
+def test_retrieval_comparison_excludes_no_gold_pairs():
+    baseline = _mock_summary("base", [1.0, 1.0], [0.5, 0.0])
+    treatment = _mock_summary("treat", [1.0, 1.0], [1.0, 0.0])
+    for summary in (baseline, treatment):
+        summary.results[1].test_type = TestType.UNANSWERABLE
+        summary.results[1].retrieval_metrics.no_answer_empty_retrieval = False
+    compared = SignificanceAnalyzer.compare_runs(baseline, treatment, metric="recall")
+    assert compared["n"] == 1
+    assert compared["mean_diff"] == 0.5

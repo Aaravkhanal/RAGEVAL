@@ -1,0 +1,692 @@
+[
+  {
+    "id": "v2_test_001",
+    "domain": "space",
+    "question": "Where did Apollo 8 launch from?",
+    "gold_answer": "Cape Kennedy.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo8",
+        "span": "Apollo 8 launched from Cape Kennedy",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Cape Kennedy.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo8"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_002",
+    "domain": "space",
+    "question": "Who were the Apollo 8 astronauts?",
+    "gold_answer": "Frank Borman, James Lovell Jr., and William Anders.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo8",
+        "span": "Frank Borman, James Lovell Jr. and William Anders",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Frank Borman, James Lovell Jr., and William Anders.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo8"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_003",
+    "domain": "space",
+    "question": "How many telecasts did Apollo 8 conduct?",
+    "gold_answer": "Six.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo8",
+        "span": "Six telecasts were conducted during the mission",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Six.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo8"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_004",
+    "domain": "space",
+    "question": "How long was Apollo 8 in lunar orbit?",
+    "gold_answer": "20 hours.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo8",
+        "span": "During the 20-hour period in lunar orbit",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "20 hours.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo8"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_005",
+    "domain": "space",
+    "question": "What was Apollo 9's primary objective?",
+    "gold_answer": "An Earth-orbital engineering test of the first crewed lunar module.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo9",
+        "span": "an Earth-orbital engineering test of the first crewed lunar module",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "An Earth-orbital engineering test of the first crewed lunar module.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo9"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_006",
+    "domain": "space",
+    "question": "When did Apollo 9 launch?",
+    "gold_answer": "March 3, 1969.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo9",
+        "span": "Apollo 9 launched from Kennedy Space center on March 3, 1969",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "March 3, 1969.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo9"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_007",
+    "domain": "space",
+    "question": "How many times did Apollo 9 perform CSM and LM rendezvous and docking?",
+    "gold_answer": "Twice.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo9",
+        "span": "This was performed twice",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Twice.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo9"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_008",
+    "domain": "space",
+    "question": "Why was Schweickart's scheduled two-hour EVA scrubbed?",
+    "gold_answer": "Because of nausea.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo9",
+        "span": "Because of nausea, Schweickart\u2019s scheduled two-hour EVA",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Because of nausea.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo9"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_009",
+    "domain": "space",
+    "question": "Did Apollo 10 land on the Moon?",
+    "gold_answer": "No; it rehearsed a lunar landing without landing.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo10",
+        "span": "except the landing",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "No; it rehearsed a lunar landing without landing.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo10"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_010",
+    "domain": "space",
+    "question": "When did Apollo 10 launch?",
+    "gold_answer": "May 18, 1969.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo10",
+        "span": "Apollo 10 launched from Cape Kennedy on May 18, 1969",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "May 18, 1969.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo10"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_011",
+    "domain": "space",
+    "question": "Which landing site did Apollo 10's lunar module fly over?",
+    "gold_answer": "Landing Site 2 in the Sea of Tranquility.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo10",
+        "span": "Landing Site 2 in the Sea of Tranquility",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Landing Site 2 in the Sea of Tranquility.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo10"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_012",
+    "domain": "space",
+    "question": "How many of Apollo 10's four planned midcourse corrections were needed?",
+    "gold_answer": "One.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo10",
+        "span": "only one of four midcourse corrections was needed",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "One.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo10"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_013",
+    "domain": "space",
+    "question": "Where did Apollo 17 land?",
+    "gold_answer": "Taurus-Littrow highlands and valley.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo17",
+        "span": "Taurus-Littrow highlands and valley area",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Taurus-Littrow highlands and valley.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo17"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_014",
+    "domain": "space",
+    "question": "Who was the first scientist-astronaut to land on the Moon?",
+    "gold_answer": "Harrison Schmitt.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo17",
+        "span": "first scientist-astronaut to land on moon: Harrison Schmitt",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Harrison Schmitt.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo17"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_015",
+    "domain": "space",
+    "question": "How far did Apollo 17's lunar rover travel?",
+    "gold_answer": "30.5 kilometers.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo17",
+        "span": "lunar rover vehicle traversed a total of 30.5 kilometers",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "30.5 kilometers.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo17"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_016",
+    "domain": "space",
+    "question": "How long did Ronald Evans's transearth EVA last?",
+    "gold_answer": "One hour and six minutes.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo17",
+        "span": "lasted one hour, six minutes",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "One hour and six minutes.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo17"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_017",
+    "domain": "space",
+    "question": "What was the serial number of Apollo 8's sextant?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "answerability": "unanswerable",
+    "scenario_type": "unanswerable",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_018",
+    "domain": "space",
+    "question": "What was the personal phone number of Apollo 9's commander?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "answerability": "unanswerable",
+    "scenario_type": "unanswerable",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_019",
+    "domain": "space",
+    "question": "How much did the Apollo 10 lunar module's paint cost?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "answerability": "unanswerable",
+    "scenario_type": "unanswerable",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_020",
+    "domain": "space",
+    "question": "What was the Apollo 17 rover's tire pressure?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "answerability": "unanswerable",
+    "scenario_type": "unanswerable",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_021",
+    "domain": "space",
+    "question": "Did Apollo 10 land on the Moon?",
+    "gold_answer": "No; Apollo 10 did not land on the Moon.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo10",
+        "span": "except the landing",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "No; Apollo 10 did not land on the Moon.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo10"
+        ]
+      }
+    ],
+    "test_type": "conflicting",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "conflicting",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed",
+      "conflicting_doc_id": "doc_apollo10_altered"
+    }
+  },
+  {
+    "id": "v2_test_022",
+    "domain": "space",
+    "question": "How far did Apollo 17's lunar rover travel?",
+    "gold_answer": "30.5 kilometers.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo17",
+        "span": "lunar rover vehicle traversed a total of 30.5 kilometers",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "30.5 kilometers.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo17"
+        ]
+      }
+    ],
+    "test_type": "conflicting",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "conflicting",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed",
+      "conflicting_doc_id": "doc_apollo17_altered"
+    }
+  }
+]

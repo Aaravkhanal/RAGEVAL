@@ -1,0 +1,47 @@
+{
+  "baseline": "Embed_MiniLM",
+  "note": "Confirmatory tests require n>=30 i.i.d. items. Items that share documents are not i.i.d.; is_significant stays false.",
+  "comparisons": [
+    {
+      "metric": "faithfulness",
+      "baseline_name": "Embed_MiniLM",
+      "treatment_name": "Embed_MPNet",
+      "n": 40,
+      "mean_baseline": 0.4292,
+      "mean_treatment": 0.3917,
+      "mean_diff": -0.0375,
+      "t_statistic": -1.7782,
+      "p_value_ttest": 0.0832,
+      "p_value_wilcoxon": 0.0833,
+      "is_significant": false,
+      "underpowered": true,
+      "confirmatory": false,
+      "independent_items_assumed": false,
+      "bootstrap_mean_diff": {
+        "n": 40,
+        "mean": -0.0375,
+        "ci_low": -0.0875,
+        "ci_high": 0.0,
+        "ci_level": 0.95,
+        "n_bootstrap": 1000,
+        "assumptions_met": false,
+        "assumption_notes": "Diagnostic only. n=40, independent=False. Confirmatory CI requires n>=30 i.i.d. query items (items that share documents are not independent)."
+      },
+      "note": "n=40 but items are not treated as i.i.d.; tests are diagnostic; is_significant stays false."
+    },
+    {
+      "metric": "recall",
+      "baseline_name": "Embed_MiniLM",
+      "treatment_name": "Embed_MPNet",
+      "n": 34,
+      "mean_diff": 0.0,
+      "p_value_ttest": 1.0,
+      "p_value_wilcoxon": 1.0,
+      "is_significant": false,
+      "underpowered": true,
+      "confirmatory": false,
+      "independent_items_assumed": false,
+      "note": "n=34 but items are not treated as i.i.d.; tests are diagnostic; is_significant stays false."
+    }
+  ]
+}

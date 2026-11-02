@@ -376,6 +376,12 @@ def main():
 
     elif args.command == "serve":
         import uvicorn
+        from rageval.server.runtime import require_public_auth
+
+        if args.host not in {"127.0.0.1", "localhost", "::1"} and (
+            not require_public_auth() or not os.environ.get("RAGEVAL_PUBLIC_TOKEN")
+        ):
+            raise SystemExit("Non-local HTTP binding requires RAGEVAL_REQUIRE_AUTH=1 and RAGEVAL_PUBLIC_TOKEN")
 
         os.environ["RAGEVAL_RUNS_DIR"] = args.runs_dir
         os.environ["RAGEVAL_DATA_DIR"] = resolve_asset(args.data_dir)
