@@ -10,7 +10,7 @@ This project was previously prototyped under the name RAGTruth. It is **not** th
 - Atomic claim decomposition and NLI verification (`supported` / `unsupported` / `contradicted`, plus `partially_supported` and `ambiguous` in the schema).
 - Citation existence and support-conditioned citation metrics.
 - A **synthetic smoke dataset** (8 documents, 8 questions). It is author-written fiction, not SEC/NEJM/OSDI source text.
-- A **licensed benchmark_v1** (29 documents, 40 questions in v1.3.0): short U.S. government public-domain excerpts plus original CC-BY-4.0 fiction. See `data/cards/benchmark_v1.md`. The committed ablation tables used v1.0.0 (16/24). Companion mock+NLI scored v1.1.0 (18/28) and v1.2.0 (21/32). v1.3.0 is on-disk only until a new companion run is recorded.
+- A **licensed benchmark_v1** (36 documents, 47 questions in v1.4.0): short U.S. government public-domain excerpts plus original CC-BY-4.0 fiction. See `data/cards/benchmark_v1.md`. The committed ablation tables used v1.0.0 (16/24). Companion mock+NLI scored v1.1.0 (18/28) and v1.2.0 (21/32). v1.3.0/1.4.0 are on-disk only until a new companion run is recorded. Independent slice n=30 is a count threshold with disjoint gold documents; labels remain single-author.
 - A separate **chunk_benchmark_v1** diagnostic slice (7 long public NASA/CDC documents, 30 questions). The named `A_chunk` experiment now uses it so 128/256/512-word settings produce different chunks. See `data/cards/chunk_benchmark_v1.md`.
 - Answer-level EM / token F1 alongside claim-level support (RQ3).
 - Official metric registry (`rageval.metrics.registry`) with no composite overall score.
@@ -28,13 +28,13 @@ The current long-document chunk diagnostic is `reports/phase7/A_chunk_long_v1/`.
 
 `reports/phase7/B_embed_v1/` records a matched MiniLM versus MPNet embedding comparison on `benchmark_v1` 1.3.0. It remains diagnostic and uses the blinded mock generator.
 
-`reports/phase7/live_matrix_v1/` records six matched retrieval settings with a real NVIDIA NIM generator on the 40-item corpus. The paper includes this companion table. Its token counts are recorded, but USD cost is unknown because a provider rate was not available; the questions share documents, so the results remain diagnostic.
+`reports/phase7/live_matrix_v1/` records six matched retrieval settings with a real NVIDIA NIM generator on the 40-item v1.3.0 corpus. The paper includes this companion table. Live v1 document Recall@5 is 1.0 on all six configs, so that matrix cannot rank retrievers. Use `reports/phase8/retrieval_v2.json` for a non-saturated retrieval diagnostic. Token counts are recorded; USD cost is unknown because a provider rate was not available. Live NVIDIA stays companion; the official SUT is the blinded mock on `a97ad68f`.
 
-`data/gold/review/claim_review_v1.jsonl` is an unlabeled 40-answer review queue for independent claim-boundary, evidence-support, and citation judgments. See `docs/CLAIM_REVIEW.md`; no human agreement result is claimed yet.
+`data/gold/review/claim_review_v1.jsonl` is an unlabeled review queue for independent claim-boundary, evidence-support, and citation judgments (`human_*` fields null). See `docs/CLAIM_REVIEW.md`; no human agreement result is claimed yet.
 
 ## Install
 
-Python 3.10+. Prefer a dedicated environment. Software version **0.2.1**. Official ablation tables remain mock run `20261028T183042Z_a97ad68f`.
+Python 3.10+. Prefer a dedicated environment. Software version **0.3.0**. Official ablation tables remain mock run `20261028T183042Z_a97ad68f`.
 
 ```bash
 # Fast tests and smoke (hashed [dev,api] lock, no torch)
@@ -47,7 +47,7 @@ pytest -m "not hf"
 pip install -e ".[all]"
 ```
 
-Hashed locks: `requirements-lock-fast.txt` (universal) and `requirements-lock-all.txt` (manylinux x86_64, CPU torch). Regenerate with `bash scripts/compile_locks.sh`. Docker: `docker build --platform linux/amd64 -t rageval:0.2.1 .` or `docker compose up --build` (see `docs/REPRODUCIBILITY.md`, `docs/PRODUCTION.md`). Packaging history: `CHANGELOG.md`.
+Hashed locks: `requirements-lock-fast.txt` (universal) and `requirements-lock-all.txt` (manylinux x86_64, CPU torch). Regenerate with `bash scripts/compile_locks.sh`. Docker: `docker build --platform linux/amd64 -t rageval:0.3.0 .` or `docker compose up --build` (see `docs/REPRODUCIBILITY.md`, `docs/PRODUCTION.md`). Packaging history: `CHANGELOG.md`.
 
 First NLI/embedding calls download Hugging Face weights unless they are already cached. There are no paid APIs in the default path. See `docs/QUICKSTART.md`.
 

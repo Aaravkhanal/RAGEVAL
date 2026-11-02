@@ -14,7 +14,7 @@ How to reproduce **smoke** and the **documented v1 baseline tables**. This is no
 | Write-up | `reports/20261028T183042Z_a97ad68f/FINDINGS.md` |
 | Draft paper | `reports/paper.tex` (table matches that run; n=24 is underpowered) |
 
-Current `benchmark_v1` on disk is **1.3.0** (29/40). Companion mock+NLI tables: `reports/phase7/v1_1_matrix/` (1.1.0, `657c8089`) and `reports/phase7/v1_2_matrix/` (1.2.0, `de870a29`). Live NVIDIA NIM companion: `reports/phase7/nvidia_nim_v1/` (`20261030T052638Z_79a8b21d`). Do not copy those scores onto `v1_033`–`v1_040`. The published table remains `a97ad68f`. The independent companion YAML is `configs/experiments/H_independent.yaml` (CLI; not a recorded table).
+Current `benchmark_v1` on disk is **1.4.0** (36/47). Companion mock+NLI tables: `reports/phase7/v1_1_matrix/` (1.1.0, `657c8089`) and `reports/phase7/v1_2_matrix/` (1.2.0, `de870a29`). Live NVIDIA NIM companion: `reports/phase7/nvidia_nim_v1/` (`20261030T052638Z_79a8b21d`). Do not copy those scores onto `v1_033`–`v1_047`. The published table remains `a97ad68f`. The independent companion YAML is `configs/experiments/H_independent.yaml` (CLI; n=30 disjoint gold docs; single-author; not a recorded confirmatory table).
 
 `A_chunk.yaml` now uses `chunk_benchmark_v1` 1.0.0: seven pinned long public documents and 30 evidence-labeled questions. Rebuild its JSON from checked-in text snapshots with `python -m rageval.dataset.chunk_benchmark_v1 --output-dir data`, then run `rageval experiment --config configs/experiments/A_chunk.yaml`. Source hashes and URLs are in its `corpus.json`. The older `A_chunk_overlap32` report used `benchmark_v1` 1.2.0 and remains a historical snapshot.
 
@@ -57,8 +57,8 @@ That script uses `uv pip compile` (`uv` 0.13+). The all-lock sets `--extra-index
 ## Docker
 
 ```bash
-docker build --platform linux/amd64 -t rageval:0.2.1 .
-docker run --rm -p 8000:8000 rageval:0.2.1
+docker build --platform linux/amd64 -t rageval:0.3.0 .
+docker run --rm -p 8000:8000 rageval:0.3.0
 # or
 DOCKER_DEFAULT_PLATFORM=linux/amd64 docker compose up --build
 ```
@@ -67,9 +67,9 @@ DOCKER_DEFAULT_PLATFORM=linux/amd64 docker compose up --build
 
 This job is not in GitHub Actions (torch wheels blow the fast-CI minute budget).
 
-## Software package (0.2.1)
+## Software package (0.3.0)
 
-Git tag `v0.2.1` is the current software release (dashboard job UI on top of `v0.2.0`). It does **not** upload to PyPI. Official tables remain run `20261028T183042Z_a97ad68f`.
+Git tag `v0.3.0` is the current software release (auth/TLS host surface, `benchmark_v1` 1.4.0). It does **not** upload to PyPI (no token in this environment; CI does not publish). Official tables remain run `20261028T183042Z_a97ad68f`.
 
 ```bash
 python -m pip install build twine

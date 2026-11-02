@@ -15,25 +15,24 @@ def test_benchmark_v1_integrity_and_licenses():
         docs, items, require_license=True, require_verbatim_spans=True, require_reviewed_scenarios=True
     )
     assert report["valid"] is True, report["errors"]
-    assert len(docs) == 29
-    assert len(items) == 40
+    assert len(docs) == 36
+    assert len(items) == 47
     assert all(doc.license for doc in docs)
     n_dev = sum(1 for item in items if item.split == "dev")
     n_test = sum(1 for item in items if item.split == "test")
-    assert n_dev == 32
+    assert n_dev == 39
     assert n_test == 8
     ids = [item.id for item in items]
-    assert ids[-8:] == [
-        "v1_033",
-        "v1_034",
-        "v1_035",
-        "v1_036",
-        "v1_037",
-        "v1_038",
-        "v1_039",
-        "v1_040",
+    assert ids[-7:] == [
+        "v1_041",
+        "v1_042",
+        "v1_043",
+        "v1_044",
+        "v1_045",
+        "v1_046",
+        "v1_047",
     ]
-    new_ids = {f"v1_{i:03d}" for i in range(29, 41)}
+    new_ids = {f"v1_{i:03d}" for i in range(29, 48)}
     assert all(item.split == "dev" for item in items if item.id in new_ids)
     frozen_test = {"v1_002", "v1_006", "v1_008", "v1_012", "v1_016", "v1_018", "v1_020", "v1_024"}
     assert {item.id for item in items if item.split == "test"} == frozen_test
@@ -62,7 +61,7 @@ def test_validate_cli_benchmark_v1():
     assert proc.returncode == 0, proc.stderr
     report = json.loads(proc.stdout)
     assert report["valid"] is True
-    assert report["total_benchmark_items"] == 40
+    assert report["total_benchmark_items"] == 47
 
 
 def test_smoke_loader_still_defaults():
@@ -96,7 +95,7 @@ def test_independent_slice_has_disjoint_gold_docs():
     built = select_independent_items(items)
     assert [item.id for item in independent] == [item.id for item in built]
     assert independent
-    assert len(independent) == 23
+    assert len(independent) == 30
     seen = set()
     for item in independent:
         docs = {ev.doc_id for ev in item.gold_evidence_spans}

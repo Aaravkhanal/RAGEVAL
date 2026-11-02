@@ -12,7 +12,7 @@ Named YAML under this directory. `label` is `v1` or `pilot`.
 | `F_ablate.yaml` | ablate | sparse / dense / hybrid+rerank |
 | `G_claim_vs_answer.yaml` | analysis | no pipelines; table from `metrics.json` mixed-support slice |
 | `smoke.yaml` | smoke | BM25 + lexical heuristic on `smoke_v1` (CI; not a publication result) |
-| `H_independent.yaml` | independent | companion slice: one item per unused gold document on `benchmark_v1` 1.3.0 (NLI; not a replacement for `a97ad68f`) |
+| `H_independent.yaml` | independent | companion slice: one item per unused gold document on `benchmark_v1` 1.4.0 (n=30, single-author; not a replacement for `a97ad68f`) |
 
 ```bash
 rageval experiment --config configs/experiments/smoke.yaml

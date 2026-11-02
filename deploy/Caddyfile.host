@@ -1,0 +1,11 @@
+# Local TLS in front of a host-bound RAGeval process (127.0.0.1:8000).
+# Used when Compose service DNS is not available. Caddy local/internal
+# certificates; this is not a purchased public domain.
+{
+	local_certs
+}
+
+{$RAGEVAL_DOMAIN:localhost} {
+	encode gzip
+	reverse_proxy host.docker.internal:8000
+}

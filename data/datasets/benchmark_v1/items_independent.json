@@ -978,5 +978,347 @@
       "reviewer_notes": "Hand-checked NPS Everglades Nature page fetched 2026-10-30.",
       "reviewed": true
     }
+  },
+  {
+    "id": "v1_041",
+    "domain": "parks",
+    "question": "How large is Zion National Park, and what are its highest and lowest elevations?",
+    "gold_answer": "Zion encompasses 232 square miles. The highest point is Horse Ranch Mountain at 8,726 feet and the lowest is Coal Pits Wash at 3,666 feet.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_zion",
+        "span": "Within its 232 square miles are high plateaus",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_nps_zion",
+        "span": "Horse Ranch Mountain (at 8,726 feet) to the lowest point at Coal Pits Wash (at 3,666 feet)",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Zion National Park covers 232 square miles",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_zion"
+        ]
+      },
+      {
+        "claim": "The highest point is Horse Ranch Mountain at 8,726 feet",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_zion"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "numerical_negation",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NPS Zion Nature page fetched 2026-11-02.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_042",
+    "domain": "parks",
+    "question": "About how many acres does Acadia National Park preserve, and how much coastline does it protect?",
+    "gold_answer": "Acadia preserves approximately 50,000 acres and protects nearly 64 miles of coastline.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_acadia",
+        "span": "preserves approximately 50,000 acres along the mid-section of the Maine coast",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_nps_acadia",
+        "span": "nearly 64 miles of coastline on Mount Desert Island",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Acadia preserves approximately 50,000 acres",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_acadia"
+        ]
+      },
+      {
+        "claim": "Acadia protects nearly 64 miles of coastline",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_acadia"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NPS Acadia Nature page fetched 2026-11-02.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_043",
+    "domain": "parks",
+    "question": "Is Great Smoky Mountains the most biodiverse U.S. national park, and how many species have been documented there?",
+    "gold_answer": "It is the most biodiverse park in the National Park system. Over 19,000 species have been documented in the park.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_smoky",
+        "span": "Great Smoky Mountains is the most biodiverse park in the National Park system.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_nps_smoky",
+        "span": "Over 19,000 species have been documented in the park",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Great Smoky Mountains is the most biodiverse park in the National Park system",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_smoky"
+        ]
+      },
+      {
+        "claim": "Over 19,000 species have been documented in the park",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_smoky"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NPS Great Smoky Mountains Nature page fetched 2026-11-02.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_044",
+    "domain": "public_health",
+    "question": "What bacterium causes tetanus, when do symptoms typically start, and what is the usual first sign?",
+    "gold_answer": "Clostridium tetani causes tetanus. Symptoms typically occur between 3 and 21 days (average 8 days). The first sign is most commonly lockjaw.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cdc_tetanus",
+        "span": "bacteria called Clostridium tetani (C. tetani), that are found in the environment",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_cdc_tetanus",
+        "span": "between 3 and 21 days (average 8 days)",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_cdc_tetanus",
+        "span": "spasms of the jaw muscles, or \"lockjaw.\"",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Tetanus is caused by Clostridium tetani",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_tetanus"
+        ]
+      },
+      {
+        "claim": "Symptoms typically occur between 3 and 21 days, averaging 8 days",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_tetanus"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked CDC About Tetanus page fetched 2026-11-02.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_045",
+    "domain": "public_health",
+    "question": "What bacterium causes whooping cough, and which age group is at greatest risk of severe complications?",
+    "gold_answer": "Bordetella pertussis causes whooping cough. Babies younger than 1 year old are at greatest risk of severe complications.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_cdc_pertussis",
+        "span": "bacteria called Bordetella pertussis",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_cdc_pertussis",
+        "span": "Babies younger than 1 year old are at greatest risk for getting whooping cough and having severe complications from it.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Whooping cough is caused by Bordetella pertussis",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_pertussis"
+        ]
+      },
+      {
+        "claim": "Babies younger than 1 year old are at greatest risk of severe complications",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_cdc_pertussis"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked CDC About Whooping Cough page fetched 2026-11-02.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_046",
+    "domain": "parks",
+    "question": "How large is Olympic National Park, and which three ecosystems does it encompass?",
+    "gold_answer": "The park protects 922,651 acres and encompasses glacier-capped mountains, wild Pacific coast, and old-growth temperate rain forest.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_olympic",
+        "span": "The park protects 922,651 acres",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_nps_olympic",
+        "span": "three distinctly different ecosystems: rugged glacier-capped mountains, wild Pacific coast, and magnificent old-growth temperate rain forest.",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Olympic National Park protects 922,651 acres",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_olympic"
+        ]
+      },
+      {
+        "claim": "It encompasses glacier-capped mountains, wild Pacific coast, and old-growth temperate rain forest",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_olympic"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NPS Olympic Nature page fetched 2026-11-02.",
+      "reviewed": true
+    }
+  },
+  {
+    "id": "v1_047",
+    "domain": "space",
+    "question": "When did Parker Solar Probe launch, and when did it first fly through the Sun's corona?",
+    "gold_answer": "Parker Solar Probe launched on August 12, 2018 and became the first spacecraft to fly through the corona in 2021.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nasa_parker",
+        "span": "Launch Aug. 12, 2018.",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_nasa_parker",
+        "span": "the first spacecraft to fly through the corona - the Sun's upper atmosphere - in 2021",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Parker Solar Probe launched on August 12, 2018",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_parker"
+        ]
+      },
+      {
+        "claim": "It became the first spacecraft to fly through the corona in 2021",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nasa_parker"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NASA Science Parker Solar Probe page fetched 2026-11-02.",
+      "reviewed": true
+    }
   }
 ]

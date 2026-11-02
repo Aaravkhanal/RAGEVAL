@@ -1,6 +1,12 @@
 # Production software notes
 
-This is the **software** production surface for RAGeval 0.2.1. Official ablation tables remain blinded-mock run `20261028T183042Z_a97ad68f`. Shipping the API does not make the recorded n=24 table confirmatory.
+This is the **software** production surface for RAGeval 0.3.0. Official ablation tables remain blinded-mock run `20261028T183042Z_a97ad68f`. Shipping the API does not make the recorded n=24 table confirmatory.
+
+## Public-host decision
+
+Do **not** put this process on the public internet. Rate limits are process-local. Compose starts one API replica. The worker is SQLite in `RAGEVAL_RUNS_DIR`. There is no Redis/Celery queue and no multi-tenant isolation. Supported mode is a local or private host: auth required, distinct public/admin tokens, TLS in a reverse proxy, one replica.
+
+A purchased public domain was not set on this machine. The local TLS check used Caddy internal certificates for `localhost` (`deploy/Caddyfile.host`) in front of the launch-agent API on `127.0.0.1:8000`. Probe: `reports/phase8/service_probe_tls.json`.
 
 ## What this process does
 
@@ -43,7 +49,7 @@ Copy `.env.example` to a gitignored `.env` for CLI keys. `rageval serve` does no
 ## Docker
 
 ```bash
-docker build --platform linux/amd64 -t rageval:0.2.1 .
+docker build --platform linux/amd64 -t rageval:0.3.0 .
 docker compose up --build
 # Apple Silicon:
 DOCKER_DEFAULT_PLATFORM=linux/amd64 docker compose up --build

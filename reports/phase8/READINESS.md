@@ -24,6 +24,14 @@ The `service_probe.json` timings are for a local HTTP process using the heuristi
 
 The local authenticated probe passed health/readiness, denied an unauthenticated dataset read, accepted an authenticated read, and returned 20/20 successes at five concurrent live evaluations. Unit tests cover per-token rate limits and expired worker lease recovery. The runs-volume backup/restore round trip checks both run files and SQLite integrity. To reproduce: start a single API instance with `RAGEVAL_REQUIRE_AUTH=1`, non-empty public/admin tokens, and then run `RAGEVAL_PUBLIC_TOKEN=... uv run python scripts/probe_service.py`.
 
-For a real host, set `RAGEVAL_DOMAIN`, `RAGEVAL_CORS_ORIGINS=https://<domain>`, and both tokens, then start the base and TLS compose files. The TLS overlay now passes the domain to trusted-host validation. Keep one API replica while rate limits remain process-local. Before public launch, verify the external HTTPS endpoint and certificate, repeat the probe against that URL, test an unauthorized request and limit exhaustion, restart the worker during a queued job, take an offline backup, restore it into an empty runs volume, and verify results. Docker Compose and the daemon were unavailable on this machine, so container/TLS and remote-host checks are **not passed** here.
+Local TLS **passed** on 2026-11-02: Caddy `caddy:2.8-alpine` with `deploy/Caddyfile.host` (internal certs for `localhost`) reverse-proxied the launch-agent API on `127.0.0.1:8000` via Colima `host.docker.internal`. Probe `https://localhost --insecure` is in `service_probe_tls.json` (health/ready 200, unauthenticated datasets 401, authenticated 200, 20/20 evaluate). A purchased public DNS name was **not** set. Remote-host ACME certificates were **not** checked.
+
+Public-host decision: **do not** publish this process on the open internet. Rate limits are process-local, Compose is one API replica, the worker is SQLite, and there is no Redis/Celery or multi-tenant isolation. See `docs/PRODUCTION.md`.
+
+Live v1 retrieval is saturated (document Recall@5 = 1.0 on all six live-matrix configs). Retriever ranking uses the `benchmark_v2` diagnostic in `retrieval_v2.json` (n_test=22, 18 answerable, single-author, NASA-heavy). That file is not a confirmatory ranking.
+
+Cost remains **unknown USD**. Token counts exist; no billed rate or invoice was available.
+
+Human rater B remains unfilled. LLM kappa 0.9423 is diagnostic. Independent slice n=30 on v1.4.0 meets the count threshold with disjoint gold documents; labels are still single-author.
 
 For backup: stop API and worker, then run `uv run python scripts/backup_runs.py backup <runs-dir> <archive.tar.gz>`. Restore only into an empty directory with `uv run python scripts/backup_runs.py restore <empty-runs-dir> <archive.tar.gz>`, then restart services and check `/ready` and a saved run.

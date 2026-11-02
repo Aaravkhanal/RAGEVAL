@@ -1,0 +1,19 @@
+{
+  "base_url": "https://localhost",
+  "requests": 20,
+  "concurrency": 5,
+  "tls_insecure": true,
+  "health": 200,
+  "ready": 200,
+  "unauthorized_read": 401,
+  "authorized_read": 200,
+  "response_codes": {
+    "200": 20
+  },
+  "latency_ms": {
+    "p50": 13.97,
+    "p95": 80.02,
+    "p99": 80.54
+  },
+  "note": "End-to-end HTTP timing from the probe client. verify=False skips certificate verification for Caddy local TLS."
+}

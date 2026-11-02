@@ -1,12 +1,10 @@
 # Release checklist
 
-The production hardening in `CHANGELOG.md` under **Unreleased** is not part of the v0.2.1 tag. Before the next tag, run the new lint/build/clean-wheel CI gates, verify Docker Compose with a configured admin token and worker, and repeat the model-dependent tests.
-
-Use before tagging. Version on this branch: **0.2.1** (tag `v0.2.1`). This is a **software** release. Official ablation tables remain blinded-mock run `20261028T183042Z_a97ad68f`. Do not claim SOTA or confirmatory RAG rankings.
+Use before tagging. Version on this branch: **0.3.0** (tag `v0.3.0`). This is a **software** release. Official ablation tables remain blinded-mock run `20261028T183042Z_a97ad68f`. Do not claim SOTA or confirmatory RAG rankings.
 
 - [x] `pyproject.toml` version matches `rageval/__init__.py` (and FastAPI `app.version`)
 - [x] `LICENSE` (MIT) and `data/LICENSE.md` present
-- [x] `CHANGELOG.md` (Keep a Changelog) records 0.2.0 → 0.2.1 (dashboard job UI) and the recorded-run banner
+- [x] `CHANGELOG.md` (Keep a Changelog) records 0.2.1 → 0.3.0 and the recorded-run banner
 - [x] Fast GitHub CI installs `requirements-lock-fast.txt` with `--require-hashes` then `pip install --no-deps -e .`
 - [x] Locks last compiled with `bash scripts/compile_locks.sh`; all-lock still `torch==…+cpu` (P3; no extra changes in this tag)
 - [x] `pytest -m "not hf"` (run locally before tag; GitHub `ci.yml` on the tag commit)
@@ -21,13 +19,13 @@ Use before tagging. Version on this branch: **0.2.1** (tag `v0.2.1`). This is a 
 - [x] `POST /experiments` with `config=smoke` returns 202; poll `GET /experiments/{id}` until complete; unknown names 400; heavy without `allow_heavy` 403; second job 409
 - [x] Hugging Face nightly is green; URL in `docs/REPRODUCIBILITY.md` ([run 40891849818](https://github.com/Aaravkhanal/RAGEVAL/actions/runs/40891849818))
 - [x] `python -m build && twine check dist/*` locally (sdist + wheel)
-- [x] Annotated tag `v0.2.1`; Docker image tag `rageval:0.2.1`
+- [x] Annotated tag `v0.3.0`; Docker image tag `rageval:0.3.0`
 - [x] `GET /health` includes version; `GET /ready` is 200 when data dir exists
 - [x] `POST /evaluate/answer` default `method=heuristic` (no model download); `method=nli` still opt-in
 - [x] CORS default is localhost (not `*` + credentials); Docker `HEALTHCHECK` + `docker-compose.yml`
 - [x] Compose worker + `RAGEVAL_ADMIN_TOKEN`; HTTP NLI opt-in; Caddy overlay documented in `docs/PRODUCTION.md`
 - [x] `rageval iaa-label` does not invent labels; human rater B file is still unfilled
-- [ ] `twine upload dist/*` — **maintainer only**, needs a PyPI token. Not run in CI. Do not treat the GitHub tag as a PyPI publish.
+- [ ] `twine upload dist/*` — **skipped**. No PyPI token in this environment. Not run in CI. Do not treat the GitHub tag as a PyPI publish.
 
 Rebuild a local wheel after extras change; regenerate locks first.
 

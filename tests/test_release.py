@@ -17,10 +17,11 @@ SECRET_VALUE = re.compile(
 
 
 def test_version_is_release():
-    assert rageval.__version__ == "0.2.1"
+    assert rageval.__version__ == "0.3.0"
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert re.search(r'(?m)^version = "0.2.1"$', pyproject)
+    assert re.search(r'(?m)^version = "0.3.0"$', pyproject)
     changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    assert "## [0.3.0]" in changelog
     assert "## [0.2.1]" in changelog
     assert "## [0.2.0]" in changelog
     assert "Keep a Changelog" in changelog
@@ -29,7 +30,7 @@ def test_version_is_release():
     assert "POST /experiments" in changelog
     from rageval.server.app import app
 
-    assert app.version == "0.2.1"
+    assert app.version == "0.3.0"
 
 
 def test_license_files_exist():
@@ -55,7 +56,7 @@ def test_hashed_lockfiles():
     assert "HEALTHCHECK" in dockerfile
     assert (ROOT / "docker-compose.yml").is_file()
     compose = (ROOT / "docker-compose.yml").read_text(encoding="utf-8")
-    assert "rageval:0.2.1" in compose
+    assert "rageval:0.3.0" in compose
     dockerignore = (ROOT / ".dockerignore").read_text(encoding="utf-8")
     assert ".env" in dockerignore
     env_example = (ROOT / ".env.example").read_text(encoding="utf-8")

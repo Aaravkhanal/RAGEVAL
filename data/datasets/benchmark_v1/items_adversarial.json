@@ -685,5 +685,53 @@
       "reviewer_notes": "Hand-checked NPS Grand Canyon Nature page fetched 2026-10-30.",
       "reviewed": true
     }
+  },
+  {
+    "id": "v1_041",
+    "domain": "parks",
+    "question": "How large is Zion National Park, and what are its highest and lowest elevations?",
+    "gold_answer": "Zion encompasses 232 square miles. The highest point is Horse Ranch Mountain at 8,726 feet and the lowest is Coal Pits Wash at 3,666 feet.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_nps_zion",
+        "span": "Within its 232 square miles are high plateaus",
+        "chunk_id": null,
+        "passage_id": null
+      },
+      {
+        "doc_id": "doc_nps_zion",
+        "span": "Horse Ranch Mountain (at 8,726 feet) to the lowest point at Coal Pits Wash (at 3,666 feet)",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Zion National Park covers 232 square miles",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_zion"
+        ]
+      },
+      {
+        "claim": "The highest point is Horse Ranch Mountain at 8,726 feet",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_nps_zion"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "numerical_negation",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": true,
+    "metadata": {
+      "reviewer_notes": "Hand-checked NPS Zion Nature page fetched 2026-11-02.",
+      "reviewed": true
+    }
   }
 ]

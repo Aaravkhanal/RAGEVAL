@@ -1,6 +1,6 @@
 {
   "dataset_id": "benchmark_v1",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "synthetic": false,
   "license": "mixed: US-government-work-public-domain-17USC105 and CC-BY-4.0 original fiction",
   "documents": "data/datasets/benchmark_v1/corpus.json",
@@ -8,14 +8,14 @@
   "items_dev": "data/datasets/benchmark_v1/items_dev.json",
   "items_test": "data/datasets/benchmark_v1/items_test.json",
   "items_paired": "data/datasets/benchmark_v1/items_paired.json",
-  "n_documents": 29,
-  "n_items": 40,
-  "n_dev": 32,
+  "n_documents": 36,
+  "n_items": 47,
+  "n_dev": 39,
   "n_test": 8,
-  "n_independent": 23,
+  "n_independent": 30,
   "items_independent": "data/datasets/benchmark_v1/items_independent.json",
-  "split_policy": "Documented 24/8 dev/test split from v1.0.0; test ids stay frozen. v1.2.0\u2013v1.3.0 items are all dev. n_test=8 is underpowered. The independent slice keeps one item per unused gold document and is a companion, not a replacement for a97ad68f. Test items were not used to choose metrics or NLI thresholds.",
+  "split_policy": "Documented 24/8 dev/test split from v1.0.0; test ids stay frozen. v1.2.0\u2013v1.4.0 items are all dev. n_test=8 is underpowered. The independent slice keeps one item per unused gold document and is a companion, not a replacement for a97ad68f. Test items were not used to choose metrics or NLI thresholds. n_independent>=30 is a count threshold only; labels remain single-author.",
   "annotator": "single-author, disclosed",
-  "retrieved_date": "2026-10-30",
-  "notes": "Public-domain excerpts are short US government passages with URL provenance. HarborNet, LumenGrid, Nerexin, CedarRail, Millford, the HarborNet restatement, and the instruction-like document are original fiction (CC-BY-4.0). NASA quotes were ASCII-normalized. This is not the Niu et al. 2024 RAGTruth corpus. v1.3.0 adds eight unique-URL US government documents (CDC measles/handwashing, NPS Grand Canyon/Yosemite/Everglades, NASA Voyager/Hubble/Webb) as v1_033\u2013v1_040. Official tables remain 20261028T183042Z_a97ad68f (v1.0.0 n=24)."
+  "retrieved_date": "2026-11-02",
+  "notes": "Public-domain excerpts are short US government passages with URL provenance. HarborNet, LumenGrid, Nerexin, CedarRail, Millford, the HarborNet restatement, and the instruction-like document are original fiction (CC-BY-4.0). NASA quotes were ASCII-normalized. This is not the Niu et al. 2024 RAGTruth corpus. v1.4.0 adds seven unique-URL US government documents (NPS Zion/Acadia/Smoky/Olympic, CDC tetanus/pertussis, NASA Parker Solar Probe) as v1_041\u2013v1_047. Official tables remain 20261028T183042Z_a97ad68f (v1.0.0 n=24)."
 }

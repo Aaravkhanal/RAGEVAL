@@ -3,10 +3,10 @@
 | Field | Value |
 | --- | --- |
 | Dataset id | `benchmark_v1` |
-| Version | `1.3.0` |
-| Size | 29 documents, 40 questions (32 dev / 8 test) |
+| Version | `1.4.0` |
+| Size | 36 documents, 47 questions (39 dev / 8 test) |
 | License mix | U.S. government works (17 U.S.C. § 105, public domain) and original fiction (CC-BY-4.0) |
-| Retrieved | 2026-10-28 (v1.0–v1.1 docs); 2026-10-29 (USGS / NASA ISS); 2026-10-30 (v1.3 CDC/NPS/NASA) |
+| Retrieved | 2026-10-28 (v1.0–v1.1 docs); 2026-10-29 (USGS / NASA ISS); 2026-10-30 (v1.3 CDC/NPS/NASA); 2026-11-02 (v1.4 NPS/CDC/NASA) |
 | Annotator | Single author, disclosed |
 | Split | Dev `v1_001`–style majority; test is 8 held-out ids. Test was not used to choose metrics or NLI thresholds. The first ablation still reports **all 24** because `n_test=8` is underpowered. |
 | Gold | Human-authored questions, answers, verbatim evidence spans, and 5-way claim labels |
@@ -30,6 +30,13 @@ Short passages from:
 - NASA Science Webb — https://science.nasa.gov/mission/webb/ (fetched 2026-10-30)
 - CDC About Handwashing — https://www.cdc.gov/clean-hands/about/index.html (page date 2024-02-16)
 - NPS Everglades Nature — https://www.nps.gov/ever/learn/nature/index.htm (last updated 2025-04-29)
+- NPS Zion Nature — https://www.nps.gov/zion/learn/nature/index.htm (last updated 2026-03-19)
+- NPS Acadia Nature — https://www.nps.gov/acad/learn/nature/index.htm (last updated 2026-07-29)
+- NPS Great Smoky Mountains Nature — https://www.nps.gov/grsm/learn/nature/index.htm (last updated 2022-12-22)
+- CDC About Tetanus — https://www.cdc.gov/tetanus/about/index.html (page date 2026-09-08)
+- CDC About Whooping Cough — https://www.cdc.gov/pertussis/about/index.html (page date 2026-06-24)
+- NPS Olympic Nature — https://www.nps.gov/olym/learn/nature/index.htm (last updated 2022-10-17)
+- NASA Science Parker Solar Probe — https://science.nasa.gov/mission/parker-solar-probe/ (fetched 2026-11-02)
 
 NASA curly quotes were stored as ASCII. Wildlife counts are the NPS Nature-page species list (`67 mammals, 285 birds, …`).
 
@@ -48,6 +55,6 @@ HarborNet, LumenGrid, Nerexin, CedarRail, Millford Public Library, the HarborNet
 - 1 empty-context protocol (`v1_026`; retrieval is dropped before generation)
 - 1 instruction-like document (`v1_027`; injection text tells the assistant to answer 99.0% churn)
 
-Test remains 8 held-out ids from v1.0.0. New v1.1.0, v1.2.0, and v1.3.0 items are **dev**. The **published** ablation in `reports/` is v1.0.0 n=24 (`20261028T183042Z_a97ad68f`). Companion mock+NLI scores: 1.1.0 `20261029T165024Z_657c8089` (`reports/phase7/v1_1_matrix/`) and 1.2.0 `20261029T173408Z_de870a29` (`reports/phase7/v1_2_matrix/`, includes `v1_029`–`v1_032`). v1.3.0 has no recorded NLI companion yet. The `independent` split keeps one item per unused gold document (`items_independent.json`, n=23, `H_independent.yaml`). n=23 is still under confirmatory n≥30. n=40 still shares documents on the full set.
+Test remains 8 held-out ids from v1.0.0. New v1.1.0–v1.4.0 items are **dev**. The **published** ablation in `reports/` is v1.0.0 n=24 (`20261028T183042Z_a97ad68f`). Companion mock+NLI scores: 1.1.0 `20261029T165024Z_657c8089` (`reports/phase7/v1_1_matrix/`) and 1.2.0 `20261029T173408Z_de870a29` (`reports/phase7/v1_2_matrix/`, includes `v1_029`–`v1_032`). v1.3.0/1.4.0 have no recorded NLI companion yet. The `independent` split keeps one item per unused gold document (`items_independent.json`, n=30, `H_independent.yaml`). n=30 meets the count threshold with disjoint gold documents; labels remain single-author, so this is not a confirmatory ranking. The full 47-item set still shares documents.
 
-Use `smoke_v1` for CI. Use `benchmark_v1` for the licensed pilot. Do not treat n=40 as a confirmatory scientific result. HTTP jobs cap `max_items` at 32; the CLI can run all 40.
+Use `smoke_v1` for CI. Use `benchmark_v1` for the licensed pilot. Do not treat n=47 as a confirmatory scientific result. HTTP jobs cap `max_items` at 32; the CLI can run all 47.

@@ -9,12 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-02
+
+Software release. Official ablation tables remain blinded-mock run `20261028T183042Z_a97ad68f`. This tag is not a confirmatory RAG ranking and is not a PyPI publish.
+
 ### Added
 
-- Production-readiness follow-up: dashboard text escaping, admin-token protection and job rate limiting, bounded evaluation bodies and fields, SQLite-backed experiment queue with a separate worker and lease recovery, stricter readiness, wheel-bundled benchmark assets, split validation, and CI lint/build/clean-wheel checks. These changes are unreleased and do not change the recorded research results.
-- Caddy TLS compose overlay (`docker-compose.tls.yml`, `deploy/Caddyfile`). The app still does not terminate HTTPS.
+- Production-readiness follow-up: dashboard text escaping, admin-token protection and job rate limiting, bounded evaluation bodies and fields, SQLite-backed experiment queue with a separate worker and lease recovery, stricter readiness, wheel-bundled benchmark assets, split validation, and CI lint/build/clean-wheel checks. These changes do not change the recorded research results.
+- Caddy TLS compose overlay (`docker-compose.tls.yml`, `deploy/Caddyfile`) plus a host-process overlay (`deploy/Caddyfile.host`) for Colima/Docker when Compose service DNS is missing. The app still does not terminate HTTPS.
+- Local authenticated TLS probe against `https://localhost` with Caddy internal certs (`reports/phase8/service_probe_tls.json`). A purchased public domain was not set.
+- Host token helper `scripts/generate_host_tokens.py` writes gitignored `.env` with distinct public/admin tokens and never prints values.
+- `benchmark_v1` **1.4.0**: 36 documents, 47 items (39 dev / 8 frozen test). New public-domain docs/items `v1_041`–`v1_047` (NPS Zion/Acadia/Smoky/Olympic, CDC tetanus/pertussis, NASA Parker Solar Probe). Independent slice n=30 (`items_independent.json`). Count threshold only; labels remain single-author. HTTP `max_items` stays 32. Does not replace `a97ad68f`.
 - `rageval iaa-label --set id=label` writes a human rater-B file from the blank template. It does not invent labels. Confirmatory IAA still needs an independent human.
-- `benchmark_v1` **1.3.0**: 29 documents, 40 items (32 dev / 8 frozen test). New public-domain docs/items `v1_033`–`v1_040` (CDC measles/handwashing, NPS Grand Canyon/Yosemite/Everglades, NASA Voyager/Hubble/Webb). Companion split `independent` (`items_independent.json`, experiment `H_independent.yaml`). HTTP `max_items` stays 32; CLI can run the full set. Does not replace `a97ad68f`.
+- `benchmark_v1` **1.3.0**: 29 documents, 40 items (32 dev / 8 frozen test). New public-domain docs/items `v1_033`–`v1_040` (CDC measles/handwashing, NPS Grand Canyon/Yosemite/Everglades, NASA Voyager/Hubble/Webb). Companion split `independent` (`items_independent.json`, experiment `H_independent.yaml`). HTTP `max_items` stays 32; CLI can run the full set. Does not replace `a97ad68f`. Superseded on disk by 1.4.0.
 - Production HTTP hardening: `GET /ready`, version+busy on `GET /health`, `POST /score`, live `method=heuristic|nli` (default heuristic), CORS from `RAGEVAL_CORS_ORIGINS`, trusted hosts, request-id, security headers, per-IP rate limit on evaluate/score. Docker `HEALTHCHECK`, `docker-compose.yml`, `.dockerignore`, `.env.example`, `docs/PRODUCTION.md`. Dashboard live audit no longer loads Google Fonts.
 - NVIDIA NIM opt-in generator (`configs/opt_in/nvidia_nim.yaml`, `smoke_llm_nvidia.yaml`, `benchmark_llm_nvidia.yaml`, `benchmark_llm_nvidia_retrieve.yaml`). Keys from `NVIDIA_API_KEY` in the environment or a gitignored `.env` (`rageval.core.envfile`). Model used: `nvidia/nemotron-3.5-bolt-e4b`. Live smoke `20261030T052448Z_6df3afb9` on `smoke_v1` (n=8, heuristic). Sparse companion `20261030T052638Z_79a8b21d` (faith 0.7188, R@5 0.8438, MRR 0.7812, abstention 1.0). Dense/hybrid companion `20261030T055224Z_388c5503` (dense faith 0.7396 / MRR 0.7344; hybrid faith 0.6458 / MRR 0.75; R@5 0.8438 and abstention 1.0 on both). Does not replace `a97ad68f`.
 - Disclosed LLM rater B (`data/gold/iaa/annotator_b_verifier_eval_v1.json`, annotator_id `rater_b_llm_grok`). Diagnostic kappa 0.9423 on n=24. Not confirmatory human IAA.
@@ -30,6 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Public-host decision: do not publish this process on the open internet. Rate limits are process-local, Compose runs one API replica, the worker is SQLite, and there is no Redis/Celery or multi-tenant isolation. Supported mode is a local or private host with TLS in front.
+- Package version `0.2.1` → `0.3.0`. Git tag `v0.3.0`. PyPI upload is skipped (no token; CI does not publish).
 - `rageval findings` describes the generator/verifier from recorded `pipelines` identity instead of always saying "blinded mock". NVIDIA companion findings stay live-LLM text.
 - `rageval score` accepts run `predictions.jsonl` rows (`generated_answer` + `retrieved_chunks`).
 - OpenAI-like HTTP generator retries 429/502/503/504 (and connect errors) up to `max_retries` (default 2).
@@ -75,6 +84,7 @@ Installable software release after `0.2.0rc1`: HTTP jobs, opt-in LLM backends, h
 
 Phase 10 release candidate (tag `v0.2.0-rc1`). Split extras so fast tests run without Hugging Face; MIT `LICENSE` and dataset license notes; smoke experiment YAML; quickstart and reproducibility docs; CI that skips `-m hf`.
 
+[0.3.0]: https://github.com/Aaravkhanal/RAGEVAL/releases/tag/v0.3.0
 [0.2.1]: https://github.com/Aaravkhanal/RAGEVAL/releases/tag/v0.2.1
 [0.2.0]: https://github.com/Aaravkhanal/RAGEVAL/releases/tag/v0.2.0
 [0.2.0rc1]: https://github.com/Aaravkhanal/RAGEVAL/releases/tag/v0.2.0-rc1

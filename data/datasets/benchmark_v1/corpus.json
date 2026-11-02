@@ -404,5 +404,103 @@
       "text_normalization": "ascii-quotes",
       "kind": "us_gov_excerpt"
     }
+  },
+  {
+    "id": "doc_nps_zion",
+    "text": "Located in Washington, Iron, and Kane Counties in southwestern Utah, Zion National Park encompasses some of the most scenic canyon country in the United States. Within its 232 square miles are high plateaus, the Virgin River and its tributaries, and a maze of narrow, deep, sandstone canyons. With an elevation change of about 5,000 feet - from the highest point at Horse Ranch Mountain (at 8,726 feet) to the lowest point at Coal Pits Wash (at 3,666 feet) - Zion's diverse topography leads to a diversity of habitats and species.",
+    "title": "Zion area and elevation range",
+    "domain": "parks",
+    "license": "US-government-work-public-domain-17USC105",
+    "source_url": "https://www.nps.gov/zion/learn/nature/index.htm",
+    "provenance": "Excerpt from NPS Zion Nature & Science (last updated March 19, 2026). U.S. government work.",
+    "retrieved_date": "2026-11-02",
+    "metadata": {
+      "text_normalization": "ascii-quotes",
+      "kind": "us_gov_excerpt"
+    }
+  },
+  {
+    "id": "doc_nps_acadia",
+    "text": "Acadia National Park preserves approximately 50,000 acres along the mid-section of the Maine coast, containing the tallest mountains on the eastern seaboard, an iconic rocky Maine coastline, and subalpine rocky summits. Acadia protects nearly 64 miles of coastline on Mount Desert Island, Schoodic Peninsula, Isle au Haut, and other islands.",
+    "title": "Acadia acreage and coastline",
+    "domain": "parks",
+    "license": "US-government-work-public-domain-17USC105",
+    "source_url": "https://www.nps.gov/acad/learn/nature/index.htm",
+    "provenance": "Excerpt from NPS Acadia Nature (last updated July 29, 2026). U.S. government work.",
+    "retrieved_date": "2026-11-02",
+    "metadata": {
+      "text_normalization": "ascii-quotes",
+      "kind": "us_gov_excerpt"
+    }
+  },
+  {
+    "id": "doc_nps_smoky",
+    "text": "Great Smoky Mountains is the most biodiverse park in the National Park system. Encompassing over 800 square miles in the Southern Appalachian Mountains, no other area of equal size in a temperate climate can match the park's amazing diversity. Over 19,000 species have been documented in the park and scientists believe an additional 80,000-100,000 species may live here.",
+    "title": "Great Smoky Mountains biodiversity",
+    "domain": "parks",
+    "license": "US-government-work-public-domain-17USC105",
+    "source_url": "https://www.nps.gov/grsm/learn/nature/index.htm",
+    "provenance": "Excerpt from NPS Great Smoky Mountains Nature & Science (last updated December 22, 2022). U.S. government work.",
+    "retrieved_date": "2026-11-02",
+    "metadata": {
+      "text_normalization": "ascii-quotes",
+      "kind": "us_gov_excerpt"
+    }
+  },
+  {
+    "id": "doc_cdc_tetanus",
+    "text": "Tetanus is an infection caused by bacteria called Clostridium tetani (C. tetani), that are found in the environment. Symptoms typically occur between 3 and 21 days (average 8 days) after someone is exposed to C. tetani. The first sign is most commonly spasms of the jaw muscles, or \"lockjaw.\" Tetanus can lead to death (1 in 10 cases in the United States are fatal).",
+    "title": "Tetanus cause, incubation, and fatality",
+    "domain": "public_health",
+    "license": "US-government-work-public-domain-17USC105",
+    "source_url": "https://www.cdc.gov/tetanus/about/index.html",
+    "provenance": "Excerpt from CDC About Tetanus (page date September 8, 2026). U.S. government work.",
+    "retrieved_date": "2026-11-02",
+    "metadata": {
+      "text_normalization": "ascii-quotes",
+      "kind": "us_gov_excerpt"
+    }
+  },
+  {
+    "id": "doc_cdc_pertussis",
+    "text": "Whooping cough is a respiratory illness caused by a type of bacteria called Bordetella pertussis. The disease is only found in humans. Babies younger than 1 year old are at greatest risk for getting whooping cough and having severe complications from it.",
+    "title": "Whooping cough cause and infant risk",
+    "domain": "public_health",
+    "license": "US-government-work-public-domain-17USC105",
+    "source_url": "https://www.cdc.gov/pertussis/about/index.html",
+    "provenance": "Excerpt from CDC About Whooping Cough (page date June 24, 2026). U.S. government work.",
+    "retrieved_date": "2026-11-02",
+    "metadata": {
+      "text_normalization": "ascii-quotes",
+      "kind": "us_gov_excerpt"
+    }
+  },
+  {
+    "id": "doc_nps_olympic",
+    "text": "Diversity is the hallmark of Olympic National Park. The park protects 922,651 acres, encompassing three distinctly different ecosystems: rugged glacier-capped mountains, wild Pacific coast, and magnificent old-growth temperate rain forest.",
+    "title": "Olympic National Park acreage and ecosystems",
+    "domain": "parks",
+    "license": "US-government-work-public-domain-17USC105",
+    "source_url": "https://www.nps.gov/olym/learn/nature/index.htm",
+    "provenance": "Excerpt from NPS Olympic Nature (last updated October 17, 2022). U.S. government work.",
+    "retrieved_date": "2026-11-02",
+    "metadata": {
+      "text_normalization": "ascii-quotes",
+      "kind": "us_gov_excerpt"
+    }
+  },
+  {
+    "id": "doc_nasa_parker",
+    "text": "On a mission to \"touch the Sun,\" NASA's Parker Solar Probe became the first spacecraft to fly through the corona - the Sun's upper atmosphere - in 2021. Launch Aug. 12, 2018. At its closest approach, the spacecraft will come within about 3.9 million miles (6.2 million kilometers) of the Sun.",
+    "title": "Parker Solar Probe corona flythrough and launch",
+    "domain": "space",
+    "license": "US-government-work-public-domain-17USC105",
+    "source_url": "https://science.nasa.gov/mission/parker-solar-probe/",
+    "provenance": "Excerpt from NASA Science Parker Solar Probe page (fetched 2026-11-02). U.S. government work.",
+    "retrieved_date": "2026-11-02",
+    "metadata": {
+      "text_normalization": "ascii-quotes",
+      "kind": "us_gov_excerpt"
+    }
   }
 ]

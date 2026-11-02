@@ -20,10 +20,11 @@ from rageval.core.schemas import (
 )
 
 DATASET_ID = "benchmark_v1"
-DATASET_VERSION = "1.3.0"
+DATASET_VERSION = "1.4.0"
 RETRIEVED_DATE = "2026-10-28"
 RETRIEVED_DATE_V12 = "2026-10-29"
 RETRIEVED_DATE_V13 = "2026-10-30"
+RETRIEVED_DATE_V14 = "2026-11-02"
 CC_BY = "CC-BY-4.0"
 US_GOV_PD = "US-government-work-public-domain-17USC105"
 
@@ -223,6 +224,55 @@ CDC_HANDWASHING = (
 NPS_EVERGLADES = (
     "The Everglades formed 5,000 years ago atop a bedrock of porous limestone. Water is the lifeblood of "
     "the Everglades. Without it, this ecosystem would cease to exist."
+)
+
+# v1.4.0 public-domain excerpts fetched 2026-11-02. One document per source URL.
+NPS_ZION = (
+    "Located in Washington, Iron, and Kane Counties in southwestern Utah, Zion National Park encompasses "
+    "some of the most scenic canyon country in the United States. Within its 232 square miles are high "
+    "plateaus, the Virgin River and its tributaries, and a maze of narrow, deep, sandstone canyons. With "
+    "an elevation change of about 5,000 feet - from the highest point at Horse Ranch Mountain (at 8,726 "
+    "feet) to the lowest point at Coal Pits Wash (at 3,666 feet) - Zion's diverse topography leads to a "
+    "diversity of habitats and species."
+)
+
+NPS_ACADIA = (
+    "Acadia National Park preserves approximately 50,000 acres along the mid-section of the Maine coast, "
+    "containing the tallest mountains on the eastern seaboard, an iconic rocky Maine coastline, and "
+    "subalpine rocky summits. Acadia protects nearly 64 miles of coastline on Mount Desert Island, "
+    "Schoodic Peninsula, Isle au Haut, and other islands."
+)
+
+NPS_SMOKY = (
+    "Great Smoky Mountains is the most biodiverse park in the National Park system. Encompassing over 800 "
+    "square miles in the Southern Appalachian Mountains, no other area of equal size in a temperate "
+    "climate can match the park's amazing diversity. Over 19,000 species have been documented in the park "
+    "and scientists believe an additional 80,000-100,000 species may live here."
+)
+
+CDC_TETANUS = (
+    "Tetanus is an infection caused by bacteria called Clostridium tetani (C. tetani), that are found in "
+    "the environment. Symptoms typically occur between 3 and 21 days (average 8 days) after someone is "
+    "exposed to C. tetani. The first sign is most commonly spasms of the jaw muscles, or \"lockjaw.\" "
+    "Tetanus can lead to death (1 in 10 cases in the United States are fatal)."
+)
+
+CDC_PERTUSSIS = (
+    "Whooping cough is a respiratory illness caused by a type of bacteria called Bordetella pertussis. "
+    "The disease is only found in humans. Babies younger than 1 year old are at greatest risk for getting "
+    "whooping cough and having severe complications from it."
+)
+
+NPS_OLYMPIC = (
+    "Diversity is the hallmark of Olympic National Park. The park protects 922,651 acres, encompassing "
+    "three distinctly different ecosystems: rugged glacier-capped mountains, wild Pacific coast, and "
+    "magnificent old-growth temperate rain forest."
+)
+
+NASA_PARKER = (
+    "On a mission to \"touch the Sun,\" NASA's Parker Solar Probe became the first spacecraft to fly "
+    "through the corona - the Sun's upper atmosphere - in 2021. Launch Aug. 12, 2018. At its closest "
+    "approach, the spacecraft will come within about 3.9 million miles (6.2 million kilometers) of the Sun."
 )
 
 
@@ -447,6 +497,69 @@ def build_corpus() -> List[Document]:
             "https://www.nps.gov/ever/learn/nature/index.htm",
             "Excerpt from NPS Everglades Nature page (last updated April 29, 2025). U.S. government work.",
             retrieved_date=RETRIEVED_DATE_V13,
+        ),
+        _pd(
+            "doc_nps_zion",
+            "Zion area and elevation range",
+            "parks",
+            NPS_ZION,
+            "https://www.nps.gov/zion/learn/nature/index.htm",
+            "Excerpt from NPS Zion Nature & Science (last updated March 19, 2026). U.S. government work.",
+            retrieved_date=RETRIEVED_DATE_V14,
+        ),
+        _pd(
+            "doc_nps_acadia",
+            "Acadia acreage and coastline",
+            "parks",
+            NPS_ACADIA,
+            "https://www.nps.gov/acad/learn/nature/index.htm",
+            "Excerpt from NPS Acadia Nature (last updated July 29, 2026). U.S. government work.",
+            retrieved_date=RETRIEVED_DATE_V14,
+        ),
+        _pd(
+            "doc_nps_smoky",
+            "Great Smoky Mountains biodiversity",
+            "parks",
+            NPS_SMOKY,
+            "https://www.nps.gov/grsm/learn/nature/index.htm",
+            "Excerpt from NPS Great Smoky Mountains Nature & Science (last updated December 22, 2022). U.S. government work.",
+            retrieved_date=RETRIEVED_DATE_V14,
+        ),
+        _pd(
+            "doc_cdc_tetanus",
+            "Tetanus cause, incubation, and fatality",
+            "public_health",
+            CDC_TETANUS,
+            "https://www.cdc.gov/tetanus/about/index.html",
+            "Excerpt from CDC About Tetanus (page date September 8, 2026). U.S. government work.",
+            retrieved_date=RETRIEVED_DATE_V14,
+        ),
+        _pd(
+            "doc_cdc_pertussis",
+            "Whooping cough cause and infant risk",
+            "public_health",
+            CDC_PERTUSSIS,
+            "https://www.cdc.gov/pertussis/about/index.html",
+            "Excerpt from CDC About Whooping Cough (page date June 24, 2026). U.S. government work.",
+            retrieved_date=RETRIEVED_DATE_V14,
+        ),
+        _pd(
+            "doc_nps_olympic",
+            "Olympic National Park acreage and ecosystems",
+            "parks",
+            NPS_OLYMPIC,
+            "https://www.nps.gov/olym/learn/nature/index.htm",
+            "Excerpt from NPS Olympic Nature (last updated October 17, 2022). U.S. government work.",
+            retrieved_date=RETRIEVED_DATE_V14,
+        ),
+        _pd(
+            "doc_nasa_parker",
+            "Parker Solar Probe corona flythrough and launch",
+            "space",
+            NASA_PARKER,
+            "https://science.nasa.gov/mission/parker-solar-probe/",
+            "Excerpt from NASA Science Parker Solar Probe page (fetched 2026-11-02). U.S. government work.",
+            retrieved_date=RETRIEVED_DATE_V14,
         ),
     ]
 
@@ -1420,6 +1533,198 @@ def build_items() -> List[BenchmarkItem]:
             reviewed=True,
             metadata={"reviewer_notes": "Hand-checked NPS Everglades Nature page fetched 2026-10-30."},
         ),
+        _item(
+            "v1_041",
+            "parks",
+            "How large is Zion National Park, and what are its highest and lowest elevations?",
+            "Zion encompasses 232 square miles. The highest point is Horse Ranch Mountain at 8,726 feet and the lowest is Coal Pits Wash at 3,666 feet.",
+            [
+                _ev("doc_nps_zion", "Within its 232 square miles are high plateaus"),
+                _ev(
+                    "doc_nps_zion",
+                    "Horse Ranch Mountain (at 8,726 feet) to the lowest point at Coal Pits Wash (at 3,666 feet)",
+                ),
+            ],
+            [
+                _claim(
+                    "Zion National Park covers 232 square miles",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_nps_zion"],
+                ),
+                _claim(
+                    "The highest point is Horse Ranch Mountain at 8,726 feet",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_nps_zion"],
+                ),
+            ],
+            scenario_type="numerical_negation",
+            split=dev,
+            reviewed=True,
+            metadata={"reviewer_notes": "Hand-checked NPS Zion Nature page fetched 2026-11-02."},
+        ),
+        _item(
+            "v1_042",
+            "parks",
+            "About how many acres does Acadia National Park preserve, and how much coastline does it protect?",
+            "Acadia preserves approximately 50,000 acres and protects nearly 64 miles of coastline.",
+            [
+                _ev("doc_nps_acadia", "preserves approximately 50,000 acres along the mid-section of the Maine coast"),
+                _ev("doc_nps_acadia", "nearly 64 miles of coastline on Mount Desert Island"),
+            ],
+            [
+                _claim(
+                    "Acadia preserves approximately 50,000 acres",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_nps_acadia"],
+                ),
+                _claim(
+                    "Acadia protects nearly 64 miles of coastline",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_nps_acadia"],
+                ),
+            ],
+            split=dev,
+            reviewed=True,
+            metadata={"reviewer_notes": "Hand-checked NPS Acadia Nature page fetched 2026-11-02."},
+        ),
+        _item(
+            "v1_043",
+            "parks",
+            "Is Great Smoky Mountains the most biodiverse U.S. national park, and how many species have been documented there?",
+            "It is the most biodiverse park in the National Park system. Over 19,000 species have been documented in the park.",
+            [
+                _ev(
+                    "doc_nps_smoky",
+                    "Great Smoky Mountains is the most biodiverse park in the National Park system.",
+                ),
+                _ev("doc_nps_smoky", "Over 19,000 species have been documented in the park"),
+            ],
+            [
+                _claim(
+                    "Great Smoky Mountains is the most biodiverse park in the National Park system",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_nps_smoky"],
+                ),
+                _claim(
+                    "Over 19,000 species have been documented in the park",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_nps_smoky"],
+                ),
+            ],
+            split=dev,
+            reviewed=True,
+            metadata={"reviewer_notes": "Hand-checked NPS Great Smoky Mountains Nature page fetched 2026-11-02."},
+        ),
+        _item(
+            "v1_044",
+            "public_health",
+            "What bacterium causes tetanus, when do symptoms typically start, and what is the usual first sign?",
+            "Clostridium tetani causes tetanus. Symptoms typically occur between 3 and 21 days (average 8 days). The first sign is most commonly lockjaw.",
+            [
+                _ev("doc_cdc_tetanus", "bacteria called Clostridium tetani (C. tetani), that are found in the environment"),
+                _ev("doc_cdc_tetanus", "between 3 and 21 days (average 8 days)"),
+                _ev("doc_cdc_tetanus", "spasms of the jaw muscles, or \"lockjaw.\""),
+            ],
+            [
+                _claim(
+                    "Tetanus is caused by Clostridium tetani",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_cdc_tetanus"],
+                ),
+                _claim(
+                    "Symptoms typically occur between 3 and 21 days, averaging 8 days",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_cdc_tetanus"],
+                ),
+            ],
+            split=dev,
+            reviewed=True,
+            metadata={"reviewer_notes": "Hand-checked CDC About Tetanus page fetched 2026-11-02."},
+        ),
+        _item(
+            "v1_045",
+            "public_health",
+            "What bacterium causes whooping cough, and which age group is at greatest risk of severe complications?",
+            "Bordetella pertussis causes whooping cough. Babies younger than 1 year old are at greatest risk of severe complications.",
+            [
+                _ev("doc_cdc_pertussis", "bacteria called Bordetella pertussis"),
+                _ev(
+                    "doc_cdc_pertussis",
+                    "Babies younger than 1 year old are at greatest risk for getting whooping cough and having severe complications from it.",
+                ),
+            ],
+            [
+                _claim(
+                    "Whooping cough is caused by Bordetella pertussis",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_cdc_pertussis"],
+                ),
+                _claim(
+                    "Babies younger than 1 year old are at greatest risk of severe complications",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_cdc_pertussis"],
+                ),
+            ],
+            split=dev,
+            reviewed=True,
+            metadata={"reviewer_notes": "Hand-checked CDC About Whooping Cough page fetched 2026-11-02."},
+        ),
+        _item(
+            "v1_046",
+            "parks",
+            "How large is Olympic National Park, and which three ecosystems does it encompass?",
+            "The park protects 922,651 acres and encompasses glacier-capped mountains, wild Pacific coast, and old-growth temperate rain forest.",
+            [
+                _ev("doc_nps_olympic", "The park protects 922,651 acres"),
+                _ev(
+                    "doc_nps_olympic",
+                    "three distinctly different ecosystems: rugged glacier-capped mountains, wild Pacific coast, and magnificent old-growth temperate rain forest.",
+                ),
+            ],
+            [
+                _claim(
+                    "Olympic National Park protects 922,651 acres",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_nps_olympic"],
+                ),
+                _claim(
+                    "It encompasses glacier-capped mountains, wild Pacific coast, and old-growth temperate rain forest",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_nps_olympic"],
+                ),
+            ],
+            split=dev,
+            reviewed=True,
+            metadata={"reviewer_notes": "Hand-checked NPS Olympic Nature page fetched 2026-11-02."},
+        ),
+        _item(
+            "v1_047",
+            "space",
+            "When did Parker Solar Probe launch, and when did it first fly through the Sun's corona?",
+            "Parker Solar Probe launched on August 12, 2018 and became the first spacecraft to fly through the corona in 2021.",
+            [
+                _ev("doc_nasa_parker", "Launch Aug. 12, 2018."),
+                _ev(
+                    "doc_nasa_parker",
+                    "the first spacecraft to fly through the corona - the Sun's upper atmosphere - in 2021",
+                ),
+            ],
+            [
+                _claim(
+                    "Parker Solar Probe launched on August 12, 2018",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_nasa_parker"],
+                ),
+                _claim(
+                    "It became the first spacecraft to fly through the corona in 2021",
+                    VerificationLabel.SUPPORTED,
+                    ["doc_nasa_parker"],
+                ),
+            ],
+            split=dev,
+            reviewed=True,
+            metadata={"reviewer_notes": "Hand-checked NASA Science Parker Solar Probe page fetched 2026-11-02."},
+        ),
     ]
 
 
@@ -1521,19 +1826,20 @@ def write_dataset(data_dir: str = "data") -> str:
         "items_independent": f"data/datasets/{DATASET_ID}/items_independent.json",
         "split_policy": (
             "Documented 24/8 dev/test split from v1.0.0; test ids stay frozen. "
-            "v1.2.0–v1.3.0 items are all dev. n_test=8 is underpowered. "
+            "v1.2.0–v1.4.0 items are all dev. n_test=8 is underpowered. "
             "The independent slice keeps one item per unused gold document and is a companion, "
-            "not a replacement for a97ad68f. Test items were not used to choose metrics or NLI thresholds."
+            "not a replacement for a97ad68f. Test items were not used to choose metrics or NLI thresholds. "
+            "n_independent>=30 is a count threshold only; labels remain single-author."
         ),
         "annotator": "single-author, disclosed",
-        "retrieved_date": RETRIEVED_DATE_V13,
+        "retrieved_date": RETRIEVED_DATE_V14,
         "notes": (
             "Public-domain excerpts are short US government passages with URL provenance. "
             "HarborNet, LumenGrid, Nerexin, CedarRail, Millford, the HarborNet restatement, and "
             "the instruction-like document are original fiction (CC-BY-4.0). "
             "NASA quotes were ASCII-normalized. This is not the Niu et al. 2024 RAGTruth corpus. "
-            "v1.3.0 adds eight unique-URL US government documents (CDC measles/handwashing, NPS "
-            "Grand Canyon/Yosemite/Everglades, NASA Voyager/Hubble/Webb) as v1_033–v1_040. "
+            "v1.4.0 adds seven unique-URL US government documents (NPS Zion/Acadia/Smoky/Olympic, "
+            "CDC tetanus/pertussis, NASA Parker Solar Probe) as v1_041–v1_047. "
             "Official tables remain 20261028T183042Z_a97ad68f (v1.0.0 n=24)."
         ),
     }
