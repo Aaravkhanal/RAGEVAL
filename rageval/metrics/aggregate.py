@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import math
 from typing import Any, Dict, Iterable, List, Optional
 
 from rageval.core.schemas import BenchmarkRunSummary, QueryEvaluationResult, TestType
@@ -16,6 +17,16 @@ def _mean(values: List[float]) -> Optional[float]:
     if not values:
         return None
     return round(sum(values) / len(values), 4)
+
+
+def _percentile(values: List[float], percentile: float) -> Optional[float]:
+    if not values:
+        return None
+    ordered = sorted(values)
+    rank = (len(ordered) - 1) * percentile
+    low = math.floor(rank)
+    high = math.ceil(rank)
+    return round(ordered[low] + (ordered[high] - ordered[low]) * (rank - low), 4)
 
 
 def summarize_results(
@@ -61,7 +72,17 @@ def summarize_results(
         "answer_f1": {"mean": _mean(f1s)},
         "abstention_accuracy": abstention_accuracy(abstained, unans) if rows else 1.0,
         "mean_latency_ms": _mean([r.total_latency_ms for r in rows]),
+        "latency_ms": {
+            stage: {
+                "p50": _percentile([getattr(r, stage) for r in rows], 0.5),
+                "p95": _percentile([getattr(r, stage) for r in rows], 0.95),
+                "p99": _percentile([getattr(r, stage) for r in rows], 0.99),
+            }
+            for stage in ("retrieval_latency_ms", "generation_latency_ms", "verification_latency_ms", "total_latency_ms")
+        },
         "total_estimated_cost_usd": None if not costs else round(sum(costs), 6),
+        "cost_status": "estimated" if costs else "unpriced_token_usage_only",
+        "cost_pricing_sources": sorted({r.cost_pricing_source for r in rows if r.cost_pricing_source}),
         "total_prompt_tokens": sum(r.token_count_prompt for r in rows),
         "total_completion_tokens": sum(r.token_count_completion for r in rows),
         "priced_query_count": len(costs),

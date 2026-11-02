@@ -1,0 +1,148 @@
+[
+  {
+    "id": "v2_test_017",
+    "domain": "space",
+    "question": "What was the serial number of Apollo 8's sextant?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "answerability": "unanswerable",
+    "scenario_type": "unanswerable",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_018",
+    "domain": "space",
+    "question": "What was the personal phone number of Apollo 9's commander?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "answerability": "unanswerable",
+    "scenario_type": "unanswerable",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_019",
+    "domain": "space",
+    "question": "How much did the Apollo 10 lunar module's paint cost?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "answerability": "unanswerable",
+    "scenario_type": "unanswerable",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_020",
+    "domain": "space",
+    "question": "What was the Apollo 17 rover's tire pressure?",
+    "gold_answer": null,
+    "gold_evidence_spans": [],
+    "gold_atomic_claims": [],
+    "test_type": "unanswerable",
+    "expected_abstention": true,
+    "answerability": "unanswerable",
+    "scenario_type": "unanswerable",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed"
+    }
+  },
+  {
+    "id": "v2_test_021",
+    "domain": "space",
+    "question": "Did Apollo 10 land on the Moon?",
+    "gold_answer": "No; Apollo 10 did not land on the Moon.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo10",
+        "span": "except the landing",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "No; Apollo 10 did not land on the Moon.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo10"
+        ]
+      }
+    ],
+    "test_type": "conflicting",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "conflicting",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed",
+      "conflicting_doc_id": "doc_apollo10_altered"
+    }
+  },
+  {
+    "id": "v2_test_022",
+    "domain": "space",
+    "question": "How far did Apollo 17's lunar rover travel?",
+    "gold_answer": "30.5 kilometers.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo17",
+        "span": "lunar rover vehicle traversed a total of 30.5 kilometers",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "30.5 kilometers.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo17"
+        ]
+      }
+    ],
+    "test_type": "conflicting",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "conflicting",
+    "split": "test",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_unreviewed",
+      "conflicting_doc_id": "doc_apollo17_altered"
+    }
+  }
+]
