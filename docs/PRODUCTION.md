@@ -26,7 +26,10 @@ This is the **software** production surface for RAGeval 0.2.1. Official ablation
 | `RAGEVAL_INCLUDE_SNAPSHOTS` | `1` | Include committed `reports/phase7/` tables in `GET /experiments` |
 | `RAGEVAL_CORS_ORIGINS` | `http://127.0.0.1:8000,http://localhost:8000` | CORS allow list. `*` disables credentials |
 | `RAGEVAL_ALLOWED_HOSTS` | `*` | Starlette trusted hosts |
-| `RAGEVAL_RATE_LIMIT_PER_MINUTE` | `60` | POST `/evaluate/*` and `/score` per client host. `0` disables these; job creation remains capped at 6/minute |
+| `RAGEVAL_RATE_LIMIT_PER_MINUTE` | `60` | POST `/evaluate/*` and `/score` per API token (or client host without a token). Job creation remains capped at 6/minute |
+| `RAGEVAL_READ_RATE_LIMIT_PER_MINUTE` | `120` | Protected GET requests per token per minute |
+| `RAGEVAL_REQUIRE_AUTH` | `0` (`1` in Docker Compose) | Require an API token for datasets, experiments, metrics, evaluate, and score |
+| `RAGEVAL_PUBLIC_TOKEN` | unset | `X-RAGEVAL-API-TOKEN` for protected endpoints. Public mode fails closed with 503 if unset |
 | `RAGEVAL_ADMIN_TOKEN` | unset | Required `X-RAGEVAL-ADMIN-TOKEN` for POST `/experiments`; jobs are disabled if unset |
 | `RAGEVAL_ENABLE_HTTP_NLI` | `0` | Set to `1` only when the NLI model and CPU/memory capacity are provisioned |
 
@@ -46,24 +49,26 @@ docker compose up --build
 DOCKER_DEFAULT_PLATFORM=linux/amd64 docker compose up --build
 ```
 
-The image is CPU torch + hashed `requirements-lock-all.txt`. Hugging Face weights are not in the image. First `method=nli` call downloads DeBERTa unless the cache is mounted. Compose starts an API and a worker sharing the named run volume. It publishes the API on localhost; place a reverse proxy with TLS and authentication in front for remote access. Set a strong `RAGEVAL_ADMIN_TOKEN` in the host environment before using the job form. The dashboard keeps that token in its input field only.
+The image is CPU torch + hashed `requirements-lock-all.txt`. Hugging Face weights are not in the image. First `method=nli` call downloads DeBERTa unless the cache is mounted. Compose starts an API and a worker sharing the named run volume. It publishes the API on localhost. Compose enables API authentication; set a long random `RAGEVAL_PUBLIC_TOKEN` and a separate `RAGEVAL_ADMIN_TOKEN`. The dashboard accepts the API token in a password field and keeps it in memory only. Keep TLS in front of remote access. Rate limits are process-local; use a shared gateway quota if multiple API replicas serve the same token.
 
 TLS overlay (Caddy terminates HTTPS; this app does not):
 
 ```bash
 # Local (Caddy internal/local certs for localhost)
-RAGEVAL_DOMAIN=localhost RAGEVAL_ADMIN_TOKEN="choose-a-long-random-token" \
+RAGEVAL_DOMAIN=localhost RAGEVAL_PUBLIC_TOKEN="choose-a-long-random-api-token" RAGEVAL_ADMIN_TOKEN="choose-a-long-random-admin-token" \
   docker compose -f docker-compose.yml -f docker-compose.tls.yml up --build
 
 # Public hostname (Caddy obtains a certificate; set CORS and hosts to the same name)
 RAGEVAL_DOMAIN=eval.example.com \
 RAGEVAL_CORS_ORIGINS=https://eval.example.com \
 RAGEVAL_ALLOWED_HOSTS=eval.example.com \
-RAGEVAL_ADMIN_TOKEN="choose-a-long-random-token" \
+RAGEVAL_PUBLIC_TOKEN="choose-a-long-random-api-token" \
+RAGEVAL_ADMIN_TOKEN="choose-a-long-random-admin-token" \
   docker compose -f docker-compose.yml -f docker-compose.tls.yml up -d
 ```
 
 The API still binds `127.0.0.1:8000` on the host. Caddy publishes 80/443 and reverse-proxies the `rageval` service on the compose network.
+Direct `rageval serve --host 0.0.0.0` exits unless public auth is enabled and a public token is configured.
 
 ## Hardening already in the process
 
@@ -74,6 +79,7 @@ The API still binds `127.0.0.1:8000` on the host. Caddy publishes 80/443 and rev
 - Live evaluate/score default heuristic. HTTP NLI is disabled by default so a request cannot trigger a model download.
 - Evaluation request bodies are capped at 64 KiB; model inputs and context arrays have explicit limits.
 - Job creation requires an admin token and has a separate rate limit. The worker retries a running job after its 30-second lease expires if it crashes.
+- Protected data, results, metrics, and evaluation routes require an API token in public mode. Invalid token attempts are limited to 20/minute per client host; authenticated reads have a separate quota.
 - `.dockerignore` excludes `.env`, tests, and run artifacts.
 
 Put a reverse proxy in front for TLS. This app does not terminate HTTPS.

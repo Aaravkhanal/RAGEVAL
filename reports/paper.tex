@@ -23,7 +23,7 @@
 \maketitle
 
 \begin{abstract}
-RAGeval measures whether RAG answers are supported by retrieved evidence at the claim level. It is a software-and-pilot-data project, not a claim of novelty relative to FActScore, ALCE, or Niu et al.\ (2024) RAGTruth. On licensed \texttt{benchmark\_v1} 1.0.0 (16 documents, 24 items; run \texttt{20261028T183042Z\_a97ad68f}), six CPU retrieval configs produced identical Recall@5 $=0.8333$ and MRR $=0.8125$. Claim-support rates ranged from $0.4375$ (dense MiniLM) to $0.5833$ (hybrid+rerank). Those differences are diagnostic: $n=24$ items share documents. A blinded mock generator copied retrieved sentences; abstention accuracy on unanswerable items was $0.0$. Cost is unreported (no pricing source). This draft does not claim a retrieval improvement and does not use an overall score.
+RAGeval measures whether RAG answers are supported by retrieved evidence at the claim level. It is a software-and-pilot-data project, not a claim of novelty relative to FActScore, ALCE, or Niu et al.\ (2024) RAGTruth. The historical v1.0.0 mock-generator pilot (16 documents, 24 items) produced identical mixed-definition Recall@5 $=0.8333$ across six retrieval settings. A new matched real-generator companion on v1.3.0 (29 documents, 40 items) yields answerable-only Recall@5 $=1.0$ across the same six settings; claim-support rates range from $0.5917$ to $0.6500$. These different recall definitions cannot be compared directly. Items share documents, so differences are diagnostic. USD cost remains unreported without a provider rate; token usage is recorded. No overall score is used.
 \end{abstract}
 
 \section{Introduction}
@@ -70,7 +70,32 @@ Short U.S.\ government public-domain excerpts (NASA Apollo 11, CDC influenza typ
 Paired tests vs dense-256 are stored in \texttt{reports/phase7/v1\_matrix/significance.json}. All have \texttt{underpowered=true}. A raw $p=0.0109$ on hybrid vs baseline claim support is not treated as significant.
 
 \section{Limitations}
-Mock generator on the published table; $n=24$; current licensed corpus is v1.2.0 ($n=32$, items share documents); single human annotator (a disclosed LLM rater B yields diagnostic kappa $0.9423$, not confirmatory IAA); companion mock+NLI runs \texttt{20261029T165024Z\_657c8089} and \texttt{20261029T173408Z\_de870a29} do not replace this table; live NVIDIA NIM companions \texttt{20261030T052638Z\_79a8b21d} (sparse faith $0.7188$) and \texttt{20261030T055224Z\_388c5503} (dense $0.7396$, hybrid $0.6458$; Recall@5 $0.8438$) are also companion-only; no overall score.
+Mock generator on the published table; $n=24$; current licensed corpus is v1.3.0 ($n=40$, items share 29 documents); single human annotator (a disclosed LLM rater B yields diagnostic kappa $0.9423$, not confirmatory IAA). Historical reports used a mixed answerable/unanswerable Recall@5 definition. New metric schema v2 excludes no-gold questions from Recall@5 and reports empty retrieval on those questions separately; old and new recall values are not directly comparable. There is no overall score. USD cost is unavailable for the NVIDIA NIM trial endpoint because no published rate was identified; token usage is reported instead.
+
+\section{Matched real-generator companion}
+\label{sec:live}
+The recorded \texttt{reports/phase7/live\_matrix\_v1/metrics.json} combines two completed runs (five retrieval settings and one reranker setting) over the same \texttt{benchmark\_v1} 1.3.0 questions. All six use \texttt{nvidia/nemotron-3.5-bolt-e4b}, temperature zero, top-five retrieval before optional reranking, and DeBERTa NLI. The 128-, 256-, and 512-word dense treatments remain identical on this short-document corpus; the separate \texttt{chunk\_benchmark\_v1} report tests actual chunk changes.
+
+\begin{table*}[t]
+\centering
+\small
+\caption{Diagnostic real-generator companion, 40 items sharing 29 documents. Recall@5 is answerable-only ($n=34$). USD price was unavailable; recorded token counts use API usage when returned and a local fallback otherwise.}
+\label{tab:live}
+\begin{tabular}{lccccrr}
+\toprule
+\textbf{Configuration} & \textbf{Support} & \textbf{Recall@5} & \textbf{MRR} & \textbf{Abst.} & \textbf{Input tok.} & \textbf{Output tok.} \\
+\midrule
+Dense 128 & 0.6375 & 1.0000 & 0.9265 & 1.000 & 19647 & 1372 \\
+Dense 256 & 0.6375 & 1.0000 & 0.9265 & 1.000 & 19647 & 1372 \\
+Dense 512 & 0.6375 & 1.0000 & 0.9265 & 1.000 & 19647 & 1371 \\
+Sparse BM25 & 0.6500 & 1.0000 & 0.9618 & 1.000 & 19820 & 1358 \\
+Hybrid RRF & 0.5917 & 1.0000 & 0.9216 & 1.000 & 19903 & 1468 \\
+Hybrid+rerank & 0.6375 & 1.0000 & 0.9216 & 1.000 & 13555 & 1457 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+All answerable items contain a gold document in the top five for every setting, so this small corpus cannot identify a Recall@5 improvement. Differences in MRR and claim support are descriptive. Six no-gold questions are excluded from Recall@5; empty retrieval occurred on one of them under each setting. The published v1.0.0 table above remains a historical mock-generator result with different metric semantics.
 
 \section{Conclusion}
 On this pilot, retrieval metrics did not move. Claim-level scores did move on mixed-support items while token F1 did not. Those observations are descriptive of run \texttt{20261028T183042Z\_a97ad68f}, not a ranking of RAG systems.

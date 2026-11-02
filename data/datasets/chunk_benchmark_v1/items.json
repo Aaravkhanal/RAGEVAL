@@ -1,0 +1,1022 @@
+[
+  {
+    "id": "chunk_001",
+    "domain": "space",
+    "question": "What national goal was Apollo 11's primary objective?",
+    "gold_answer": "A crewed lunar landing and return to Earth.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo11",
+        "span": "perform a crewed lunar landing and return to Earth",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "A crewed lunar landing and return to Earth.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo11"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_002",
+    "domain": "space",
+    "question": "When and from where did Apollo 11 launch?",
+    "gold_answer": "July 16, 1969, from Cape Kennedy.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo11",
+        "span": "Apollo 11 launched from Cape Kennedy on July 16, 1969",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "July 16, 1969, from Cape Kennedy.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo11"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_003",
+    "domain": "space",
+    "question": "When did Apollo 11 first transmit color TV to Earth?",
+    "gold_answer": "During the translunar coast.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo11",
+        "span": "The first color TV transmission to Earth from Apollo 11 occurred during the translunar coast",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "During the translunar coast.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo11"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_004",
+    "domain": "space",
+    "question": "What was Apollo 11's initial elliptical lunar orbit?",
+    "gold_answer": "69 by 190 miles.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo11",
+        "span": "an initial, elliptical-lunar orbit of 69 by 190 miles",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "69 by 190 miles.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo11"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_005",
+    "domain": "space",
+    "question": "How far downrange from the predicted point did Eagle land?",
+    "gold_answer": "About four miles.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo11",
+        "span": "about four miles downrange from the predicted touchdown point",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "About four miles.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo11"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_006",
+    "domain": "space",
+    "question": "How long did Armstrong and Aldrin spend on the moon's surface?",
+    "gold_answer": "21 hours, 36 minutes.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo11",
+        "span": "Armstrong and Aldrin spent 21 hours, 36 minutes on the moon\u2019s surface",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "21 hours, 36 minutes.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo11"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_007",
+    "domain": "space",
+    "question": "How far from the recovery ship did Apollo 11 splash down?",
+    "gold_answer": "13 miles from USS Hornet.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo11",
+        "span": "Apollo 11 splashed down in the Pacific Ocean, 13 miles from the recovery ship USS Hornet",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "13 miles from USS Hornet.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo11"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_008",
+    "domain": "public_health",
+    "question": "What are the four types of influenza viruses?",
+    "gold_answer": "A, B, C, and D.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_influenza",
+        "span": "There are four types of influenza viruses: A, B, C, and D",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "A, B, C, and D.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_influenza"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_009",
+    "domain": "public_health",
+    "question": "Which influenza virus type is known to cause flu pandemics?",
+    "gold_answer": "Influenza A.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_influenza",
+        "span": "Influenza A viruses are the only influenza viruses known to cause flu pandemics",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Influenza A.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_influenza"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_010",
+    "domain": "public_health",
+    "question": "Are influenza D viruses known to cause illness in people?",
+    "gold_answer": "No; they primarily affect cattle and are not known to cause illness in people.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_influenza",
+        "span": "Influenza D viruses primarily affect cattle with spillover to other animals but are not known to cause illness in people",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "No; they primarily affect cattle and are not known to cause illness in people.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_influenza"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_011",
+    "domain": "public_health",
+    "question": "How many hemagglutinin and neuraminidase subtypes are there?",
+    "gold_answer": "18 hemagglutinin and 11 neuraminidase subtypes.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_influenza",
+        "span": "There are 18 hemagglutinin subtypes and 11 neuraminidase subtypes",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "18 hemagglutinin and 11 neuraminidase subtypes.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_influenza"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_012",
+    "domain": "public_health",
+    "question": "Which influenza A subtypes routinely circulate in people?",
+    "gold_answer": "A(H1N1) and A(H3N2).",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_influenza",
+        "span": "Current subtypes of influenza A viruses that routinely circulate in people include A(H1N1) and A(H3N2)",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "A(H1N1) and A(H3N2).",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_influenza"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_013",
+    "domain": "public_health",
+    "question": "When were B/Yamagata viruses last detected?",
+    "gold_answer": "They have not been detected after March 2020.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_influenza",
+        "span": "B/Yamagata viruses have not been detected after March 2020",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "They have not been detected after March 2020.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_influenza"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_014",
+    "domain": "public_health",
+    "question": "Which three viruses do US seasonal flu vaccines target?",
+    "gold_answer": "One A(H1N1), one A(H3N2), and one B/Victoria lineage virus.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_influenza",
+        "span": "one influenza A(H1N1) virus, one influenza A(H3N2) virus, and one influenza B/Victoria lineage virus",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "One A(H1N1), one A(H3N2), and one B/Victoria lineage virus.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_influenza"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_015",
+    "domain": "space",
+    "question": "Which lunar region was Apollo 13 supposed to visit?",
+    "gold_answer": "Fra Mauro.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo13",
+        "span": "Apollo 13 was supposed to land in the Fra Mauro area",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Fra Mauro.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo13"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_016",
+    "domain": "space",
+    "question": "Who replaced Ken Mattingly as Apollo 13 command module pilot?",
+    "gold_answer": "John Jack Swigert.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo13",
+        "span": "was replaced by backup command module pilot, John \u201cJack\u201d Swigert",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "John Jack Swigert.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo13"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_017",
+    "domain": "space",
+    "question": "What happened to Apollo 13 oxygen tank No. 2?",
+    "gold_answer": "It blew up, causing tank No. 1 to fail too.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo13",
+        "span": "oxygen tank No. 2 blew up, causing the No. 1 tank to also fail",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "It blew up, causing tank No. 1 to fail too.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo13"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_018",
+    "domain": "space",
+    "question": "How did mission control adapt carbon dioxide canisters for Apollo 13?",
+    "gold_answer": "It attached command module canisters to the lunar module system with plastic bags, cardboard, and tape.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo13",
+        "span": "Mission control devised a way to attach the CM canisters to the LM system by using plastic bags, cardboard and to tape",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "It attached command module canisters to the lunar module system with plastic bags, cardboard, and tape.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo13"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_019",
+    "domain": "space",
+    "question": "Which region was Apollo 14 sent to explore?",
+    "gold_answer": "The Fra Mauro region.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo14",
+        "span": "explore the Fra Mauro region",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The Fra Mauro region.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo14"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_020",
+    "domain": "space",
+    "question": "How close did Apollo 14's Antares land to its target?",
+    "gold_answer": "Approximately 87 feet.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo14",
+        "span": "Antares made the most precise landing to date, approximately 87 feet from the targeted landing point",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Approximately 87 feet.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo14"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_021",
+    "domain": "space",
+    "question": "How much rock and soil did Apollo 14 astronauts collect?",
+    "gold_answer": "94 pounds.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo14",
+        "span": "the astronauts collected 94 pounds of rocks and soil for return to Earth",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "94 pounds.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo14"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_022",
+    "domain": "space",
+    "question": "Which vehicle enhanced Apollo 15 surface investigations?",
+    "gold_answer": "The Lunar Roving Vehicle.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo15",
+        "span": "enhanced by the addition of the Lunar Roving Vehicle",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The Lunar Roving Vehicle.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo15"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_023",
+    "domain": "space",
+    "question": "Where did Apollo 15 land?",
+    "gold_answer": "At Hadley Rille.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo15",
+        "span": "landing at 6:16 p.m. EDT July 30, at Hadley Rille",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "At Hadley Rille.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo15"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_024",
+    "domain": "space",
+    "question": "How far did Apollo 15 astronauts travel in the lunar rover?",
+    "gold_answer": "17.5 miles.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo15",
+        "span": "traveled 17.5 miles in the first car that humans have ever driven on the moon",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "17.5 miles.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo15"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_025",
+    "domain": "space",
+    "question": "Which highlands formations was the Apollo 16 landing site chosen to sample?",
+    "gold_answer": "The Cayley formation and Kant Plateau.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo16",
+        "span": "the Cayley formation and the Kant Plateau",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "The Cayley formation and Kant Plateau.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo16"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_026",
+    "domain": "space",
+    "question": "Who landed Apollo 16's lunar module at Descartes?",
+    "gold_answer": "John Young and Charles Duke.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo16",
+        "span": "carrying John Young and Charles Duke touched down at Descartes",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "John Young and Charles Duke.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo16"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_027",
+    "domain": "space",
+    "question": "What shortened the Apollo 16 subsatellite's expected life?",
+    "gold_answer": "Deletion of the orbital shaping maneuver left it in a highly elliptical orbit.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_apollo16",
+        "span": "it was ejected into a highly elliptical orbit, cutting its lifetime from one year to about one month",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Deletion of the orbital shaping maneuver left it in a highly elliptical orbit.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_apollo16"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_028",
+    "domain": "public_health",
+    "question": "What changes cause antigenic drift?",
+    "gold_answer": "Small mutations in influenza-virus genes that can change HA and NA proteins.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_flu_change",
+        "span": "Drift consists of small changes (or mutations) in the genes of influenza viruses",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "Small mutations in influenza-virus genes that can change HA and NA proteins.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_flu_change"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_029",
+    "domain": "public_health",
+    "question": "Why are flu-vaccine compositions reviewed annually?",
+    "gold_answer": "To keep up with evolving viruses changed by antigenic drift.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_flu_change",
+        "span": "the composition of flu vaccines for use in the Northern and Southern Hemispheres is reviewed annually and updated as needed",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "To keep up with evolving viruses changed by antigenic drift.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_flu_change"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  },
+  {
+    "id": "chunk_030",
+    "domain": "public_health",
+    "question": "What is antigenic shift?",
+    "gold_answer": "An abrupt major change in an influenza A virus that creates new HA or HA and NA proteins.",
+    "gold_evidence_spans": [
+      {
+        "doc_id": "doc_flu_change",
+        "span": "Shift is an abrupt, major change in a flu A virus, resulting in new HA and/or new HA and NA proteins",
+        "chunk_id": null,
+        "passage_id": null
+      }
+    ],
+    "gold_atomic_claims": [
+      {
+        "claim": "An abrupt major change in an influenza A virus that creates new HA or HA and NA proteins.",
+        "status": "supported",
+        "gold_doc_ids": [
+          "doc_flu_change"
+        ]
+      }
+    ],
+    "test_type": "standard",
+    "expected_abstention": false,
+    "answerability": "answerable",
+    "scenario_type": "standard",
+    "split": "dev",
+    "pair_id": null,
+    "pair_role": null,
+    "reviewed": false,
+    "metadata": {
+      "annotation_status": "single_author_diagnostic"
+    }
+  }
+]

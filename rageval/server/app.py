@@ -37,6 +37,7 @@ from rageval.server.runtime import (
     get_evaluator,
     ProductionHeadersMiddleware,
     RateLimitMiddleware,
+    APIAuthMiddleware,
 )
 from rageval.server.streaming import StreamingVerificationSession
 
@@ -55,7 +56,8 @@ app = FastAPI(
 
 _cors_origins, _cors_credentials = cors_allow_origins()
 app.add_middleware(RateLimitMiddleware)
-app.add_middleware(ProductionHeadersMiddleware)
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts())
+app.add_middleware(APIAuthMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_cors_origins,
@@ -63,7 +65,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts())
+app.add_middleware(ProductionHeadersMiddleware)
 
 CLI_START = (
     "rageval experiment --config configs/experiments/C_retrieve.yaml "

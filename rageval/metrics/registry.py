@@ -22,7 +22,19 @@ def _specs() -> List[MetricSpec]:
             "recall_at_k",
             "retrieval",
             "|gold docs in retrieved[:k]| / |gold docs|.",
-            "Empty gold → 0.0 in the pure function. Unanswerable items (no gold spans) are special-cased in RetrievalMetricsCalculator: 1.0 if nothing retrieved, else 0.0.",
+            "No gold evidence → undefined for aggregate recall; score no-answer retrieval separately.",
+        ),
+        MetricSpec(
+            "evidence_recall_at_5",
+            "retrieval",
+            "Fraction of verbatim gold evidence spans fully present in the top five retrieved chunks.",
+            "No gold evidence → undefined.",
+        ),
+        MetricSpec(
+            "no_answer_empty_retrieval_rate",
+            "retrieval",
+            "Among items with no gold evidence, fraction returning zero chunks.",
+            "No no-answer items → undefined.",
         ),
         MetricSpec(
             "mrr",
@@ -163,11 +175,20 @@ def compute(name: str, *args, **kwargs):
         unsupported_claim_rate,
     )
     from rageval.metrics.classification import macro_f1
-    from rageval.metrics.retrieval import mrr, ndcg_at_k, noise_ratio, recall_at_k
+    from rageval.metrics.retrieval import (
+        evidence_recall_at_k,
+        mrr,
+        ndcg_at_k,
+        no_answer_empty_retrieval_rate,
+        noise_ratio,
+        recall_at_k,
+    )
     from rageval.metrics.system import estimated_cost_usd
 
     fns = {
         "recall_at_k": recall_at_k,
+        "evidence_recall_at_5": lambda texts, spans: evidence_recall_at_k(texts, spans, 5),
+        "no_answer_empty_retrieval_rate": no_answer_empty_retrieval_rate,
         "mrr": mrr,
         "ndcg_at_k": ndcg_at_k,
         "noise_ratio": noise_ratio,

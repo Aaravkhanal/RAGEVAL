@@ -56,9 +56,14 @@ def test_h_independent_yaml_is_companion_slice():
 def test_experiment_yamls_load_matrix():
     a = load_experiment("configs/experiments/A_chunk.yaml")
     assert len(a.pipelines) == 3
+    assert a.dataset_id == "chunk_benchmark_v1"
     assert all(p.chunker.chunk_overlap == 32 for p in a.pipelines)
     b = load_experiment("configs/experiments/B_embed.yaml")
-    assert b.opt_in_embedders and b.opt_in_embedders[0]["approved"] is False
+    assert b.opt_in is True
+    assert {p.embedder.model_name for p in b.pipelines} == {
+        "sentence-transformers/all-MiniLM-L6-v2",
+        "sentence-transformers/all-mpnet-base-v2",
+    }
     g = load_experiment("configs/experiments/G_claim_vs_answer.yaml")
     assert g.analysis == "claim_vs_answer"
     assert g.pipelines == []

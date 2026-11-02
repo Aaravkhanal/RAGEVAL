@@ -30,6 +30,8 @@ def summarize_results(
     ems = [r.answer_em for r in rows if r.answer_em is not None]
     f1s = [r.answer_f1 for r in rows if r.answer_f1 is not None]
     costs = [r.estimated_cost_usd for r in rows if r.estimated_cost_usd is not None]
+    answerable = [r for r in rows if r.retrieval_metrics.no_answer_empty_retrieval is None]
+    no_answer = [r for r in rows if r.retrieval_metrics.no_answer_empty_retrieval is not None]
     support_prec = [
         r.citation_metrics.citation_support_precision for r in rows if r.citation_metrics
     ]
@@ -43,8 +45,10 @@ def summarize_results(
         },
         "unsupported_claim_rate": {"mean": _mean([r.hallucination_rate for r in rows])},
         "contradiction_rate": {"mean": _mean([r.contradiction_rate for r in rows])},
-        "recall_at_5": {"mean": _mean([r.retrieval_metrics.recall_at_5 for r in rows])},
-        "mrr": {"mean": _mean([r.retrieval_metrics.mrr for r in rows])},
+        "recall_at_5": {"mean": _mean([r.retrieval_metrics.recall_at_5 for r in answerable]), "n": len(answerable)},
+        "evidence_recall_at_5": {"mean": _mean([r.retrieval_metrics.evidence_recall_at_5 for r in answerable if r.retrieval_metrics.evidence_recall_at_5 is not None]), "n": sum(r.retrieval_metrics.evidence_recall_at_5 is not None for r in answerable)},
+        "no_answer_empty_retrieval_rate": {"mean": _mean([float(r.retrieval_metrics.no_answer_empty_retrieval) for r in no_answer]), "n": len(no_answer)},
+        "mrr": {"mean": _mean([r.retrieval_metrics.mrr for r in answerable]), "n": len(answerable)},
         "citation_existence_precision": {
             "mean": _mean([r.citation_metrics.citation_precision for r in rows])
         },
@@ -58,6 +62,9 @@ def summarize_results(
         "abstention_accuracy": abstention_accuracy(abstained, unans) if rows else 1.0,
         "mean_latency_ms": _mean([r.total_latency_ms for r in rows]),
         "total_estimated_cost_usd": None if not costs else round(sum(costs), 6),
+        "total_prompt_tokens": sum(r.token_count_prompt for r in rows),
+        "total_completion_tokens": sum(r.token_count_completion for r in rows),
+        "priced_query_count": len(costs),
         "official_metric_names": [m.name for m in official_metrics()],
     }
     return payload
@@ -82,6 +89,8 @@ def robustness_by_scenario_type(
             "unsupported_claim_rate": summary["unsupported_claim_rate"]["mean"],
             "contradiction_rate": summary["contradiction_rate"]["mean"],
             "recall_at_5": summary["recall_at_5"]["mean"],
+            "evidence_recall_at_5": summary["evidence_recall_at_5"]["mean"],
+            "no_answer_empty_retrieval_rate": summary["no_answer_empty_retrieval_rate"]["mean"],
             "mrr": summary["mrr"]["mean"],
             "answer_em": summary["answer_em"]["mean"],
             "answer_f1": summary["answer_f1"]["mean"],
@@ -119,8 +128,18 @@ def write_metrics_bundle(
                     "claim_support_rate": result.faithfulness_score,
                     "unsupported_claim_rate": result.hallucination_rate,
                     "contradiction_rate": result.contradiction_rate,
-                    "recall_at_5": result.retrieval_metrics.recall_at_5,
-                    "mrr": result.retrieval_metrics.mrr,
+                    "recall_at_5": (
+                        result.retrieval_metrics.recall_at_5
+                        if result.retrieval_metrics.no_answer_empty_retrieval is None
+                        else None
+                    ),
+                    "evidence_recall_at_5": result.retrieval_metrics.evidence_recall_at_5,
+                    "no_answer_empty_retrieval": result.retrieval_metrics.no_answer_empty_retrieval,
+                    "mrr": (
+                        result.retrieval_metrics.mrr
+                        if result.retrieval_metrics.no_answer_empty_retrieval is None
+                        else None
+                    ),
                     "citation_existence_precision": result.citation_metrics.citation_precision,
                     "citation_support_precision": result.citation_metrics.citation_support_precision,
                     "citation_marker_recall": result.citation_metrics.citation_recall,
@@ -133,9 +152,10 @@ def write_metrics_bundle(
                 }
                 f.write(json.dumps(record) + "\n")
     aggregate = {
-        "schema": "rageval.metrics.v1",
+        "schema": "rageval.metrics.v2",
         "overall_score": None,
         "note": "No official composite ranking score. Compare named metrics only.",
+        "retrieval_metric_policy": "Document Recall@5 and MRR use only items with gold evidence. Evidence Recall@5 requires a full gold span within one retrieved chunk. No-gold retrieval is reported separately.",
         "independent_items_assumed": independent,
         "by_config": by_config,
     }

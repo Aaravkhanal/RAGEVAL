@@ -139,6 +139,8 @@ class RetrievalMetrics(BaseModel):
     recall_at_3: float = 0.0
     recall_at_5: float = 0.0
     recall_at_k: float = 0.0
+    evidence_recall_at_5: Optional[float] = None
+    no_answer_empty_retrieval: Optional[bool] = None
     mrr: float = 0.0
     ndcg_at_k: float = 0.0
     noise_ratio: float = 0.0
@@ -188,8 +190,8 @@ class BenchmarkRunSummary(BaseModel):
     mean_contradiction_rate: float
     mean_citation_precision: float
     mean_citation_recall: float
-    mean_recall_at_5: float
-    mean_mrr: float
+    mean_recall_at_5: Optional[float]
+    mean_mrr: Optional[float]
     mean_latency_ms: float
     p95_latency_ms: float
     abstention_accuracy: float

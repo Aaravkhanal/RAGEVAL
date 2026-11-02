@@ -16,7 +16,7 @@ class CrossEncoderReranker:
         self.model = None
 
         if self.enabled:
-            self.model = CrossEncoder(self.config.model_name)
+            self.model = CrossEncoder(self.config.model_name, device=self.config.device)
 
     def rerank(self, query: str, candidates: List[RetrievedChunk], top_k: Optional[int] = None) -> List[RetrievedChunk]:
         if not self.enabled or not self.model or not candidates:

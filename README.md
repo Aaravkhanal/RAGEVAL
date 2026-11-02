@@ -11,16 +11,26 @@ This project was previously prototyped under the name RAGTruth. It is **not** th
 - Citation existence and support-conditioned citation metrics.
 - A **synthetic smoke dataset** (8 documents, 8 questions). It is author-written fiction, not SEC/NEJM/OSDI source text.
 - A **licensed benchmark_v1** (29 documents, 40 questions in v1.3.0): short U.S. government public-domain excerpts plus original CC-BY-4.0 fiction. See `data/cards/benchmark_v1.md`. The committed ablation tables used v1.0.0 (16/24). Companion mock+NLI scored v1.1.0 (18/28) and v1.2.0 (21/32). v1.3.0 is on-disk only until a new companion run is recorded.
+- A separate **chunk_benchmark_v1** diagnostic slice (7 long public NASA/CDC documents, 30 questions). The named `A_chunk` experiment now uses it so 128/256/512-word settings produce different chunks. See `data/cards/chunk_benchmark_v1.md`.
 - Answer-level EM / token F1 alongside claim-level support (RQ3).
 - Official metric registry (`rageval.metrics.registry`) with no composite overall score.
 - Adversarial scenarios with a failure taxonomy (`docs/FAILURE_TAXONOMY.md`) and robustness means by `scenario_type`.
 - CLI, FastAPI live claim audit, and pytest suite.
+- Optional fail-closed API-token protection for dataset, run, metrics, and evaluation routes; Docker Compose enables it by default. See `docs/PRODUCTION.md`.
 
 Official generation for smoke tests is a **blinded mock** that cannot read gold `test_type` labels. Opt-in HTTP (`openai` / `ollama`) and `local_hf` backends live under `configs/opt_in/`; keys come from `OPENAI_API_KEY` / `RAGEVAL_API_KEY`, never YAML. Live LLM configs need `rageval experiment --allow-opt-in`; HTTP jobs refuse them.
 
 ## Status of results
 
 Committed tables under `reports/` are from run `20261028T183042Z_a97ad68f` on `benchmark_v1` 1.0.0 (16 documents, 24 items; US government public-domain excerpts plus CC-BY-4.0 fiction). Honest write-up: `reports/20261028T183042Z_a97ad68f/FINDINGS.md`. Companion mock+NLI: v1.1.0 `657c8089`, v1.2.0 `de870a29`, A_chunk overlap-32 `7e2b94a3`. `reports/paper.tex` is a **draft** whose table matches the published run; $n=24$ is underpowered. New runs write unique folders under `experiments/runs/`.
+
+The current long-document chunk diagnostic is `reports/phase7/A_chunk_long_v1/`. It uses metric schema v2: document Recall@5 is calculated only on answerable items, with separate evidence-span recall and no-answer retrieval reporting. Historical v1 recall values mixed answerable and unanswerable questions and are not directly comparable.
+
+`reports/phase7/B_embed_v1/` records a matched MiniLM versus MPNet embedding comparison on `benchmark_v1` 1.3.0. It remains diagnostic and uses the blinded mock generator.
+
+`reports/phase7/live_matrix_v1/` records six matched retrieval settings with a real NVIDIA NIM generator on the 40-item corpus. The paper includes this companion table. Its token counts are recorded, but USD cost is unknown because a provider rate was not available; the questions share documents, so the results remain diagnostic.
+
+`data/gold/review/claim_review_v1.jsonl` is an unlabeled 40-answer review queue for independent claim-boundary, evidence-support, and citation judgments. See `docs/CLAIM_REVIEW.md`; no human agreement result is claimed yet.
 
 ## Install
 
@@ -52,6 +62,9 @@ pytest -m "not hf"
 
 # Optional: licensed v1 ablation (loads MiniLM + DeBERTa; writes experiments/runs/<id>/)
 rageval benchmark --dataset benchmark_v1 --data-dir data --output-dir experiments/runs
+
+# Diagnostic long-document chunk comparison with evidence-span Recall@5
+rageval experiment --config configs/experiments/A_chunk.yaml --output-dir experiments/runs
 
 # CI smoke fixture (BM25 + heuristic; no MiniLM/DeBERTa)
 rageval experiment --config configs/experiments/smoke.yaml --output-dir experiments/runs

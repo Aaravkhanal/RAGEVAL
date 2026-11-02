@@ -1,0 +1,27 @@
+{
+  "run_dir": "/Users/aaravkhanal/Desktop/RAGEVAL/experiments/runs/20261102T041417Z_2b164af2",
+  "environment": {
+    "python": "3.12.16 (main, Oct 26 2026, 13:59:40) [Clang 23.1.3 ]",
+    "platform": "macOS-14.5-arm64-arm-64bit",
+    "processor": "arm",
+    "git_commit": "c24e42f7b499662800c4e75f53b3250e596732ec",
+    "timestamp_utc": "2026-11-02T04:20:00.581745+00:00"
+  },
+  "configs": [
+    "Dense_Chunk128_overlap32",
+    "Dense_Chunk256_Baseline",
+    "Dense_Chunk512_overlap32"
+  ],
+  "label": "v1",
+  "experiment_id": "A_chunk",
+  "title": "Chunk size with dense MiniLM, overlap fixed at 32, rerank off",
+  "family": "chunk",
+  "data_dir": "data",
+  "dataset_id": "chunk_benchmark_v1",
+  "dataset_version": "1.0.0",
+  "split": "all",
+  "n_documents": 7,
+  "n_items": 30,
+  "resource_note": "Pinned long NASA/CDC documents; evidence-span Recall@5. CPU MiniLM + blinded mock, overlap 32 words, no paid LLM. Diagnostic n=30.",
+  "max_items": null
+}

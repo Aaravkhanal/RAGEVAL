@@ -1,0 +1,16 @@
+{
+  "dataset_id": "chunk_benchmark_v1",
+  "version": "1.0.0",
+  "synthetic": false,
+  "license": "US-government-work-public-domain-17USC105",
+  "documents": "data/datasets/chunk_benchmark_v1/corpus.json",
+  "items_all": "data/datasets/chunk_benchmark_v1/items.json",
+  "n_documents": 7,
+  "n_items": 30,
+  "n_dev": 30,
+  "n_test": 0,
+  "split_policy": "Diagnostic chunk-size slice: all items are dev; no held-out or independent test set.",
+  "annotator": "single-author, diagnostic",
+  "retrieved_date": "2026-11-02",
+  "notes": "Long public NASA and CDC main-content snapshots. Evaluate evidence-span recall, not only document recall. No confirmatory claims."
+}

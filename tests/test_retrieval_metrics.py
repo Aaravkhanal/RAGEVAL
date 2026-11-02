@@ -21,6 +21,10 @@ def test_empty_gold_pure_function_is_zero():
     assert mrr(["d1"], set()) == 0.0
 
 
+def test_document_ndcg_counts_duplicate_chunks_once():
+    assert ndcg_at_k(["d1", "d1"], {"d1"}, 2) == 1.0
+
+
 def test_k_greater_than_retrieved_and_ndcg_hand_computed():
     retrieved = ["d1", "d9", "d2"]
     gold = {"d1", "d2"}

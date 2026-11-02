@@ -68,8 +68,8 @@ class BenchmarkRunner:
                 mean_contradiction_rate=0.0,
                 mean_citation_precision=0.0,
                 mean_citation_recall=0.0,
-                mean_recall_at_5=0.0,
-                mean_mrr=0.0,
+                mean_recall_at_5=None,
+                mean_mrr=None,
                 mean_latency_ms=0.0,
                 p95_latency_ms=0.0,
                 abstention_accuracy=0.0,
@@ -91,8 +91,9 @@ class BenchmarkRunner:
         contras = [r.contradiction_rate for r in results]
         precisions = [r.citation_metrics.citation_precision for r in results]
         recalls = [r.citation_metrics.citation_recall for r in results]
-        r5s = [r.retrieval_metrics.recall_at_5 for r in results]
-        mrrs = [r.retrieval_metrics.mrr for r in results]
+        answerable_results = [r for r in results if r.retrieval_metrics.no_answer_empty_retrieval is None]
+        r5s = [r.retrieval_metrics.recall_at_5 for r in answerable_results]
+        mrrs = [r.retrieval_metrics.mrr for r in answerable_results]
         latencies = [r.total_latency_ms for r in results]
         costs = [r.estimated_cost_usd for r in results if r.estimated_cost_usd is not None]
 
@@ -132,8 +133,8 @@ class BenchmarkRunner:
             mean_contradiction_rate=round(float(np.mean(contras)), 4),
             mean_citation_precision=round(float(np.mean(precisions)), 4),
             mean_citation_recall=round(float(np.mean(recalls)), 4),
-            mean_recall_at_5=round(float(np.mean(r5s)), 4),
-            mean_mrr=round(float(np.mean(mrrs)), 4),
+            mean_recall_at_5=round(float(np.mean(r5s)), 4) if r5s else None,
+            mean_mrr=round(float(np.mean(mrrs)), 4) if mrrs else None,
             mean_latency_ms=round(float(np.mean(latencies)), 2),
             p95_latency_ms=round(float(np.percentile(latencies, 95)), 2),
             abstention_accuracy=round(float(abstention_acc), 4),

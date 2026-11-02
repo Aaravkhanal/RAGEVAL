@@ -162,7 +162,7 @@ class NLIVerifier:
     ) -> ClaimVerification:
         """Verifies an individual atomic claim against candidate chunks.
 
-        Prioritizes explicitly cited chunks, then tests against all retrieved chunks.
+        Tests all retrieved chunks so faithfulness is independent of citation attribution.
         """
         # If the claim is an abstention statement
         if claim.is_abstention or any(
@@ -196,11 +196,9 @@ class NLIVerifier:
                 label_schema_version=schema_version(),
             )
 
-        # 1. Gather candidate premises (prioritize cited chunks if available)
-        cited_cids = set(claim.cited_chunk_ids)
-        candidate_chunks = [r for r in retrieved_chunks if r.chunk.id in cited_cids]
-        if not candidate_chunks:
-            candidate_chunks = retrieved_chunks
+        # Faithfulness considers the whole retrieved pool. The citation audit checks
+        # separately whether the specific cited chunks support the claim.
+        candidate_chunks = retrieved_chunks
 
         # Evaluate pairs
         pairs = [(c.chunk.text, claim.text) for c in candidate_chunks]

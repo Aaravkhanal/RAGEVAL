@@ -6,7 +6,7 @@ from typing import List, Set
 
 from rageval.core.schemas import BenchmarkItem, RetrievedChunk, RetrievalMetrics
 from rageval.metrics.retrieval import mrr as mrr_score
-from rageval.metrics.retrieval import ndcg_at_k
+from rageval.metrics.retrieval import evidence_recall_at_k, ndcg_at_k
 from rageval.metrics.retrieval import noise_ratio as noise_ratio_score
 from rageval.metrics.retrieval import recall_at_k
 
@@ -23,13 +23,10 @@ class RetrievalMetricsCalculator:
         retrieved_doc_ids = [r.chunk.doc_id for r in retrieved_chunks]
 
         if not item.gold_evidence_spans:
-            # Unanswerable / no gold passages: retrieving anything is treated as noise.
+            # Recall is undefined without relevant evidence. Track no-answer behavior separately.
             empty = not retrieved_chunks
             return RetrievalMetrics(
-                recall_at_1=1.0 if empty else 0.0,
-                recall_at_3=1.0 if empty else 0.0,
-                recall_at_5=1.0 if empty else 0.0,
-                recall_at_k=1.0 if empty else 0.0,
+                no_answer_empty_retrieval=empty,
                 mrr=0.0,
                 ndcg_at_k=0.0,
                 noise_ratio=0.0 if empty else 1.0,
@@ -45,6 +42,11 @@ class RetrievalMetricsCalculator:
             recall_at_3=recall_at_k(retrieved_doc_ids, gold_doc_ids, 3),
             recall_at_5=recall_at_k(retrieved_doc_ids, gold_doc_ids, 5),
             recall_at_k=recall_at_k(retrieved_doc_ids, gold_doc_ids, k),
+            evidence_recall_at_5=evidence_recall_at_k(
+                [result.chunk.text for result in retrieved_chunks],
+                [ev.span for ev in item.gold_evidence_spans],
+                5,
+            ),
             mrr=mrr_score(retrieved_doc_ids, gold_doc_ids),
             ndcg_at_k=ndcg_at_k(retrieved_doc_ids, gold_doc_ids, k),
             noise_ratio=noise_ratio_score(retrieved_doc_ids, gold_doc_ids, k),

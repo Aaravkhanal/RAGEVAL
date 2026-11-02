@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import os
+import hashlib
+import hmac
 import threading
 import time
 import uuid
@@ -17,6 +19,7 @@ from rageval.evaluator.evaluator import RAGEvalEvaluator
 
 DEFAULT_CORS = "http://127.0.0.1:8000,http://localhost:8000"
 RATE_LIMITED_PREFIXES = ("/evaluate/", "/score")
+PROTECTED_PREFIXES = ("/datasets", "/experiments", "/experiment-configs", "/evaluate", "/score", "/metrics")
 MAX_REQUEST_BYTES = 65536
 _evaluators: Dict[str, RAGEvalEvaluator] = {}
 _eval_lock = threading.Lock()
@@ -49,6 +52,37 @@ def rate_limit_per_minute() -> int:
         return max(0, int(raw))
     except ValueError:
         return 60
+
+
+def require_public_auth() -> bool:
+    return os.environ.get("RAGEVAL_REQUIRE_AUTH", "0").lower() in {"1", "true", "yes"}
+
+
+def read_rate_limit_per_minute() -> int:
+    try:
+        return max(1, int(os.environ.get("RAGEVAL_READ_RATE_LIMIT_PER_MINUTE", "120")))
+    except ValueError:
+        return 120
+
+
+class APIAuthMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next) -> Response:
+        if request.method == "OPTIONS" or not require_public_auth():
+            return await call_next(request)
+        path = request.url.path
+        if not any(path == prefix or path.startswith(prefix + "/") for prefix in PROTECTED_PREFIXES):
+            return await call_next(request)
+        expected = os.environ.get("RAGEVAL_PUBLIC_TOKEN", "")
+        if not expected:
+            return JSONResponse(status_code=503, content={"detail": "Public API authentication is not configured"})
+        supplied = request.headers.get("x-rageval-api-token", "")
+        admin = os.environ.get("RAGEVAL_ADMIN_TOKEN", "")
+        if not supplied or not (hmac.compare_digest(supplied, expected) or (admin and hmac.compare_digest(supplied, admin))):
+            client = request.client.host if request.client else "unknown"
+            if not allow_request(f"{client}:auth", 20):
+                return JSONResponse(status_code=429, content={"detail": "Too many authentication attempts"}, headers={"Retry-After": "60"})
+            return JSONResponse(status_code=401, content={"detail": "Invalid API token"})
+        return await call_next(request)
 
 
 def reset_runtime_for_tests() -> None:
@@ -106,7 +140,8 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         path = request.url.path
         limited = any(path == prefix.rstrip("/") or path.startswith(prefix) for prefix in RATE_LIMITED_PREFIXES)
         job_start = request.method == "POST" and path == "/experiments"
-        if not limited and not job_start:
+        protected_read = request.method == "GET" and any(path == prefix or path.startswith(prefix + "/") for prefix in PROTECTED_PREFIXES)
+        if not limited and not job_start and not protected_read:
             return await call_next(request)
         if request.method == "POST":
             body = await request.body()
@@ -115,11 +150,16 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         limit = rate_limit_per_minute()
         if job_start:
             limit = min(limit, 6) if limit else 6
+        elif protected_read:
+            limit = read_rate_limit_per_minute()
         client = request.client.host if request.client else "unknown"
-        if not allow_request(f"{client}:{'jobs' if job_start else 'evaluation'}", limit):
+        principal = request.headers.get("x-rageval-api-token", "") or request.headers.get("x-rageval-admin-token", "")
+        principal_id = hashlib.sha256(principal.encode()).hexdigest()[:16] if principal else client
+        category = "jobs" if job_start else "reads" if protected_read else "evaluation"
+        if not allow_request(f"{principal_id}:{category}", limit):
             return JSONResponse(
                 status_code=429,
-                content={"detail": f"Rate limit exceeded ({limit}/minute on evaluate and score)."},
+                content={"detail": f"Rate limit exceeded ({limit}/minute for {category})."},
                 headers={"Retry-After": "60"},
             )
         return await call_next(request)

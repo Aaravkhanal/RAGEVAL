@@ -198,7 +198,8 @@ def export_tables_from_summaries_json(
         for name, summary in by_name.items():
             if name == baseline_name:
                 continue
-            for metric in ("faithfulness", "recall"):
+            metric_names = ("faithfulness", "recall", "evidence_recall") if (extra or {}).get("experiment_id") == "A_chunk" else ("faithfulness", "recall")
+            for metric in metric_names:
                 comparisons.append(
                     SignificanceAnalyzer.compare_runs(
                         by_name[baseline_name], summary, metric=metric

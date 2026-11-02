@@ -3,6 +3,8 @@
 from rageval.core.labels import VerificationLabel
 from rageval.core.schemas import AtomicClaim, Chunk, ClaimVerification, RetrievedChunk
 from rageval.evaluator.citation_parser import CitationParser
+from rageval.evaluator.nli_verifier import NLIVerifier
+from rageval.core.config import EvaluatorConfig
 
 
 def _chunks():
@@ -92,3 +94,19 @@ def test_support_precision_and_contradicting_citation():
     assert any("b->c2" in x for x in metric.contradicting_citations)
     assert "c" in metric.uncited_claim_ids
     assert metric.citation_completeness == 1.0 / 3.0
+
+
+def test_answer_support_and_citation_support_are_independent():
+    chunks = _chunks()
+    claim = AtomicClaim(
+        claim_id="wrong_reference",
+        text="Churn was 1.8 percent",
+        raw_sentence="Churn was 1.8 percent [1].",
+        cited_chunk_ids=["c1"],
+    )
+    verification = NLIVerifier(EvaluatorConfig(method="heuristic")).verify_claim(claim, chunks)
+    assert verification.label == VerificationLabel.SUPPORTED
+    assert "c2" in verification.supporting_chunk_ids
+    audit = CitationParser.audit_citations_with_claims(claim.raw_sentence, chunks, [claim], [verification])
+    assert audit.citation_support_precision == 0.0
+    assert audit.citation_precision == 1.0
