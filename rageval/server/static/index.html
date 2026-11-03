@@ -77,6 +77,10 @@
         .hero-title { margin: 0 0 8px; font-size: clamp(29px, 3vw, 39px); font-weight: 750; line-height: 1.15; letter-spacing: -.048em; }
         .hero-subtitle { margin: 0; color: var(--text-muted); max-width: 690px; font-size: 14px; }
         .access-field { width: min(320px, 100%); flex: none; }
+        .field-help { margin: 0; color: var(--text-muted); font-size: 11px; line-height: 1.45; }
+        .field-help a { color: var(--text-main); text-underline-offset: 2px; }
+        .form-error { margin: -10px 0 0; padding: 10px 12px; border: 1px solid #e5c9c5; border-radius: 6px; background: var(--status-contra-bg); color: var(--status-contra); font-size: 12px; }
+        .form-error[hidden] { display: none; }
         .workspace-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start; }
         .panel, .table-wrapper {
             min-width: 0;
@@ -212,8 +216,9 @@
                 <p class="hero-subtitle">Review each claim, inspect its evidence, and compare benchmark runs. The live check uses a fast lexical heuristic.</p>
             </div>
             <div class="input-group access-field">
-                <label for="api-token">API access token</label>
-                <input type="password" id="api-token" autocomplete="off" placeholder="Paste token to load data">
+                <label for="api-token">RAGeval access token</label>
+                <input type="password" id="api-token" autocomplete="off" aria-describedby="token-help" placeholder="Paste RAGEVAL_PUBLIC_TOKEN">
+                <p class="field-help" id="token-help">Get <code>RAGEVAL_PUBLIC_TOKEN</code> from the Render service’s Environment page. This unlocks checks; it is not an AI provider key.</p>
             </div>
         </div>
 
@@ -266,6 +271,7 @@
                     <button class="btn-primary" id="btn-run-eval">
                         <span>Audit Claims & Citations</span>
                     </button>
+                    <p class="form-error" id="eval-error" role="alert" hidden></p>
                 </div>
 
                 <!-- Right Panel -->
@@ -458,6 +464,9 @@
             const contextText = document.getElementById('eval-context').value;
             const answer = document.getElementById('eval-answer').value;
             const btn = document.getElementById('btn-run-eval');
+            const errorEl = document.getElementById('eval-error');
+            errorEl.hidden = true;
+            errorEl.textContent = '';
 
             btn.disabled = true;
             btn.innerHTML = `<span class="spinner"></span><span>Evaluating Claims...</span>`;
@@ -477,11 +486,19 @@
                     })
                 });
 
-                if (!resp.ok) throw new Error("Evaluation request failed");
+                if (!resp.ok) {
+                    if (resp.status === 401) {
+                        throw new Error('A valid RAGeval access token is required. Paste RAGEVAL_PUBLIC_TOKEN from the Render Environment page above.');
+                    }
+                    const body = await resp.json().catch(() => ({}));
+                    const detail = typeof body.detail === 'string' ? body.detail : `Request failed (${resp.status}). Please try again.`;
+                    throw new Error(detail);
+                }
                 const data = await resp.json();
                 renderEvaluation(data.evaluation);
             } catch (err) {
-                alert("Error running evaluation: " + err.message);
+                errorEl.textContent = err.message || 'The check could not be completed. Please try again.';
+                errorEl.hidden = false;
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = `<span>Audit Claims & Citations</span>`;

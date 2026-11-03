@@ -36,8 +36,12 @@ The current long-document chunk diagnostic is `reports/phase7/A_chunk_long_v1/`.
 
 ### Live free preview
 
-[Open RAGeval on Render](https://rageval-free.onrender.com/). Enter the public API
-token from the Render service's **Environment** page. On **Claim Verifier**,
+[Open RAGeval on Render](https://rageval-free.onrender.com/). Enter
+`RAGEVAL_PUBLIC_TOKEN` from the Render service's **Environment** page in the
+RAGeval access token field. This token controls access to the hosted service;
+it is not a key for the AI system being evaluated or an AI model provider.
+You can check any answer by pasting its question, retrieved source text, and
+answer. On **Claim audit**,
 choose Faithful, Hallucinated, or Contradictory to compare an answer with its
 source text. The claim cards show which individual statements have support;
 click a card to inspect its matching evidence. The default verifier is a fast
