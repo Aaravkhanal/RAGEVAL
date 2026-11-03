@@ -19,9 +19,12 @@ def remote(method, query, body=None):
     key = os.environ.get('RAGEVAL_SUPABASE_KEY')
     if not key:
         raise HTTPException(503, 'Remote storage key is missing')
+    headers = {'apikey': key, 'Content-Type': 'application/json'}
+    if not key.startswith('sb_secret_'):
+        headers['Authorization'] = 'Bearer ' + key
     request = Request(base + '/rest/v1/rageval_records' + query,
         data=json.dumps(body).encode() if body is not None else None,
-        headers={'apikey': key, 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json'}, method=method)
+        headers=headers, method=method)
     try:
         with urlopen(request, timeout=15) as response:
             raw = response.read()
