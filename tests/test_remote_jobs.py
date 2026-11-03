@@ -19,6 +19,9 @@ def test_worker_archives_every_artifact_and_finishes_lease(tmp_path, monkeypatch
     assert payload['lease']=='lease'
     assert payload['final_state']=='complete'
     assert 'predictions.jsonl' in payload['result_body']['files']
+    job['lease_token']='replacement-lease'
+    assert remote_jobs.execute(str(tmp_path),'data')
+    assert (tmp_path/'.leases/replacement-lease/test-run/predictions.jsonl').exists()
 
 
 def test_empty_queue_does_no_work(monkeypatch):

@@ -42,7 +42,8 @@ def execute(output_root, data_root):
     from rageval.benchmark.run_store import create_run_dir, write_run_status
     from rageval.server.catalog import get_experiment_results
     run_id, lease = job['id'], job['lease_token']
-    run_dir = create_run_dir(output_root,run_id=run_id)
+    work_root = str(Path(output_root) / '.leases' / lease)
+    run_dir = create_run_dir(work_root,run_id=run_id)
     stopped = threading.Event()
     def heartbeat():
         while not stopped.wait(10):
@@ -56,10 +57,10 @@ def execute(output_root, data_root):
     pulse.start()
     try:
         write_run_status(run_dir,'running')
-        run_experiment(load_experiment(resolve_config_path(job['config'])),data_dir=data_root,output_root=output_root,max_items=job['max_items'],existing_run_dir=run_dir)
+        run_experiment(load_experiment(resolve_config_path(job['config'])),data_dir=data_root,output_root=work_root,max_items=job['max_items'],existing_run_dir=run_dir)
         write_run_status(run_dir,'complete')
         files = {str(p.relative_to(run_dir)):base64.b64encode(p.read_bytes()).decode() for p in Path(run_dir).rglob('*') if p.is_file()}
-        result = get_experiment_results(run_id,output_root)
+        result = get_experiment_results(run_id,work_root)
         rpc('rageval_finish', {'job_id':run_id,'lease':lease,'final_state':'complete','result_body':{'result':result,'files':files}})
     except Exception as exc:
         rpc('rageval_finish', {'job_id':run_id,'lease':lease,'final_state':'failed','result_body':{'error':type(exc).__name__}})

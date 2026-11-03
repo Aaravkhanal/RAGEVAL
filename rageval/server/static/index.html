@@ -354,7 +354,7 @@
                     <select id="experiment-select"></select>
                 </div>
             </div>
-            <p id="experiment-meta" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;"></p>
+            <button class="preset-btn" id="download-run-artifacts">Download full run artifacts</button><p id="experiment-meta" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;"></p>
 
             <div class="table-wrapper">
                 <table>
@@ -443,6 +443,7 @@
             if (accountSession && url.startsWith("/workspace/")) headers.set("Authorization", "Bearer " + accountSession);
             if (token) headers.set("X-RAGEVAL-API-TOKEN", token);
             const response = await fetch(url, { ...options, headers });
+            if (response.status === 401 && url.startsWith('/workspace/')) throw new Error('Sign in to your private workspace, or enter the admin token in Experiments. Your session may have expired.');
             if (response.status === 401) throw new Error('Access denied. Enter your RAGEVAL_PUBLIC_TOKEN above and click Connect. Starting a job also needs RAGEVAL_ADMIN_TOKEN.');
             if (response.status === 429) throw new Error('Request limit reached. Wait one minute and try again.');
             return response;
@@ -471,7 +472,19 @@
         }
         document.getElementById('account-login').onclick=()=>accountAction('login');
         document.getElementById('account-signup').onclick=()=>accountAction('signup');
-        document.getElementById('account-logout').onclick=()=>{accountSession=null;document.getElementById('workspace-output').textContent='';document.getElementById('account-status').textContent='Signed out.';};
+        document.getElementById('account-logout').onclick=()=>{accountSession=null;workspaceReport={};document.getElementById('workspace-output').textContent='';document.getElementById('workspace-summary').replaceChildren();document.getElementById('account-password').value='';document.getElementById('account-status').textContent='Signed out.';};
+        document.getElementById('download-run-artifacts').onclick=async()=>{
+            const status=document.getElementById('job-status');
+            try {
+                const id=document.getElementById('experiment-select').value;
+                if (!id) throw new Error('Select a completed run first.');
+                const response=await apiFetch('/experiments/'+encodeURIComponent(id)+'/artifacts',{headers:{'X-RAGEVAL-ADMIN-TOKEN':document.getElementById('admin-token').value.trim()}});
+                const body=await response.json();
+                if(!response.ok) throw new Error(typeof body.detail==='string'?body.detail:'Artifact export failed');
+                downloadJSON(id+'-artifacts.json',body);
+                status.textContent='Full run artifacts exported.';
+            }catch(err){status.textContent=err.message;}
+        };
         let workspaceReport = {};
         document.getElementById('workspace-example').onclick = () => downloadJSON('dataset.json', {name:'Revenue benchmark', documents:[{id:'doc1',text:'Revenue was $100 million.'}],questions:[{id:'q1',question:'What was revenue?',reference_answer:'$100 million',source_ids:['doc1']}]});
         document.getElementById('accuracy-example').onclick = () => downloadJSON('human-labels.json', {claims:[{claim:'Replace with a claim independently labeled by a human',evidence:'Replace with its source passage',human_label:'supported'}]});
