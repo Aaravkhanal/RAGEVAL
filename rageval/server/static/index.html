@@ -956,7 +956,9 @@
             }
         }
 
+        let experimentLoadSequence = 0;
         async function loadExperimentResults(runId) {
+            const loadSequence = ++experimentLoadSequence;
             const tbody = document.getElementById("benchmark-tbody");
             const meta = document.getElementById("experiment-meta");
             tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-dim);">Loading ${escapeHtml(runId)}…</td></tr>`;
@@ -965,6 +967,7 @@
                     apiFetch("/experiments/" + encodeURIComponent(runId)),
                     apiFetch("/experiments/" + encodeURIComponent(runId) + "/results"),
                 ]);
+                if (loadSequence !== experimentLoadSequence) return;
                 if (!infoRes.ok) throw new Error("GET /experiments/" + runId + " failed");
                 const info = await infoRes.json();
                 meta.textContent = [
@@ -974,6 +977,10 @@
                     info.source ? `source=${info.source}` : null,
                     "no overall score",
                 ].filter(Boolean).join(" · ");
+                if (resultRes.status === 409) {
+                    tbody.innerHTML = '<tr><td colspan="8">Run is pending. Results will appear when it completes.</td></tr>';
+                    return;
+                }
                 if (resultRes.status === 404) {
                     tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-dim);">This run has no metrics.json.</td></tr>`;
                     return;

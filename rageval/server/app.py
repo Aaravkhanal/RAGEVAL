@@ -214,7 +214,7 @@ def dataset_detail(dataset_id: str, include_items: bool = Query(default=True)):
 @app.get("/experiments", tags=["experiments"])
 def experiments_index():
     from rageval.server.remote_jobs import enabled, list_jobs
-    remote_rows = [{**j, "source":"supabase", "status":{"state":j["state"]}} for j in list_jobs()] if enabled() else []
+    remote_rows = [{**j, "source":"supabase", "state":j["state"], "has_metrics":j["state"]=="complete", "status":{"state":j["state"]}} for j in list_jobs()] if enabled() else []
     return {"experiments": remote_rows + list_experiments()}
 
 
