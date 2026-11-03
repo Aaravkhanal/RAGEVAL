@@ -160,6 +160,10 @@
         #citation-summary strong { color: var(--text-main) !important; }
         .table-wrapper { overflow-x: auto; }
         .dataset-item { padding: 16px 18px; border: 1px solid var(--border-subtle); border-radius: 6px; background: #fff; }
+        .dataset-tag { padding: 3px 7px; border-radius: 3px; background: var(--bg-surface-elevated); color: var(--text-muted); font-size: 11px; font-weight: 600; }
+        .dataset-notes { margin: -5px 0 18px; color: var(--text-muted); font-size: 12px; }
+        .dataset-notes summary { width: fit-content; cursor: pointer; }
+        .dataset-notes p { max-width: 920px; margin: 9px 0 0; line-height: 1.6; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
         th { padding: 12px 14px; border-bottom: 1px solid var(--border-subtle); background: var(--bg-surface-elevated); color: var(--text-muted); font-size: 11px; font-weight: 650; white-space: nowrap; }
         td { padding: 13px 14px; border-bottom: 1px solid var(--border-subtle); color: var(--text-main); font: 12px var(--font-mono); white-space: nowrap; }
@@ -303,7 +307,7 @@
         <div id="section-benchmark" style="display: none; margin-top: 1rem;">
             <div style="margin-bottom: 1.25rem;">
                 <h2 style="font-size: 1.5rem; font-weight: 800;">Experiment jobs</h2>
-                <p id="job-intro" style="color: var(--text-muted); font-size: 0.95rem;">Queues <code>POST /experiments</code> (allowlisted YAML from <code>GET /experiment-configs</code>). Live claim audit stays on the Claim Verifier tab. Heavy NLI / full v1 names stay hidden until you check allow heavy.</p>
+                <p id="job-intro" style="color: var(--text-muted); font-size: 0.95rem;">Run a benchmark and compare it with saved results.</p>
             </div>
             <div class="panel" style="margin-bottom: 1.5rem;">
                 <div class="job-form">
@@ -312,11 +316,11 @@
                         <input type="password" id="admin-token" autocomplete="off" placeholder="Required to start a job">
                     </div>
                     <div class="input-group">
-                        <label for="config-select">Config</label>
+                        <label for="config-select">Experiment</label>
                         <select id="config-select"></select>
                     </div>
                     <div class="input-group tight">
-                        <label for="max-items">max_items</label>
+                        <label for="max-items">Questions</label>
                         <input type="number" id="max-items" min="1" max="32" value="2" step="1">
                     </div>
                     <div class="input-group" id="heavy-job-control">
@@ -330,21 +334,18 @@
                         <span>Start</span>
                     </button>
                 </div>
-                <p id="job-status" style="color: var(--text-dim); font-size: 0.85rem; font-family: var(--font-mono);">Idle. Default config is smoke.</p>
+                <p id="job-status" style="color: var(--text-dim); font-size: 0.85rem;">Ready to run.</p>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap;">
                 <div>
                     <h3 style="font-size: 1.15rem; font-weight: 700;">Results</h3>
-                    <p style="color: var(--text-muted); font-size: 0.9rem;">Reads <code>experiments/runs/</code> and the committed Phase 7 snapshot.</p>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Review a run or compare it with the saved reference results.</p>
                 </div>
                 <div class="input-group" style="min-width: 280px;">
                     <label for="experiment-select">Run</label>
                     <select id="experiment-select"></select>
                 </div>
             </div>
-            <p id="experiment-cli-hint" style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1rem; font-family: var(--font-mono);">
-                CLI: rageval experiment --config configs/experiments/C_retrieve.yaml --output-dir experiments/runs
-            </p>
             <p id="experiment-meta" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;"></p>
 
             <div class="table-wrapper">
@@ -362,7 +363,7 @@
                         </tr>
                     </thead>
                     <tbody id="benchmark-tbody">
-                        <tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-dim);">Open this tab to load GET /experiments.</td></tr>
+                        <tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-dim);">Select a run to view results.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -373,7 +374,7 @@
             <div style="margin-bottom: 1.5rem; display:flex; justify-content:space-between; align-items:flex-end; gap:1rem; flex-wrap:wrap;">
                 <div>
                     <h2 style="font-size: 1.5rem; font-weight: 800;">Dataset explorer</h2>
-                    <p style="color: var(--text-muted); font-size: 0.95rem;">Loaded from <code>GET /datasets</code>. Smoke is synthetic fiction; v1 is licensed public-domain + CC-BY excerpts.</p>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">Browse the questions and reference answers used in the benchmark.</p>
                 </div>
                 <div class="input-group" style="min-width: 240px;">
                     <label for="dataset-select">Dataset</label>
@@ -381,8 +382,9 @@
                 </div>
             </div>
             <p id="dataset-meta" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;"></p>
+            <details class="dataset-notes"><summary>Dataset notes</summary><p id="dataset-policy"></p></details>
             <div class="table-wrapper" id="dataset-items-container" style="padding:1.5rem; display:flex; flex-direction:column; gap:1rem;">
-                <p style="color:var(--text-dim);">Open this tab to load datasets from the API.</p>
+                <p style="color:var(--text-dim);">Select a dataset to view its questions.</p>
             </div>
         </div>
     </main>
@@ -659,16 +661,15 @@
         function renderJobStatus(info, fallback) {
             const el = document.getElementById("job-status");
             if (!info) {
-                el.textContent = fallback || "Idle. Default config is smoke.";
+                el.textContent = fallback || "Ready to run.";
                 return;
             }
             const state = jobState(info);
             const err = (info.status && info.status.error) || info.error;
             const bits = [
-                state || "unknown",
-                info.id ? `id=${info.id}` : null,
-                info.experiment_id ? `experiment=${info.experiment_id}` : null,
-                info.n_items != null ? `n=${info.n_items}` : null,
+                state ? state.charAt(0).toUpperCase() + state.slice(1) : "Unknown",
+                info.experiment_id || null,
+                info.n_items != null ? `${info.n_items} questions` : null,
             ].filter(Boolean);
             el.textContent = bits.join(" · ") + (err ? ` · ${err}` : "");
         }
@@ -685,7 +686,7 @@
             }
             stopJobPoll();
             setJobBusy(true);
-            status.textContent = "POST /experiments …";
+            status.textContent = "Starting experiment…";
             try {
                 const resp = await apiFetch("/experiments", {
                     method: "POST",
@@ -699,16 +700,16 @@
                 const body = await resp.json().catch(() => ({}));
                 if (!resp.ok) {
                     const detail = body.detail || resp.statusText;
-                    status.textContent = `POST /experiments ${resp.status}: ${detail}`;
+                    status.textContent = `Could not start experiment: ${detail}`;
                     setJobBusy(false);
                     return;
                 }
                 const runId = body.id;
-                status.textContent = `${body.status || "queued"} · id=${runId} · poll ${body.poll || "/experiments/" + runId}`;
+                status.textContent = "Queued · waiting for worker";
                 await loadCachedBenchmark(runId);
                 pollJobOnce(runId);
             } catch (err) {
-                status.textContent = "POST /experiments failed: " + err.message;
+                status.textContent = "Could not start experiment: " + err.message;
                 setJobBusy(false);
             }
         }
@@ -728,7 +729,7 @@
                     }
                 }
             } catch (err) {
-                document.getElementById("job-status").textContent = "poll error: " + err.message;
+                document.getElementById("job-status").textContent = "Could not refresh run: " + err.message;
             }
             jobPollTimer = setTimeout(() => pollJobOnce(runId), 2000);
         }
@@ -864,12 +865,11 @@
                 if (!resp.ok) throw new Error("GET /datasets/" + datasetId + " failed");
                 const ds = await resp.json();
                 meta.textContent = [
-                    ds.license,
-                    ds.synthetic ? "synthetic smoke" : "licensed pilot",
-                    ds.n_documents != null ? `${ds.n_documents} docs` : null,
-                    ds.n_items != null ? `${ds.n_items} items` : null,
-                    ds.split_policy,
+                    ds.synthetic ? "Synthetic sample" : "Public document benchmark",
+                    ds.n_documents != null ? `${ds.n_documents} documents` : null,
+                    ds.n_items != null ? `${ds.n_items} questions` : null,
                 ].filter(Boolean).join(" · ");
+                document.getElementById("dataset-policy").textContent = [ds.license, ds.split_policy].filter(Boolean).join(" · ");
                 const items = ds.items || [];
                 if (!items.length) {
                     container.innerHTML = `<p style="color:var(--text-dim);">No items.</p>`;
@@ -883,10 +883,10 @@
                     <div class="dataset-item">
                         <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; gap:0.75rem; flex-wrap:wrap;">
                             <span style="font-weight:700; color:var(--primary);">${escapeHtml(item.id)} · ${escapeHtml(item.domain)}</span>
-                            <span class="status-pill ${item.expected_abstention ? "neutral" : "entailed"}">${escapeHtml(item.scenario_type)} / ${escapeHtml(item.split)}</span>
+                            <span class="dataset-tag">${escapeHtml(item.scenario_type)} / ${escapeHtml(item.split)}</span>
                         </div>
                         <div style="font-size:0.95rem; margin-bottom:0.4rem;"><strong>Question:</strong> ${escapeHtml(item.question)}</div>
-                        <div style="font-size:0.85rem; color:var(--text-muted);"><strong>Gold:</strong> ${gold}</div>
+                        <div style="font-size:0.85rem; color:var(--text-muted);"><strong>Reference answer:</strong> ${gold}</div>
                     </div>`;
                 }).join("");
             } catch (err) {
