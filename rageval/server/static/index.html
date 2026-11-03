@@ -204,6 +204,7 @@
             <button class="nav-btn active" id="btn-tab-live">Claim audit</button>
             <button class="nav-btn" id="btn-tab-benchmark">Experiments</button>
             <button class="nav-btn" id="btn-tab-dataset">Datasets</button>
+            <button class="nav-btn" id="btn-tab-batch">Batch audit</button>
             <a href="/docs" target="_blank" class="nav-btn" style="text-decoration:none;">API</a>
         </nav>
     </header>
@@ -394,6 +395,17 @@
                 <p style="color:var(--text-dim);">Select a dataset to view its questions.</p>
             </div>
         </div>
+        <section id="section-batch" style="display:none">
+            <h2>Audit saved answers</h2>
+            <p class="hero-subtitle">Import a JSON array of up to 20 responses from your RAG app. Each row needs question, answer, and context_chunks (an array of source passages). Checks use the heuristic verifier. Results stay in this tab until you export or reload.</p>
+            <div class="panel" style="margin-top:20px">
+                <label for="batch-file">Responses file (.json, up to 2 MB)</label>
+                <input type="file" id="batch-file" accept=".json,application/json">
+                <div class="sample-presets"><button class="preset-btn" id="batch-template">Download example</button><button class="btn-primary" id="batch-run">Run batch audit</button><button class="preset-btn" id="batch-export" disabled>Export results</button></div>
+                <p id="batch-status" role="status">Connect with your access token before running.</p>
+                <div id="batch-results"></div>
+            </div>
+        </section>
     </main>
 
     <script>
@@ -417,6 +429,51 @@
                 await loadDatasetExplorer();
             } catch (err) { status.textContent = err.message; }
         });
+        let batchResults = [];
+        function downloadJSON(name, value) {
+            const url = URL.createObjectURL(new Blob([JSON.stringify(value, null, 2)], {type: 'application/json'}));
+            const link = document.createElement('a');
+            link.href = url; link.download = name; link.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+        document.getElementById('batch-template').onclick = () => downloadJSON('rageval-example.json', [
+            {question: 'What was revenue?', context_chunks: ['Revenue was $100 million.'], answer: 'Revenue was $100 million [1].'},
+            {question: 'What was revenue?', context_chunks: ['Revenue was $100 million.'], answer: 'Revenue was $900 million [1].'}
+        ]);
+        document.getElementById('batch-export').onclick = () => downloadJSON('rageval-results.json', {method: 'heuristic', results: batchResults});
+        document.getElementById('batch-run').onclick = async () => {
+            const button = document.getElementById('batch-run');
+            const status = document.getElementById('batch-status');
+            const output = document.getElementById('batch-results');
+            const file = document.getElementById('batch-file').files[0];
+            button.disabled = true;
+            try {
+                if (!file || file.size > 2 * 1024 * 1024) throw new Error('Choose a JSON file smaller than 2 MB.');
+                const rows = JSON.parse(await file.text());
+                if (!Array.isArray(rows) || !rows.length || rows.length > 20) throw new Error('Provide an array containing 1–20 responses.');
+                rows.forEach((row, i) => {
+                    if (!row || typeof row.question !== 'string' || !row.question.trim() || row.question.length > 2048 || typeof row.answer !== 'string' || !row.answer.trim() || row.answer.length > 16384 || !Array.isArray(row.context_chunks) || !row.context_chunks.length || row.context_chunks.length > 10 || row.context_chunks.some(c => typeof c !== 'string' || !c.trim() || c.length > 8192)) throw new Error(`Row ${i+1}: provide a question, answer, and 1–10 nonempty source passages. Question limit: 2,048 characters; answer limit: 16,384; each source passage: 8,192.`);
+                });
+                batchResults = []; output.replaceChildren();
+                document.getElementById('batch-export').disabled = true;
+                for (let i = 0; i < rows.length; i++) {
+                    status.textContent = `Checking ${i+1} of ${rows.length}…`;
+                    const row = rows[i];
+                    const response = await apiFetch('/evaluate/answer', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({question:row.question, answer:row.answer, context_chunks:row.context_chunks, method:'heuristic'})});
+                    if (!response.ok) throw new Error(`Row ${i+1} failed (${response.status}). Completed results can still be exported.`);
+                    const result = (await response.json()).evaluation;
+                    batchResults.push({row:i+1, input:row, evaluation:result});
+                    const detail = document.createElement('details');
+                    const summary = document.createElement('summary');
+                    summary.textContent = `${i+1}. ${row.question} — support ${Math.round(result.faithfulness_score*100)}%, unsupported ${Math.round(result.hallucination_rate*100)}%, contradiction ${Math.round(result.contradiction_rate*100)}%`;
+                    const pre = document.createElement('pre'); pre.style.whiteSpace = 'pre-wrap'; pre.textContent = JSON.stringify(result, null, 2);
+                    detail.append(summary, pre); output.append(detail);
+                    document.getElementById('batch-export').disabled = false;
+                }
+                status.textContent = `Complete: ${batchResults.length} responses checked. Expand a row for claim details or export the full results.`;
+            } catch (err) { status.textContent = err.message; }
+            finally { button.disabled = false; }
+        };
         const PRESETS = {
             faithful: {
                 question: "What was ApexCloud's Q3 2024 gross margin, and what drove margin expansion?",
@@ -444,7 +501,8 @@
         const tabs = [
             { btn: 'btn-tab-live', sec: 'section-live-eval' },
             { btn: 'btn-tab-benchmark', sec: 'section-benchmark', onShow: loadExperimentTab },
-            { btn: 'btn-tab-dataset', sec: 'section-dataset', onShow: loadDatasetExplorer }
+            { btn: 'btn-tab-dataset', sec: 'section-dataset', onShow: loadDatasetExplorer },
+            { btn: 'btn-tab-batch', sec: 'section-batch' }
         ];
 
         tabs.forEach(t => {

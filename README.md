@@ -168,3 +168,13 @@ HTTP after `rageval serve`:
 - `data/cards/benchmark_v1.md` — licensed pilot card
 - `docs/ANNOTATION_GUIDELINES.md`
 - `data/cards/verifier_eval_v1.md` — labeled claim set for RQ2
+
+### Audit your own saved responses
+
+Open **Batch audit**, download the example JSON, and replace it with your agent's
+responses. Each row has `question`, `answer`, and `context_chunks` (an array of
+retrieved source passages). Connect with your service token, select the file,
+and run the audit. The preview supports 1–20 rows per file, 10 source passages
+per row, and a 2 MB file limit. Expand rows for claim details and export JSON
+results before closing the tab. This evaluates saved outputs with the heuristic
+verifier; it does not register a dataset or run your agent automatically.
