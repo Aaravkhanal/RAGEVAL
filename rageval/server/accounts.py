@@ -6,6 +6,7 @@ from urllib.request import Request, urlopen
 from urllib.error import URLError
 from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel, Field
+from starlette.concurrency import run_in_threadpool
 
 owner = ContextVar('workspace_owner', default='legacy-admin')
 router = APIRouter(prefix='/account', tags=['accounts'])
@@ -49,7 +50,7 @@ async def workspace_identity(authorization: str | None = Header(default=None), x
     if authorization:
         if not authorization.startswith('Bearer '):
             raise HTTPException(401, 'Invalid session header')
-        user = auth_request('user', token=authorization[7:])
+        user = await run_in_threadpool(auth_request, 'user', token=authorization[7:])
         identity = user.get('id')
         if not identity:
             raise HTTPException(401, 'Invalid account session')
