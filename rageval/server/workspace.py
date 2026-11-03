@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field, model_validator
 
 def remote(method, query, body=None):
     from urllib.request import Request, urlopen
-    from urllib.error import URLError
+    from urllib.error import URLError, HTTPError
     base = os.environ['RAGEVAL_SUPABASE_URL'].rstrip('/')
     if not base.startswith('https://'):
         raise HTTPException(503, 'Remote storage requires HTTPS')
@@ -29,6 +29,8 @@ def remote(method, query, body=None):
         with urlopen(request, timeout=15) as response:
             raw = response.read()
             return json.loads(raw) if raw else None
+    except HTTPError as exc:
+        raise HTTPException(503, f'Remote storage returned HTTP {exc.code}; no local fallback was used') from None
     except URLError:
         raise HTTPException(503, 'Remote storage unavailable; no local fallback was used') from None
 
