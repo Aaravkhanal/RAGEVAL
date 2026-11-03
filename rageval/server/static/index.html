@@ -213,11 +213,12 @@
             <div class="hero-section">
                 <p class="eyebrow">Evidence evaluation</p>
                 <h1 class="hero-title">Check answers against their sources.</h1>
-                <p class="hero-subtitle">Review each claim, inspect its evidence, and compare benchmark runs. The live check uses a fast lexical heuristic.</p>
+                <p class="hero-subtitle">Paste a question, the source text your RAG app retrieved, and its answer. The audit checks each claim against that text. Or choose a sample below. The live check uses a fast lexical heuristic.</p>
             </div>
             <div class="input-group access-field">
                 <label for="api-token">RAGeval access token</label>
                 <input type="password" id="api-token" autocomplete="off" aria-describedby="token-help" placeholder="Paste RAGEVAL_PUBLIC_TOKEN">
+                <button class="preset-btn" id="connect-service">Connect</button><p class="field-help" id="connection-status" role="status">Enter your token, then connect.</p>
                 <p class="field-help" id="token-help">Get <code>RAGEVAL_PUBLIC_TOKEN</code> from the Render service’s Environment page. This unlocks checks; it is not an AI provider key.</p>
             </div>
         </div>
@@ -396,12 +397,26 @@
     </main>
 
     <script>
-        function apiFetch(url, options = {}) {
+        async function apiFetch(url, options = {}) {
             const headers = new Headers(options.headers || {});
-            const token = document.getElementById("api-token").value;
+            const token = document.getElementById("api-token").value.trim();
             if (token) headers.set("X-RAGEVAL-API-TOKEN", token);
-            return fetch(url, { ...options, headers });
+            const response = await fetch(url, { ...options, headers });
+            if (response.status === 401) throw new Error('Access denied. Enter your RAGEVAL_PUBLIC_TOKEN above and click Connect. Starting a job also needs RAGEVAL_ADMIN_TOKEN.');
+            if (response.status === 429) throw new Error('Request limit reached. Wait one minute and try again.');
+            return response;
         }
+        document.getElementById('connect-service').addEventListener('click', async () => {
+            const status = document.getElementById('connection-status');
+            status.textContent = 'Connecting…';
+            try {
+                const response = await apiFetch('/experiment-configs');
+                if (!response.ok) throw new Error(`Service unavailable (${response.status}). Try again shortly.`);
+                status.textContent = 'Connected. You can audit answers and browse datasets. Jobs need the separate admin token.';
+                await loadExperimentTab();
+                await loadDatasetExplorer();
+            } catch (err) { status.textContent = err.message; }
+        });
         const PRESETS = {
             faithful: {
                 question: "What was ApexCloud's Q3 2024 gross margin, and what drove margin expansion?",
@@ -464,6 +479,7 @@
             const contextText = document.getElementById('eval-context').value;
             const answer = document.getElementById('eval-answer').value;
             const btn = document.getElementById('btn-run-eval');
+            if (btn.disabled) return;
             const errorEl = document.getElementById('eval-error');
             errorEl.hidden = true;
             errorEl.textContent = '';
@@ -696,9 +712,10 @@
             const config = document.getElementById("config-select").value;
             const maxItems = Number(document.getElementById("max-items").value);
             const allowHeavy = document.getElementById("allow-heavy").checked;
-            const adminToken = document.getElementById("admin-token").value;
+            const adminToken = document.getElementById("admin-token").value.trim();
+            if (!adminToken) { status.textContent = "Enter RAGEVAL_ADMIN_TOKEN from Render Environment to start a job."; return; }
             if (!config) {
-                status.textContent = "Choose a config from GET /experiment-configs.";
+                status.textContent = "Connect using your access token first, then choose a configuration.";
                 return;
             }
             stopJobPoll();
