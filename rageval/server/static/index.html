@@ -408,6 +408,13 @@
         </section>
         <section id="section-workspace" style="display:none">
             <h2>My benchmarks</h2>
+            <div class="panel" style="margin-bottom:16px">
+                <p>Sign in for a private workspace. Sessions stay in this tab’s memory.</p>
+                <label for="account-email">Email</label><input type="text" id="account-email" autocomplete="username">
+                <label for="account-password">Password</label><input type="password" id="account-password" autocomplete="current-password">
+                <div class="sample-presets"><button class="preset-btn" id="account-login">Sign in</button><button class="preset-btn" id="account-signup">Create account</button><button class="preset-btn" id="account-logout">Sign out</button></div>
+                <p id="account-status" role="status">Sign in to keep your datasets separate from other users.</p>
+            </div>
             <p>Save custom benchmarks, measure the evaluator against human labels, and compare captured agent responses. Saving datasets requires the job admin token in Experiments.</p>
             <div class="panel">
                 <label for="workspace-file">Dataset or human claim labels (.json, maximum 60 KB)</label>
@@ -415,7 +422,7 @@
                 <div class="sample-presets">
                     <button class="preset-btn" id="workspace-example">Dataset example</button>
                     <button class="preset-btn" id="accuracy-example">Human labels template</button>
-                    <button class="preset-btn" id="workspace-upload">Save dataset</button>
+                    <button class="preset-btn" id="workspace-upload">Save dataset</button><button class="preset-btn" id="workspace-execute">Evaluate dataset answers</button><button class="preset-btn" id="workspace-operations">Service status</button>
                     <button class="preset-btn" id="workspace-accuracy">Measure accuracy</button>
                     <button class="preset-btn" id="workspace-list">Saved datasets</button>
                     <button class="preset-btn" id="workspace-compare">Compare configurations</button>
@@ -423,15 +430,17 @@
                     <button class="preset-btn" id="workspace-export">Export latest report</button>
                 </div>
                 <label for="comparison-baseline">Comparison baseline configuration (optional)</label><input type="text" id="comparison-baseline" placeholder="baseline"><p id="workspace-status" role="status"></p>
-                <pre id="workspace-output" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre>
+                <div id="workspace-summary"></div><pre id="workspace-output" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre>
             </div>
         </section>
     </main>
 
     <script>
+        let accountSession = null;
         async function apiFetch(url, options = {}) {
             const headers = new Headers(options.headers || {});
             const token = document.getElementById("api-token").value.trim();
+            if (accountSession && url.startsWith("/workspace/")) headers.set("Authorization", "Bearer " + accountSession);
             if (token) headers.set("X-RAGEVAL-API-TOKEN", token);
             const response = await fetch(url, { ...options, headers });
             if (response.status === 401) throw new Error('Access denied. Enter your RAGEVAL_PUBLIC_TOKEN above and click Connect. Starting a job also needs RAGEVAL_ADMIN_TOKEN.');
@@ -449,6 +458,20 @@
                 await loadDatasetExplorer();
             } catch (err) { status.textContent = err.message; }
         });
+        async function accountAction(action) {
+            const status = document.getElementById('account-status');
+            try {
+                const response = await fetch('/account/'+action, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('account-email').value.trim(),password:document.getElementById('account-password').value})});
+                const body = await response.json();
+                if (!response.ok) throw new Error(typeof body.detail==='string'?body.detail:'Check your email and password (at least 8 characters).');
+                document.getElementById('account-password').value='';
+                if (body.access_token) {accountSession=body.access_token; status.textContent='Signed in. Your workspace is private.';}
+                else status.textContent=body.message;
+            } catch(err) {status.textContent=err.message;}
+        }
+        document.getElementById('account-login').onclick=()=>accountAction('login');
+        document.getElementById('account-signup').onclick=()=>accountAction('signup');
+        document.getElementById('account-logout').onclick=()=>{accountSession=null;document.getElementById('workspace-output').textContent='';document.getElementById('account-status').textContent='Signed out.';};
         let workspaceReport = {};
         document.getElementById('workspace-example').onclick = () => downloadJSON('dataset.json', {name:'Revenue benchmark', documents:[{id:'doc1',text:'Revenue was $100 million.'}],questions:[{id:'q1',question:'What was revenue?',reference_answer:'$100 million',source_ids:['doc1']}]});
         document.getElementById('accuracy-example').onclick = () => downloadJSON('human-labels.json', {claims:[{claim:'Replace with a claim independently labeled by a human',evidence:'Replace with its source passage',human_label:'supported'}]});
@@ -457,7 +480,7 @@
             const status = document.getElementById('workspace-status');
             status.textContent = 'Working…';
             try {
-                let options = {};
+                let options = {headers:{'X-RAGEVAL-ADMIN-TOKEN':document.getElementById('admin-token').value.trim()}};
                 if (upload) {
                     const file = document.getElementById('workspace-file').files[0];
                     if (!file || file.size > 60000) throw new Error('Select a JSON file up to 60 KB.');
@@ -468,10 +491,22 @@
                 const body = await response.json();
                 if (!response.ok) throw new Error(typeof body.detail === 'string' ? body.detail : JSON.stringify(body.detail));
                 workspaceReport = body;
+                const summary = document.getElementById('workspace-summary'); summary.replaceChildren();
+                const rows = body.configurations || body.results || body.datasets || (body.per_label ? Object.entries(body.per_label).map(([label, values])=>({label,...values})) : []);
+                if (rows.length) {
+                    const columns = Object.keys(rows[0]).filter(key=>!key.startsWith('_') && (rows[0][key]===null || ['string','number','boolean'].includes(typeof rows[0][key])));
+                    const table = document.createElement('table');
+                    const heading = document.createElement('tr');
+                    columns.forEach(key=>{const cell=document.createElement('th');cell.textContent=key.replaceAll('_',' ');heading.append(cell);});
+                    table.append(heading);
+                    rows.forEach(row=>{const tr=document.createElement('tr');columns.forEach(key=>{const td=document.createElement('td');td.textContent=row[key]===null?'Unknown':String(row[key]);tr.append(td);});table.append(tr);});summary.append(table);
+                }
                 document.getElementById('workspace-output').textContent = JSON.stringify(body,null,2);
                 status.textContent = path === 'accuracy' ? 'Measured against the human labels you supplied. Labels are not independently verified.' : 'Complete. Export the report to keep a copy.';
             } catch (err) { status.textContent = err.message; }
         }
+        document.getElementById('workspace-execute').onclick = () => workspaceAction('execute', true);
+        document.getElementById('workspace-operations').onclick = () => workspaceAction('operations');
         document.getElementById('workspace-upload').onclick = () => workspaceAction('datasets', true);
         document.getElementById('workspace-accuracy').onclick = () => workspaceAction('accuracy', true);
         document.getElementById('workspace-list').onclick = () => workspaceAction('datasets');

@@ -178,3 +178,11 @@ and run the audit. The preview supports 1–20 rows per file, 10 source passages
 per row, and a 2 MB file limit. Expand rows for claim details and export JSON
 results before closing the tab. This evaluates saved outputs with the heuristic
 verifier; it does not register a dataset or run your agent automatically.
+
+### Private workspaces and durable deployment
+
+See [workspace operations](docs/WORKSPACE.md) for accounts, custom benchmark
+execution, durable queue migrations, full artifact export/restore, and deployed
+workflow tests. The [release diagnostic](reports/release_20261103/ANALYSIS.md)
+records a fresh smoke run and the heuristic verifier's limitations; independent
+human review remains an explicit evidence requirement.

@@ -1,0 +1,1914 @@
+[
+  {
+    "config_name": "Smoke_Sparse_Heuristic",
+    "total_queries": 8,
+    "mean_faithfulness": 0.8125,
+    "mean_hallucination_rate": 0.1875,
+    "mean_contradiction_rate": 0.0,
+    "mean_citation_precision": 1.0,
+    "mean_citation_recall": 0.6667,
+    "mean_recall_at_5": 1.0,
+    "mean_mrr": 1.0,
+    "mean_latency_ms": 0.73,
+    "p95_latency_ms": 1.57,
+    "abstention_accuracy": 0.0,
+    "conflicting_detection_rate": 0.0,
+    "mean_answer_em": 0.0,
+    "mean_answer_f1": 0.3591,
+    "mixed_support_n": 0,
+    "mixed_support_mean_answer_f1": null,
+    "mixed_support_mean_faithfulness": null,
+    "robustness_by_scenario": {
+      "standard": {
+        "n": 8,
+        "claim_support_rate": 0.8125,
+        "unsupported_claim_rate": 0.1875,
+        "contradiction_rate": 0.0,
+        "recall_at_5": 1.0,
+        "evidence_recall_at_5": 0.6667,
+        "no_answer_empty_retrieval_rate": 0.0,
+        "mrr": 1.0,
+        "answer_em": 0.0,
+        "answer_f1": 0.3591,
+        "abstention_accuracy": 0.0,
+        "citation_support_precision": 1.0
+      }
+    },
+    "total_estimated_cost_usd": null,
+    "run_id": null,
+    "dataset_id": "smoke_v1",
+    "dataset_version": "1.0.0",
+    "git_commit": "7e63d90ffe572a3c0e78e9a22a3516b0051e3bfa",
+    "results": [
+      {
+        "query_id": "bench_001",
+        "question": "What was ApexCloud's Q3 2024 gross margin, and what drove the margin expansion?",
+        "test_type": "standard",
+        "generated_answer": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth. [1] Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters. [2]",
+        "retrieved_chunks": [
+          {
+            "chunk": {
+              "id": "doc_fin_01_chk_0",
+              "doc_id": "doc_fin_01",
+              "text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth. Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters. Operating cash flow reached $215 million, compared to $145 million in Q3 2023. Net retention rate stood at 119%, moderating slightly from 122% in the prior quarter due to enterprise budget scrutiny in EMEA. For Q4 2024, management expects revenue between $880 million and $890 million with capital expenditures capped at $95 million.",
+              "chunk_index": 0,
+              "token_count": 90,
+              "start_char": 0,
+              "end_char": 582,
+              "metadata": {
+                "title": "ApexCloud Q3 2024 Financial Performance & Guidance",
+                "domain": "finance"
+              }
+            },
+            "score": 24.333943077435173,
+            "rank": 1,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_fin_02_chk_0",
+              "doc_id": "doc_fin_02",
+              "text": "As of September 30, 2024, ApexCloud held total cash, cash equivalents, and marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029. The notes carry a fixed coupon rate of 3.875% payable semi-annually. In August 2024, the company repurchased $150 million in Class A common stock under its existing $500 million share repurchase authorization.",
+              "chunk_index": 0,
+              "token_count": 61,
+              "start_char": 0,
+              "end_char": 403,
+              "metadata": {
+                "title": "ApexCloud Long-Term Debt and Capital Structure",
+                "domain": "finance"
+              }
+            },
+            "score": 17.174553897972114,
+            "rank": 2,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_conflict_b_chk_0",
+              "doc_id": "doc_conflict_b",
+              "text": "The Arizona Transportation Safety Board safety audit concluded that NovaDrive had deployed only 85 active vehicles in Phoenix as of April 2024, and mandated that all vehicles maintain licensed backup safety operators behind the wheel following two non-fatal intersection collisions in February 2024. The 24-hour unsupervised permit was suspended indefinitely.",
+              "chunk_index": 0,
+              "token_count": 50,
+              "start_char": 0,
+              "end_char": 359,
+              "metadata": {
+                "title": "State Transportation Safety Board Audit on NovaDrive - Official Report (Q3)",
+                "domain": "autonomous_vehicles"
+              }
+            },
+            "score": 17.11928383754127,
+            "rank": 3,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_bio_01_chk_0",
+              "doc_id": "doc_bio_01",
+              "text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. Grade 3 or higher treatment-related adverse events occurred in 31.2% of patients receiving combination therapy, predominantly manifested as elevated alanine aminotransferase (ALT) and immune-mediated colitis. Discontinuation due to adverse events was 9.4%.",
+              "chunk_index": 0,
+              "token_count": 88,
+              "start_char": 0,
+              "end_char": 637,
+              "metadata": {
+                "title": "Phase 3 Clinical Evaluation of Veloceptin in Metastatic Melanoma",
+                "domain": "biomedical"
+              }
+            },
+            "score": 15.73288404645314,
+            "rank": 4,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_bio_02_chk_0",
+              "doc_id": "doc_bio_02",
+              "text": "Veloceptin is a humanized monoclonal IgG1-kappa antibody targeting immunosuppressive receptor Siglec-15. Following intravenous infusion at the recommended phase 2/3 dose of 10 mg/kg every three weeks, terminal elimination half-life was 18.4 days with steady-state concentration achieved by cycle 4. No dose-limiting toxicities were observed up to 20 mg/kg.",
+              "chunk_index": 0,
+              "token_count": 48,
+              "start_char": 0,
+              "end_char": 356,
+              "metadata": {
+                "title": "Pharmacokinetics and Dosing Tolerability of Veloceptin",
+                "domain": "biomedical"
+              }
+            },
+            "score": 14.854307721375848,
+            "rank": 5,
+            "retrieval_method": "sparse_bm25"
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "claim_1",
+            "text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth.",
+            "raw_sentence": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth.",
+            "cited_chunk_ids": [],
+            "char_start": 0,
+            "char_end": 121,
+            "is_abstention": false
+          },
+          {
+            "claim_id": "claim_2",
+            "text": "Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters.",
+            "raw_sentence": "[1] Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters.",
+            "cited_chunk_ids": [
+              "doc_fin_01_chk_0"
+            ],
+            "char_start": 122,
+            "char_end": 252,
+            "is_abstention": false
+          }
+        ],
+        "verifications": [
+          {
+            "claim_id": "claim_1",
+            "claim_text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth.",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_fin_01_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_fin_01_chk_0",
+            "best_matching_chunk_text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth. Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters. Operating cash flow reached $215 million, compared to $145 million in Q3 2023. Net retention rate stood at 119%, moderating slightly from 122% in the prior quarter due to enterprise budget scrutiny in EMEA. For Q4 2024, management expects revenue between $880 million and $890 million with capital expenditures capped at $95 million.",
+            "evidence_span_start": 0,
+            "evidence_span_end": 121,
+            "evidence_exact_text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth.",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          },
+          {
+            "claim_id": "claim_2",
+            "claim_text": "Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters.",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_fin_01_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_fin_01_chk_0",
+            "best_matching_chunk_text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth. Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters. Operating cash flow reached $215 million, compared to $145 million in Q3 2023. Net retention rate stood at 119%, moderating slightly from 122% in the prior quarter due to enterprise budget scrutiny in EMEA. For Q4 2024, management expects revenue between $880 million and $890 million with capital expenditures capped at $95 million.",
+            "evidence_span_start": 122,
+            "evidence_span_end": 248,
+            "evidence_exact_text": "Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters.",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          }
+        ],
+        "faithfulness_score": 1.0,
+        "hallucination_rate": 0.0,
+        "contradiction_rate": 0.0,
+        "claim_coverage": 1.0,
+        "citation_metrics": {
+          "total_citations": 2,
+          "valid_citations": 2,
+          "hallucinated_citations": [],
+          "misattributed_citations": [],
+          "citation_precision": 1.0,
+          "citation_recall": 0.6666666666666666,
+          "citation_support_precision": 1.0,
+          "citation_completeness": 0.5,
+          "uncited_claim_ids": [
+            "claim_1"
+          ],
+          "contradicting_citations": []
+        },
+        "retrieval_metrics": {
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_k": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "no_answer_empty_retrieval": null,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "noise_ratio": 0.8,
+          "retrieved_count": 5
+        },
+        "abstained": false,
+        "correctly_abstained": true,
+        "answer_em": 0.0,
+        "answer_f1": 0.5574,
+        "scenario_type": "standard",
+        "split": "smoke",
+        "retrieval_latency_ms": 0.1,
+        "generation_latency_ms": 0.06,
+        "verification_latency_ms": 1.81,
+        "total_latency_ms": 1.96,
+        "token_count_prompt": 380,
+        "token_count_completion": 39,
+        "estimated_cost_usd": null,
+        "cost_pricing_source": null
+      },
+      {
+        "query_id": "bench_002",
+        "question": "What was the median progression-free survival and objective response rate for Veloceptin plus nivolumab?",
+        "test_type": "standard",
+        "generated_answer": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). [1] The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. [2]",
+        "retrieved_chunks": [
+          {
+            "chunk": {
+              "id": "doc_bio_01_chk_0",
+              "doc_id": "doc_bio_01",
+              "text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. Grade 3 or higher treatment-related adverse events occurred in 31.2% of patients receiving combination therapy, predominantly manifested as elevated alanine aminotransferase (ALT) and immune-mediated colitis. Discontinuation due to adverse events was 9.4%.",
+              "chunk_index": 0,
+              "token_count": 88,
+              "start_char": 0,
+              "end_char": 637,
+              "metadata": {
+                "title": "Phase 3 Clinical Evaluation of Veloceptin in Metastatic Melanoma",
+                "domain": "biomedical"
+              }
+            },
+            "score": 38.32786774220759,
+            "rank": 1,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_cs_01_chk_0",
+              "doc_id": "doc_cs_01",
+              "text": "HydraKV is a geo-replicated distributed key-value store utilizing a quorum-lease consensus protocol optimized for read-heavy workloads. Under uniform 95% read traffic across 5 planetary regions, HydraKV achieved a median read latency of 1.4 ms and a 99th percentile (p99) read latency of 4.8 ms by servicing reads locally via monotonic read lease grants. Write operations require strict majority quorum consensus with Raft, yielding a median write latency of 74.2 ms across cross-Atlantic links. When partition tolerance is challenged, HydraKV guarantees linearizable reads and sequential consistency for concurrent multi-key transactions.",
+              "chunk_index": 0,
+              "token_count": 89,
+              "start_char": 0,
+              "end_char": 639,
+              "metadata": {
+                "title": "HydraKV: Consensus Protocol and Latency Benchmarks",
+                "domain": "systems"
+              }
+            },
+            "score": 24.561618428866865,
+            "rank": 2,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_fin_01_chk_0",
+              "doc_id": "doc_fin_01",
+              "text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth. Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters. Operating cash flow reached $215 million, compared to $145 million in Q3 2023. Net retention rate stood at 119%, moderating slightly from 122% in the prior quarter due to enterprise budget scrutiny in EMEA. For Q4 2024, management expects revenue between $880 million and $890 million with capital expenditures capped at $95 million.",
+              "chunk_index": 0,
+              "token_count": 90,
+              "start_char": 0,
+              "end_char": 582,
+              "metadata": {
+                "title": "ApexCloud Q3 2024 Financial Performance & Guidance",
+                "domain": "finance"
+              }
+            },
+            "score": 23.917033056481298,
+            "rank": 3,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_bio_02_chk_0",
+              "doc_id": "doc_bio_02",
+              "text": "Veloceptin is a humanized monoclonal IgG1-kappa antibody targeting immunosuppressive receptor Siglec-15. Following intravenous infusion at the recommended phase 2/3 dose of 10 mg/kg every three weeks, terminal elimination half-life was 18.4 days with steady-state concentration achieved by cycle 4. No dose-limiting toxicities were observed up to 20 mg/kg.",
+              "chunk_index": 0,
+              "token_count": 48,
+              "start_char": 0,
+              "end_char": 356,
+              "metadata": {
+                "title": "Pharmacokinetics and Dosing Tolerability of Veloceptin",
+                "domain": "biomedical"
+              }
+            },
+            "score": 23.797666371304423,
+            "rank": 4,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_conflict_b_chk_0",
+              "doc_id": "doc_conflict_b",
+              "text": "The Arizona Transportation Safety Board safety audit concluded that NovaDrive had deployed only 85 active vehicles in Phoenix as of April 2024, and mandated that all vehicles maintain licensed backup safety operators behind the wheel following two non-fatal intersection collisions in February 2024. The 24-hour unsupervised permit was suspended indefinitely.",
+              "chunk_index": 0,
+              "token_count": 50,
+              "start_char": 0,
+              "end_char": 359,
+              "metadata": {
+                "title": "State Transportation Safety Board Audit on NovaDrive - Official Report (Q3)",
+                "domain": "autonomous_vehicles"
+              }
+            },
+            "score": 23.13262101072917,
+            "rank": 5,
+            "retrieval_method": "sparse_bm25"
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "claim_1",
+            "text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61",
+            "raw_sentence": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001).",
+            "cited_chunk_ids": [],
+            "char_start": 0,
+            "char_end": 231,
+            "is_abstention": false
+          },
+          {
+            "claim_id": "claim_2",
+            "text": "95% CI 0.49-0.75",
+            "raw_sentence": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001).",
+            "cited_chunk_ids": [],
+            "char_start": 233,
+            "char_end": 249,
+            "is_abstention": false
+          },
+          {
+            "claim_id": "claim_3",
+            "text": "p < 0.001).",
+            "raw_sentence": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001).",
+            "cited_chunk_ids": [],
+            "char_start": 251,
+            "char_end": 262,
+            "is_abstention": false
+          },
+          {
+            "claim_id": "claim_4",
+            "text": "The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm.",
+            "raw_sentence": "[1] The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm.",
+            "cited_chunk_ids": [
+              "doc_bio_01_chk_0"
+            ],
+            "char_start": 263,
+            "char_end": 384,
+            "is_abstention": false
+          }
+        ],
+        "verifications": [
+          {
+            "claim_id": "claim_1",
+            "claim_text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_bio_01_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_bio_01_chk_0",
+            "best_matching_chunk_text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. Grade 3 or higher treatment-related adverse events occurred in 31.2% of patients receiving combination therapy, predominantly manifested as elevated alanine aminotransferase (ALT) and immune-mediated colitis. Discontinuation due to adverse events was 9.4%.",
+            "evidence_span_start": 0,
+            "evidence_span_end": 262,
+            "evidence_exact_text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001).",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          },
+          {
+            "claim_id": "claim_2",
+            "claim_text": "95% CI 0.49-0.75",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_bio_01_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_bio_01_chk_0",
+            "best_matching_chunk_text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. Grade 3 or higher treatment-related adverse events occurred in 31.2% of patients receiving combination therapy, predominantly manifested as elevated alanine aminotransferase (ALT) and immune-mediated colitis. Discontinuation due to adverse events was 9.4%.",
+            "evidence_span_start": 0,
+            "evidence_span_end": 262,
+            "evidence_exact_text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001).",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          },
+          {
+            "claim_id": "claim_3",
+            "claim_text": "p < 0.001).",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_bio_01_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_bio_01_chk_0",
+            "best_matching_chunk_text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. Grade 3 or higher treatment-related adverse events occurred in 31.2% of patients receiving combination therapy, predominantly manifested as elevated alanine aminotransferase (ALT) and immune-mediated colitis. Discontinuation due to adverse events was 9.4%.",
+            "evidence_span_start": 0,
+            "evidence_span_end": 262,
+            "evidence_exact_text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001).",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          },
+          {
+            "claim_id": "claim_4",
+            "claim_text": "The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm.",
+            "label": "partially_supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.8,
+            "supporting_chunk_ids": [
+              "doc_bio_01_chk_0"
+            ],
+            "contradicting_chunk_ids": [
+              "doc_fin_01_chk_0"
+            ],
+            "best_matching_chunk_id": "doc_bio_01_chk_0",
+            "best_matching_chunk_text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. Grade 3 or higher treatment-related adverse events occurred in 31.2% of patients receiving combination therapy, predominantly manifested as elevated alanine aminotransferase (ALT) and immune-mediated colitis. Discontinuation due to adverse events was 9.4%.",
+            "evidence_span_start": 263,
+            "evidence_span_end": 380,
+            "evidence_exact_text": "The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm.",
+            "explanation": "Dual evidence: at least one chunk supports and one chunk contradicts; both id lists are retained.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          }
+        ],
+        "faithfulness_score": 0.75,
+        "hallucination_rate": 0.25,
+        "contradiction_rate": 0.0,
+        "claim_coverage": 1.0,
+        "citation_metrics": {
+          "total_citations": 2,
+          "valid_citations": 2,
+          "hallucinated_citations": [],
+          "misattributed_citations": [],
+          "citation_precision": 1.0,
+          "citation_recall": 0.6666666666666666,
+          "citation_support_precision": 1.0,
+          "citation_completeness": 0.25,
+          "uncited_claim_ids": [
+            "claim_1",
+            "claim_2",
+            "claim_3"
+          ],
+          "contradicting_citations": []
+        },
+        "retrieval_metrics": {
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_k": 1.0,
+          "evidence_recall_at_5": 0.0,
+          "no_answer_empty_retrieval": null,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "noise_ratio": 0.8,
+          "retrieved_count": 5
+        },
+        "abstained": false,
+        "correctly_abstained": true,
+        "answer_em": 0.0,
+        "answer_f1": 0.5974,
+        "scenario_type": "standard",
+        "split": "smoke",
+        "retrieval_latency_ms": 0.09,
+        "generation_latency_ms": 0.03,
+        "verification_latency_ms": 0.74,
+        "total_latency_ms": 0.86,
+        "token_count_prompt": 409,
+        "token_count_completion": 58,
+        "estimated_cost_usd": null,
+        "cost_pricing_source": null
+      },
+      {
+        "query_id": "bench_003",
+        "question": "What are the median and 99th percentile read latencies of HydraKV, and how are local reads serviced?",
+        "test_type": "standard",
+        "generated_answer": "HydraKV is a geo-replicated distributed key-value store utilizing a quorum-lease consensus protocol optimized for read-heavy workloads. [1] Under uniform 95% read traffic across 5 planetary regions, HydraKV achieved a median read latency of 1.4 ms and a 99th percentile (p99) read latency of 4.8 ms by servicing reads locally via monotonic read lease grants. [2]",
+        "retrieved_chunks": [
+          {
+            "chunk": {
+              "id": "doc_cs_01_chk_0",
+              "doc_id": "doc_cs_01",
+              "text": "HydraKV is a geo-replicated distributed key-value store utilizing a quorum-lease consensus protocol optimized for read-heavy workloads. Under uniform 95% read traffic across 5 planetary regions, HydraKV achieved a median read latency of 1.4 ms and a 99th percentile (p99) read latency of 4.8 ms by servicing reads locally via monotonic read lease grants. Write operations require strict majority quorum consensus with Raft, yielding a median write latency of 74.2 ms across cross-Atlantic links. When partition tolerance is challenged, HydraKV guarantees linearizable reads and sequential consistency for concurrent multi-key transactions.",
+              "chunk_index": 0,
+              "token_count": 89,
+              "start_char": 0,
+              "end_char": 639,
+              "metadata": {
+                "title": "HydraKV: Consensus Protocol and Latency Benchmarks",
+                "domain": "systems"
+              }
+            },
+            "score": 29.96400911304068,
+            "rank": 1,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_bio_01_chk_0",
+              "doc_id": "doc_bio_01",
+              "text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. Grade 3 or higher treatment-related adverse events occurred in 31.2% of patients receiving combination therapy, predominantly manifested as elevated alanine aminotransferase (ALT) and immune-mediated colitis. Discontinuation due to adverse events was 9.4%.",
+              "chunk_index": 0,
+              "token_count": 88,
+              "start_char": 0,
+              "end_char": 637,
+              "metadata": {
+                "title": "Phase 3 Clinical Evaluation of Veloceptin in Metastatic Melanoma",
+                "domain": "biomedical"
+              }
+            },
+            "score": 16.549397115645757,
+            "rank": 2,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_conflict_b_chk_0",
+              "doc_id": "doc_conflict_b",
+              "text": "The Arizona Transportation Safety Board safety audit concluded that NovaDrive had deployed only 85 active vehicles in Phoenix as of April 2024, and mandated that all vehicles maintain licensed backup safety operators behind the wheel following two non-fatal intersection collisions in February 2024. The 24-hour unsupervised permit was suspended indefinitely.",
+              "chunk_index": 0,
+              "token_count": 50,
+              "start_char": 0,
+              "end_char": 359,
+              "metadata": {
+                "title": "State Transportation Safety Board Audit on NovaDrive - Official Report (Q3)",
+                "domain": "autonomous_vehicles"
+              }
+            },
+            "score": 15.699003135018444,
+            "rank": 3,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_fin_02_chk_0",
+              "doc_id": "doc_fin_02",
+              "text": "As of September 30, 2024, ApexCloud held total cash, cash equivalents, and marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029. The notes carry a fixed coupon rate of 3.875% payable semi-annually. In August 2024, the company repurchased $150 million in Class A common stock under its existing $500 million share repurchase authorization.",
+              "chunk_index": 0,
+              "token_count": 61,
+              "start_char": 0,
+              "end_char": 403,
+              "metadata": {
+                "title": "ApexCloud Long-Term Debt and Capital Structure",
+                "domain": "finance"
+              }
+            },
+            "score": 15.540358747297196,
+            "rank": 4,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_cs_02_chk_0",
+              "doc_id": "doc_cs_02",
+              "text": "HydraKV uses an append-only LSM-tree storage engine with tiered leveling compaction. In crash recovery benchmarks on NVMe arrays, node recovery times averaged 3.2 seconds for a 500 GB partition state. Node failure detection utilizes heartbeats calibrated with a 450 ms timeout threshold, triggering leader election within an average of 620 ms.",
+              "chunk_index": 0,
+              "token_count": 51,
+              "start_char": 0,
+              "end_char": 343,
+              "metadata": {
+                "title": "HydraKV Fault Recovery and Compaction Architecture",
+                "domain": "systems"
+              }
+            },
+            "score": 15.322115149556936,
+            "rank": 5,
+            "retrieval_method": "sparse_bm25"
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "claim_1",
+            "text": "HydraKV is a geo-replicated distributed key-value store utilizing a quorum-lease consensus protocol optimized for read-heavy workloads.",
+            "raw_sentence": "HydraKV is a geo-replicated distributed key-value store utilizing a quorum-lease consensus protocol optimized for read-heavy workloads.",
+            "cited_chunk_ids": [],
+            "char_start": 0,
+            "char_end": 135,
+            "is_abstention": false
+          },
+          {
+            "claim_id": "claim_2",
+            "text": "Under uniform 95% read traffic across 5 planetary regions, HydraKV achieved a median read latency of 1.4 ms and a 99th percentile (p99) read latency of 4.8 ms by servicing reads locally via monotonic read lease grants.",
+            "raw_sentence": "[1] Under uniform 95% read traffic across 5 planetary regions, HydraKV achieved a median read latency of 1.4 ms and a 99th percentile (p99) read latency of 4.8 ms by servicing reads locally via monotonic read lease grants.",
+            "cited_chunk_ids": [
+              "doc_cs_01_chk_0"
+            ],
+            "char_start": 136,
+            "char_end": 358,
+            "is_abstention": false
+          }
+        ],
+        "verifications": [
+          {
+            "claim_id": "claim_1",
+            "claim_text": "HydraKV is a geo-replicated distributed key-value store utilizing a quorum-lease consensus protocol optimized for read-heavy workloads.",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_cs_01_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_cs_01_chk_0",
+            "best_matching_chunk_text": "HydraKV is a geo-replicated distributed key-value store utilizing a quorum-lease consensus protocol optimized for read-heavy workloads. Under uniform 95% read traffic across 5 planetary regions, HydraKV achieved a median read latency of 1.4 ms and a 99th percentile (p99) read latency of 4.8 ms by servicing reads locally via monotonic read lease grants. Write operations require strict majority quorum consensus with Raft, yielding a median write latency of 74.2 ms across cross-Atlantic links. When partition tolerance is challenged, HydraKV guarantees linearizable reads and sequential consistency for concurrent multi-key transactions.",
+            "evidence_span_start": 0,
+            "evidence_span_end": 135,
+            "evidence_exact_text": "HydraKV is a geo-replicated distributed key-value store utilizing a quorum-lease consensus protocol optimized for read-heavy workloads.",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          },
+          {
+            "claim_id": "claim_2",
+            "claim_text": "Under uniform 95% read traffic across 5 planetary regions, HydraKV achieved a median read latency of 1.4 ms and a 99th percentile (p99) read latency of 4.8 ms by servicing reads locally via monotonic read lease grants.",
+            "label": "partially_supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.8,
+            "supporting_chunk_ids": [
+              "doc_cs_01_chk_0"
+            ],
+            "contradicting_chunk_ids": [
+              "doc_cs_02_chk_0"
+            ],
+            "best_matching_chunk_id": "doc_cs_01_chk_0",
+            "best_matching_chunk_text": "HydraKV is a geo-replicated distributed key-value store utilizing a quorum-lease consensus protocol optimized for read-heavy workloads. Under uniform 95% read traffic across 5 planetary regions, HydraKV achieved a median read latency of 1.4 ms and a 99th percentile (p99) read latency of 4.8 ms by servicing reads locally via monotonic read lease grants. Write operations require strict majority quorum consensus with Raft, yielding a median write latency of 74.2 ms across cross-Atlantic links. When partition tolerance is challenged, HydraKV guarantees linearizable reads and sequential consistency for concurrent multi-key transactions.",
+            "evidence_span_start": 136,
+            "evidence_span_end": 354,
+            "evidence_exact_text": "Under uniform 95% read traffic across 5 planetary regions, HydraKV achieved a median read latency of 1.4 ms and a 99th percentile (p99) read latency of 4.8 ms by servicing reads locally via monotonic read lease grants.",
+            "explanation": "Dual evidence: at least one chunk supports and one chunk contradicts; both id lists are retained.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          }
+        ],
+        "faithfulness_score": 0.5,
+        "hallucination_rate": 0.5,
+        "contradiction_rate": 0.0,
+        "claim_coverage": 1.0,
+        "citation_metrics": {
+          "total_citations": 2,
+          "valid_citations": 2,
+          "hallucinated_citations": [],
+          "misattributed_citations": [],
+          "citation_precision": 1.0,
+          "citation_recall": 0.6666666666666666,
+          "citation_support_precision": 1.0,
+          "citation_completeness": 0.5,
+          "uncited_claim_ids": [
+            "claim_1"
+          ],
+          "contradicting_citations": []
+        },
+        "retrieval_metrics": {
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_k": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "no_answer_empty_retrieval": null,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "noise_ratio": 0.8,
+          "retrieved_count": 5
+        },
+        "abstained": false,
+        "correctly_abstained": true,
+        "answer_em": 0.0,
+        "answer_f1": 0.6053,
+        "scenario_type": "standard",
+        "split": "smoke",
+        "retrieval_latency_ms": 0.09,
+        "generation_latency_ms": 0.02,
+        "verification_latency_ms": 0.42,
+        "total_latency_ms": 0.53,
+        "token_count_prompt": 386,
+        "token_count_completion": 55,
+        "estimated_cost_usd": null,
+        "cost_pricing_source": null
+      },
+      {
+        "query_id": "bench_004_unanswerable",
+        "question": "What specific percentage of ApexCloud's Q3 2024 revenue came from Japanese enterprise clients?",
+        "test_type": "unanswerable",
+        "generated_answer": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth. [1] Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters. [2]",
+        "retrieved_chunks": [
+          {
+            "chunk": {
+              "id": "doc_fin_01_chk_0",
+              "doc_id": "doc_fin_01",
+              "text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth. Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters. Operating cash flow reached $215 million, compared to $145 million in Q3 2023. Net retention rate stood at 119%, moderating slightly from 122% in the prior quarter due to enterprise budget scrutiny in EMEA. For Q4 2024, management expects revenue between $880 million and $890 million with capital expenditures capped at $95 million.",
+              "chunk_index": 0,
+              "token_count": 90,
+              "start_char": 0,
+              "end_char": 582,
+              "metadata": {
+                "title": "ApexCloud Q3 2024 Financial Performance & Guidance",
+                "domain": "finance"
+              }
+            },
+            "score": 22.396005865883055,
+            "rank": 1,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_fin_02_chk_0",
+              "doc_id": "doc_fin_02",
+              "text": "As of September 30, 2024, ApexCloud held total cash, cash equivalents, and marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029. The notes carry a fixed coupon rate of 3.875% payable semi-annually. In August 2024, the company repurchased $150 million in Class A common stock under its existing $500 million share repurchase authorization.",
+              "chunk_index": 0,
+              "token_count": 61,
+              "start_char": 0,
+              "end_char": 403,
+              "metadata": {
+                "title": "ApexCloud Long-Term Debt and Capital Structure",
+                "domain": "finance"
+              }
+            },
+            "score": 14.207062741858985,
+            "rank": 2,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_conflict_b_chk_0",
+              "doc_id": "doc_conflict_b",
+              "text": "The Arizona Transportation Safety Board safety audit concluded that NovaDrive had deployed only 85 active vehicles in Phoenix as of April 2024, and mandated that all vehicles maintain licensed backup safety operators behind the wheel following two non-fatal intersection collisions in February 2024. The 24-hour unsupervised permit was suspended indefinitely.",
+              "chunk_index": 0,
+              "token_count": 50,
+              "start_char": 0,
+              "end_char": 359,
+              "metadata": {
+                "title": "State Transportation Safety Board Audit on NovaDrive - Official Report (Q3)",
+                "domain": "autonomous_vehicles"
+              }
+            },
+            "score": 12.627694984597573,
+            "rank": 3,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_conflict_a_chk_0",
+              "doc_id": "doc_conflict_a",
+              "text": "NovaDrive formally launched its commercial Level 4 robotaxi service in Phoenix, Arizona in January 2024, deploying an initial fleet of 250 fully autonomous electric vehicles operating 24 hours a day without safety drivers. The fleet completed over 100,000 passenger trips in its first 90 days with zero reported safety incidents.",
+              "chunk_index": 0,
+              "token_count": 50,
+              "start_char": 0,
+              "end_char": 329,
+              "metadata": {
+                "title": "NovaDrive Autonomous Vehicle Fleet Launch - Press Release (Q1)",
+                "domain": "autonomous_vehicles"
+              }
+            },
+            "score": 12.290029699870049,
+            "rank": 4,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_cs_01_chk_0",
+              "doc_id": "doc_cs_01",
+              "text": "HydraKV is a geo-replicated distributed key-value store utilizing a quorum-lease consensus protocol optimized for read-heavy workloads. Under uniform 95% read traffic across 5 planetary regions, HydraKV achieved a median read latency of 1.4 ms and a 99th percentile (p99) read latency of 4.8 ms by servicing reads locally via monotonic read lease grants. Write operations require strict majority quorum consensus with Raft, yielding a median write latency of 74.2 ms across cross-Atlantic links. When partition tolerance is challenged, HydraKV guarantees linearizable reads and sequential consistency for concurrent multi-key transactions.",
+              "chunk_index": 0,
+              "token_count": 89,
+              "start_char": 0,
+              "end_char": 639,
+              "metadata": {
+                "title": "HydraKV: Consensus Protocol and Latency Benchmarks",
+                "domain": "systems"
+              }
+            },
+            "score": 11.40164178249877,
+            "rank": 5,
+            "retrieval_method": "sparse_bm25"
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "claim_1",
+            "text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth.",
+            "raw_sentence": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth.",
+            "cited_chunk_ids": [],
+            "char_start": 0,
+            "char_end": 121,
+            "is_abstention": false
+          },
+          {
+            "claim_id": "claim_2",
+            "text": "Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters.",
+            "raw_sentence": "[1] Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters.",
+            "cited_chunk_ids": [
+              "doc_fin_01_chk_0"
+            ],
+            "char_start": 122,
+            "char_end": 252,
+            "is_abstention": false
+          }
+        ],
+        "verifications": [
+          {
+            "claim_id": "claim_1",
+            "claim_text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth.",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_fin_01_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_fin_01_chk_0",
+            "best_matching_chunk_text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth. Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters. Operating cash flow reached $215 million, compared to $145 million in Q3 2023. Net retention rate stood at 119%, moderating slightly from 122% in the prior quarter due to enterprise budget scrutiny in EMEA. For Q4 2024, management expects revenue between $880 million and $890 million with capital expenditures capped at $95 million.",
+            "evidence_span_start": 0,
+            "evidence_span_end": 121,
+            "evidence_exact_text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth.",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          },
+          {
+            "claim_id": "claim_2",
+            "claim_text": "Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters.",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_fin_01_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_fin_01_chk_0",
+            "best_matching_chunk_text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth. Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters. Operating cash flow reached $215 million, compared to $145 million in Q3 2023. Net retention rate stood at 119%, moderating slightly from 122% in the prior quarter due to enterprise budget scrutiny in EMEA. For Q4 2024, management expects revenue between $880 million and $890 million with capital expenditures capped at $95 million.",
+            "evidence_span_start": 122,
+            "evidence_span_end": 248,
+            "evidence_exact_text": "Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters.",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          }
+        ],
+        "faithfulness_score": 1.0,
+        "hallucination_rate": 0.0,
+        "contradiction_rate": 0.0,
+        "claim_coverage": 1.0,
+        "citation_metrics": {
+          "total_citations": 2,
+          "valid_citations": 2,
+          "hallucinated_citations": [],
+          "misattributed_citations": [],
+          "citation_precision": 1.0,
+          "citation_recall": 0.6666666666666666,
+          "citation_support_precision": 1.0,
+          "citation_completeness": 0.5,
+          "uncited_claim_ids": [
+            "claim_1"
+          ],
+          "contradicting_citations": []
+        },
+        "retrieval_metrics": {
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_k": 0.0,
+          "evidence_recall_at_5": null,
+          "no_answer_empty_retrieval": false,
+          "mrr": 0.0,
+          "ndcg_at_k": 0.0,
+          "noise_ratio": 1.0,
+          "retrieved_count": 5
+        },
+        "abstained": false,
+        "correctly_abstained": false,
+        "answer_em": 0.0,
+        "answer_f1": 0.0,
+        "scenario_type": "standard",
+        "split": "smoke",
+        "retrieval_latency_ms": 0.07,
+        "generation_latency_ms": 0.02,
+        "verification_latency_ms": 0.33,
+        "total_latency_ms": 0.42,
+        "token_count_prompt": 383,
+        "token_count_completion": 39,
+        "estimated_cost_usd": null,
+        "cost_pricing_source": null
+      },
+      {
+        "query_id": "bench_005_unanswerable",
+        "question": "What was the overall 5-year survival rate of pediatric patients treated with Veloceptin?",
+        "test_type": "unanswerable",
+        "generated_answer": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). [1] The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. [2]",
+        "retrieved_chunks": [
+          {
+            "chunk": {
+              "id": "doc_bio_01_chk_0",
+              "doc_id": "doc_bio_01",
+              "text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. Grade 3 or higher treatment-related adverse events occurred in 31.2% of patients receiving combination therapy, predominantly manifested as elevated alanine aminotransferase (ALT) and immune-mediated colitis. Discontinuation due to adverse events was 9.4%.",
+              "chunk_index": 0,
+              "token_count": 88,
+              "start_char": 0,
+              "end_char": 637,
+              "metadata": {
+                "title": "Phase 3 Clinical Evaluation of Veloceptin in Metastatic Melanoma",
+                "domain": "biomedical"
+              }
+            },
+            "score": 21.945726047756622,
+            "rank": 1,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_fin_01_chk_0",
+              "doc_id": "doc_fin_01",
+              "text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth. Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters. Operating cash flow reached $215 million, compared to $145 million in Q3 2023. Net retention rate stood at 119%, moderating slightly from 122% in the prior quarter due to enterprise budget scrutiny in EMEA. For Q4 2024, management expects revenue between $880 million and $890 million with capital expenditures capped at $95 million.",
+              "chunk_index": 0,
+              "token_count": 90,
+              "start_char": 0,
+              "end_char": 582,
+              "metadata": {
+                "title": "ApexCloud Q3 2024 Financial Performance & Guidance",
+                "domain": "finance"
+              }
+            },
+            "score": 18.276468896345122,
+            "rank": 2,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_bio_02_chk_0",
+              "doc_id": "doc_bio_02",
+              "text": "Veloceptin is a humanized monoclonal IgG1-kappa antibody targeting immunosuppressive receptor Siglec-15. Following intravenous infusion at the recommended phase 2/3 dose of 10 mg/kg every three weeks, terminal elimination half-life was 18.4 days with steady-state concentration achieved by cycle 4. No dose-limiting toxicities were observed up to 20 mg/kg.",
+              "chunk_index": 0,
+              "token_count": 48,
+              "start_char": 0,
+              "end_char": 356,
+              "metadata": {
+                "title": "Pharmacokinetics and Dosing Tolerability of Veloceptin",
+                "domain": "biomedical"
+              }
+            },
+            "score": 17.31297181312725,
+            "rank": 3,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_cs_01_chk_0",
+              "doc_id": "doc_cs_01",
+              "text": "HydraKV is a geo-replicated distributed key-value store utilizing a quorum-lease consensus protocol optimized for read-heavy workloads. Under uniform 95% read traffic across 5 planetary regions, HydraKV achieved a median read latency of 1.4 ms and a 99th percentile (p99) read latency of 4.8 ms by servicing reads locally via monotonic read lease grants. Write operations require strict majority quorum consensus with Raft, yielding a median write latency of 74.2 ms across cross-Atlantic links. When partition tolerance is challenged, HydraKV guarantees linearizable reads and sequential consistency for concurrent multi-key transactions.",
+              "chunk_index": 0,
+              "token_count": 89,
+              "start_char": 0,
+              "end_char": 639,
+              "metadata": {
+                "title": "HydraKV: Consensus Protocol and Latency Benchmarks",
+                "domain": "systems"
+              }
+            },
+            "score": 15.835689570552455,
+            "rank": 4,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_conflict_b_chk_0",
+              "doc_id": "doc_conflict_b",
+              "text": "The Arizona Transportation Safety Board safety audit concluded that NovaDrive had deployed only 85 active vehicles in Phoenix as of April 2024, and mandated that all vehicles maintain licensed backup safety operators behind the wheel following two non-fatal intersection collisions in February 2024. The 24-hour unsupervised permit was suspended indefinitely.",
+              "chunk_index": 0,
+              "token_count": 50,
+              "start_char": 0,
+              "end_char": 359,
+              "metadata": {
+                "title": "State Transportation Safety Board Audit on NovaDrive - Official Report (Q3)",
+                "domain": "autonomous_vehicles"
+              }
+            },
+            "score": 15.53414339758025,
+            "rank": 5,
+            "retrieval_method": "sparse_bm25"
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "claim_1",
+            "text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61",
+            "raw_sentence": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001).",
+            "cited_chunk_ids": [],
+            "char_start": 0,
+            "char_end": 231,
+            "is_abstention": false
+          },
+          {
+            "claim_id": "claim_2",
+            "text": "95% CI 0.49-0.75",
+            "raw_sentence": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001).",
+            "cited_chunk_ids": [],
+            "char_start": 233,
+            "char_end": 249,
+            "is_abstention": false
+          },
+          {
+            "claim_id": "claim_3",
+            "text": "p < 0.001).",
+            "raw_sentence": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001).",
+            "cited_chunk_ids": [],
+            "char_start": 251,
+            "char_end": 262,
+            "is_abstention": false
+          },
+          {
+            "claim_id": "claim_4",
+            "text": "The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm.",
+            "raw_sentence": "[1] The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm.",
+            "cited_chunk_ids": [
+              "doc_bio_01_chk_0"
+            ],
+            "char_start": 263,
+            "char_end": 384,
+            "is_abstention": false
+          }
+        ],
+        "verifications": [
+          {
+            "claim_id": "claim_1",
+            "claim_text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_bio_01_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_bio_01_chk_0",
+            "best_matching_chunk_text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. Grade 3 or higher treatment-related adverse events occurred in 31.2% of patients receiving combination therapy, predominantly manifested as elevated alanine aminotransferase (ALT) and immune-mediated colitis. Discontinuation due to adverse events was 9.4%.",
+            "evidence_span_start": 0,
+            "evidence_span_end": 262,
+            "evidence_exact_text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001).",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          },
+          {
+            "claim_id": "claim_2",
+            "claim_text": "95% CI 0.49-0.75",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_bio_01_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_bio_01_chk_0",
+            "best_matching_chunk_text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. Grade 3 or higher treatment-related adverse events occurred in 31.2% of patients receiving combination therapy, predominantly manifested as elevated alanine aminotransferase (ALT) and immune-mediated colitis. Discontinuation due to adverse events was 9.4%.",
+            "evidence_span_start": 0,
+            "evidence_span_end": 262,
+            "evidence_exact_text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001).",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          },
+          {
+            "claim_id": "claim_3",
+            "claim_text": "p < 0.001).",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_bio_01_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_bio_01_chk_0",
+            "best_matching_chunk_text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. Grade 3 or higher treatment-related adverse events occurred in 31.2% of patients receiving combination therapy, predominantly manifested as elevated alanine aminotransferase (ALT) and immune-mediated colitis. Discontinuation due to adverse events was 9.4%.",
+            "evidence_span_start": 0,
+            "evidence_span_end": 262,
+            "evidence_exact_text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001).",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          },
+          {
+            "claim_id": "claim_4",
+            "claim_text": "The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm.",
+            "label": "partially_supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.8,
+            "supporting_chunk_ids": [
+              "doc_bio_01_chk_0"
+            ],
+            "contradicting_chunk_ids": [
+              "doc_fin_01_chk_0"
+            ],
+            "best_matching_chunk_id": "doc_bio_01_chk_0",
+            "best_matching_chunk_text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. Grade 3 or higher treatment-related adverse events occurred in 31.2% of patients receiving combination therapy, predominantly manifested as elevated alanine aminotransferase (ALT) and immune-mediated colitis. Discontinuation due to adverse events was 9.4%.",
+            "evidence_span_start": 263,
+            "evidence_span_end": 380,
+            "evidence_exact_text": "The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm.",
+            "explanation": "Dual evidence: at least one chunk supports and one chunk contradicts; both id lists are retained.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          }
+        ],
+        "faithfulness_score": 0.75,
+        "hallucination_rate": 0.25,
+        "contradiction_rate": 0.0,
+        "claim_coverage": 1.0,
+        "citation_metrics": {
+          "total_citations": 2,
+          "valid_citations": 2,
+          "hallucinated_citations": [],
+          "misattributed_citations": [],
+          "citation_precision": 1.0,
+          "citation_recall": 0.6666666666666666,
+          "citation_support_precision": 1.0,
+          "citation_completeness": 0.25,
+          "uncited_claim_ids": [
+            "claim_1",
+            "claim_2",
+            "claim_3"
+          ],
+          "contradicting_citations": []
+        },
+        "retrieval_metrics": {
+          "recall_at_1": 0.0,
+          "recall_at_3": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_k": 0.0,
+          "evidence_recall_at_5": null,
+          "no_answer_empty_retrieval": false,
+          "mrr": 0.0,
+          "ndcg_at_k": 0.0,
+          "noise_ratio": 1.0,
+          "retrieved_count": 5
+        },
+        "abstained": false,
+        "correctly_abstained": false,
+        "answer_em": 0.0,
+        "answer_f1": 0.0,
+        "scenario_type": "standard",
+        "split": "smoke",
+        "retrieval_latency_ms": 0.07,
+        "generation_latency_ms": 0.02,
+        "verification_latency_ms": 0.61,
+        "total_latency_ms": 0.7,
+        "token_count_prompt": 408,
+        "token_count_completion": 58,
+        "estimated_cost_usd": null,
+        "cost_pricing_source": null
+      },
+      {
+        "query_id": "bench_006_conflicting",
+        "question": "Did NovaDrive operate its Phoenix robotaxi fleet without safety drivers?",
+        "test_type": "conflicting",
+        "generated_answer": "NovaDrive formally launched its commercial Level 4 robotaxi service in Phoenix, Arizona in January 2024, deploying an initial fleet of 250 fully autonomous electric vehicles operating 24 hours a day without safety drivers. [1] The fleet completed over 100,000 passenger trips in its first 90 days with zero reported safety incidents. [2]",
+        "retrieved_chunks": [
+          {
+            "chunk": {
+              "id": "doc_conflict_a_chk_0",
+              "doc_id": "doc_conflict_a",
+              "text": "NovaDrive formally launched its commercial Level 4 robotaxi service in Phoenix, Arizona in January 2024, deploying an initial fleet of 250 fully autonomous electric vehicles operating 24 hours a day without safety drivers. The fleet completed over 100,000 passenger trips in its first 90 days with zero reported safety incidents.",
+              "chunk_index": 0,
+              "token_count": 50,
+              "start_char": 0,
+              "end_char": 329,
+              "metadata": {
+                "title": "NovaDrive Autonomous Vehicle Fleet Launch - Press Release (Q1)",
+                "domain": "autonomous_vehicles"
+              }
+            },
+            "score": 34.050264139125474,
+            "rank": 1,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_conflict_b_chk_0",
+              "doc_id": "doc_conflict_b",
+              "text": "The Arizona Transportation Safety Board safety audit concluded that NovaDrive had deployed only 85 active vehicles in Phoenix as of April 2024, and mandated that all vehicles maintain licensed backup safety operators behind the wheel following two non-fatal intersection collisions in February 2024. The 24-hour unsupervised permit was suspended indefinitely.",
+              "chunk_index": 0,
+              "token_count": 50,
+              "start_char": 0,
+              "end_char": 359,
+              "metadata": {
+                "title": "State Transportation Safety Board Audit on NovaDrive - Official Report (Q3)",
+                "domain": "autonomous_vehicles"
+              }
+            },
+            "score": 20.93384101595243,
+            "rank": 2,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_fin_02_chk_0",
+              "doc_id": "doc_fin_02",
+              "text": "As of September 30, 2024, ApexCloud held total cash, cash equivalents, and marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029. The notes carry a fixed coupon rate of 3.875% payable semi-annually. In August 2024, the company repurchased $150 million in Class A common stock under its existing $500 million share repurchase authorization.",
+              "chunk_index": 0,
+              "token_count": 61,
+              "start_char": 0,
+              "end_char": 403,
+              "metadata": {
+                "title": "ApexCloud Long-Term Debt and Capital Structure",
+                "domain": "finance"
+              }
+            },
+            "score": 16.37693802483954,
+            "rank": 3,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_fin_01_chk_0",
+              "doc_id": "doc_fin_01",
+              "text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth. Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters. Operating cash flow reached $215 million, compared to $145 million in Q3 2023. Net retention rate stood at 119%, moderating slightly from 122% in the prior quarter due to enterprise budget scrutiny in EMEA. For Q4 2024, management expects revenue between $880 million and $890 million with capital expenditures capped at $95 million.",
+              "chunk_index": 0,
+              "token_count": 90,
+              "start_char": 0,
+              "end_char": 582,
+              "metadata": {
+                "title": "ApexCloud Q3 2024 Financial Performance & Guidance",
+                "domain": "finance"
+              }
+            },
+            "score": 14.805207896449977,
+            "rank": 4,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_bio_01_chk_0",
+              "doc_id": "doc_bio_01",
+              "text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. Grade 3 or higher treatment-related adverse events occurred in 31.2% of patients receiving combination therapy, predominantly manifested as elevated alanine aminotransferase (ALT) and immune-mediated colitis. Discontinuation due to adverse events was 9.4%.",
+              "chunk_index": 0,
+              "token_count": 88,
+              "start_char": 0,
+              "end_char": 637,
+              "metadata": {
+                "title": "Phase 3 Clinical Evaluation of Veloceptin in Metastatic Melanoma",
+                "domain": "biomedical"
+              }
+            },
+            "score": 14.805207896449977,
+            "rank": 5,
+            "retrieval_method": "sparse_bm25"
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "claim_1",
+            "text": "NovaDrive formally launched its commercial Level 4 robotaxi service in Phoenix, Arizona in January 2024, deploying an initial fleet of 250 fully autonomous electric vehicles operating 24 hours a day without safety drivers.",
+            "raw_sentence": "NovaDrive formally launched its commercial Level 4 robotaxi service in Phoenix, Arizona in January 2024, deploying an initial fleet of 250 fully autonomous electric vehicles operating 24 hours a day without safety drivers.",
+            "cited_chunk_ids": [],
+            "char_start": 0,
+            "char_end": 222,
+            "is_abstention": false
+          },
+          {
+            "claim_id": "claim_2",
+            "text": "The fleet completed over 100,000 passenger trips in its first 90 days with zero reported safety incidents.",
+            "raw_sentence": "[1] The fleet completed over 100,000 passenger trips in its first 90 days with zero reported safety incidents.",
+            "cited_chunk_ids": [
+              "doc_conflict_a_chk_0"
+            ],
+            "char_start": 223,
+            "char_end": 333,
+            "is_abstention": false
+          }
+        ],
+        "verifications": [
+          {
+            "claim_id": "claim_1",
+            "claim_text": "NovaDrive formally launched its commercial Level 4 robotaxi service in Phoenix, Arizona in January 2024, deploying an initial fleet of 250 fully autonomous electric vehicles operating 24 hours a day without safety drivers.",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_conflict_a_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_conflict_a_chk_0",
+            "best_matching_chunk_text": "NovaDrive formally launched its commercial Level 4 robotaxi service in Phoenix, Arizona in January 2024, deploying an initial fleet of 250 fully autonomous electric vehicles operating 24 hours a day without safety drivers. The fleet completed over 100,000 passenger trips in its first 90 days with zero reported safety incidents.",
+            "evidence_span_start": 0,
+            "evidence_span_end": 222,
+            "evidence_exact_text": "NovaDrive formally launched its commercial Level 4 robotaxi service in Phoenix, Arizona in January 2024, deploying an initial fleet of 250 fully autonomous electric vehicles operating 24 hours a day without safety drivers.",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          },
+          {
+            "claim_id": "claim_2",
+            "claim_text": "The fleet completed over 100,000 passenger trips in its first 90 days with zero reported safety incidents.",
+            "label": "partially_supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.8,
+            "supporting_chunk_ids": [
+              "doc_conflict_a_chk_0"
+            ],
+            "contradicting_chunk_ids": [
+              "doc_fin_01_chk_0"
+            ],
+            "best_matching_chunk_id": "doc_conflict_a_chk_0",
+            "best_matching_chunk_text": "NovaDrive formally launched its commercial Level 4 robotaxi service in Phoenix, Arizona in January 2024, deploying an initial fleet of 250 fully autonomous electric vehicles operating 24 hours a day without safety drivers. The fleet completed over 100,000 passenger trips in its first 90 days with zero reported safety incidents.",
+            "evidence_span_start": 223,
+            "evidence_span_end": 329,
+            "evidence_exact_text": "The fleet completed over 100,000 passenger trips in its first 90 days with zero reported safety incidents.",
+            "explanation": "Dual evidence: at least one chunk supports and one chunk contradicts; both id lists are retained.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          }
+        ],
+        "faithfulness_score": 0.5,
+        "hallucination_rate": 0.5,
+        "contradiction_rate": 0.0,
+        "claim_coverage": 1.0,
+        "citation_metrics": {
+          "total_citations": 2,
+          "valid_citations": 2,
+          "hallucinated_citations": [],
+          "misattributed_citations": [],
+          "citation_precision": 1.0,
+          "citation_recall": 0.6666666666666666,
+          "citation_support_precision": 1.0,
+          "citation_completeness": 0.5,
+          "uncited_claim_ids": [
+            "claim_1"
+          ],
+          "contradicting_citations": []
+        },
+        "retrieval_metrics": {
+          "recall_at_1": 0.5,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_k": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "no_answer_empty_retrieval": null,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "noise_ratio": 0.6,
+          "retrieved_count": 5
+        },
+        "abstained": false,
+        "correctly_abstained": true,
+        "answer_em": 0.0,
+        "answer_f1": 0.1978,
+        "scenario_type": "standard",
+        "split": "smoke",
+        "retrieval_latency_ms": 0.06,
+        "generation_latency_ms": 0.01,
+        "verification_latency_ms": 0.37,
+        "total_latency_ms": 0.44,
+        "token_count_prompt": 379,
+        "token_count_completion": 52,
+        "estimated_cost_usd": null,
+        "cost_pricing_source": null
+      },
+      {
+        "query_id": "bench_007",
+        "question": "What is the crash recovery time of HydraKV, and what is its heartbeat failure detection threshold?",
+        "test_type": "standard",
+        "generated_answer": "HydraKV uses an append-only LSM-tree storage engine with tiered leveling compaction. [1] In crash recovery benchmarks on NVMe arrays, node recovery times averaged 3.2 seconds for a 500 GB partition state. [2]",
+        "retrieved_chunks": [
+          {
+            "chunk": {
+              "id": "doc_cs_02_chk_0",
+              "doc_id": "doc_cs_02",
+              "text": "HydraKV uses an append-only LSM-tree storage engine with tiered leveling compaction. In crash recovery benchmarks on NVMe arrays, node recovery times averaged 3.2 seconds for a 500 GB partition state. Node failure detection utilizes heartbeats calibrated with a 450 ms timeout threshold, triggering leader election within an average of 620 ms.",
+              "chunk_index": 0,
+              "token_count": 51,
+              "start_char": 0,
+              "end_char": 343,
+              "metadata": {
+                "title": "HydraKV Fault Recovery and Compaction Architecture",
+                "domain": "systems"
+              }
+            },
+            "score": 33.2477558409971,
+            "rank": 1,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_cs_01_chk_0",
+              "doc_id": "doc_cs_01",
+              "text": "HydraKV is a geo-replicated distributed key-value store utilizing a quorum-lease consensus protocol optimized for read-heavy workloads. Under uniform 95% read traffic across 5 planetary regions, HydraKV achieved a median read latency of 1.4 ms and a 99th percentile (p99) read latency of 4.8 ms by servicing reads locally via monotonic read lease grants. Write operations require strict majority quorum consensus with Raft, yielding a median write latency of 74.2 ms across cross-Atlantic links. When partition tolerance is challenged, HydraKV guarantees linearizable reads and sequential consistency for concurrent multi-key transactions.",
+              "chunk_index": 0,
+              "token_count": 89,
+              "start_char": 0,
+              "end_char": 639,
+              "metadata": {
+                "title": "HydraKV: Consensus Protocol and Latency Benchmarks",
+                "domain": "systems"
+              }
+            },
+            "score": 25.19106868220772,
+            "rank": 2,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_bio_02_chk_0",
+              "doc_id": "doc_bio_02",
+              "text": "Veloceptin is a humanized monoclonal IgG1-kappa antibody targeting immunosuppressive receptor Siglec-15. Following intravenous infusion at the recommended phase 2/3 dose of 10 mg/kg every three weeks, terminal elimination half-life was 18.4 days with steady-state concentration achieved by cycle 4. No dose-limiting toxicities were observed up to 20 mg/kg.",
+              "chunk_index": 0,
+              "token_count": 48,
+              "start_char": 0,
+              "end_char": 356,
+              "metadata": {
+                "title": "Pharmacokinetics and Dosing Tolerability of Veloceptin",
+                "domain": "biomedical"
+              }
+            },
+            "score": 22.00752556025002,
+            "rank": 3,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_fin_02_chk_0",
+              "doc_id": "doc_fin_02",
+              "text": "As of September 30, 2024, ApexCloud held total cash, cash equivalents, and marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029. The notes carry a fixed coupon rate of 3.875% payable semi-annually. In August 2024, the company repurchased $150 million in Class A common stock under its existing $500 million share repurchase authorization.",
+              "chunk_index": 0,
+              "token_count": 61,
+              "start_char": 0,
+              "end_char": 403,
+              "metadata": {
+                "title": "ApexCloud Long-Term Debt and Capital Structure",
+                "domain": "finance"
+              }
+            },
+            "score": 21.11545653429727,
+            "rank": 4,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_conflict_a_chk_0",
+              "doc_id": "doc_conflict_a",
+              "text": "NovaDrive formally launched its commercial Level 4 robotaxi service in Phoenix, Arizona in January 2024, deploying an initial fleet of 250 fully autonomous electric vehicles operating 24 hours a day without safety drivers. The fleet completed over 100,000 passenger trips in its first 90 days with zero reported safety incidents.",
+              "chunk_index": 0,
+              "token_count": 50,
+              "start_char": 0,
+              "end_char": 329,
+              "metadata": {
+                "title": "NovaDrive Autonomous Vehicle Fleet Launch - Press Release (Q1)",
+                "domain": "autonomous_vehicles"
+              }
+            },
+            "score": 21.08530718816351,
+            "rank": 5,
+            "retrieval_method": "sparse_bm25"
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "claim_1",
+            "text": "HydraKV uses an append-only LSM-tree storage engine with tiered leveling compaction.",
+            "raw_sentence": "HydraKV uses an append-only LSM-tree storage engine with tiered leveling compaction.",
+            "cited_chunk_ids": [],
+            "char_start": 0,
+            "char_end": 84,
+            "is_abstention": false
+          },
+          {
+            "claim_id": "claim_2",
+            "text": "In crash recovery benchmarks on NVMe arrays, node recovery times averaged 3.2 seconds for a 500 GB partition state.",
+            "raw_sentence": "[1] In crash recovery benchmarks on NVMe arrays, node recovery times averaged 3.2 seconds for a 500 GB partition state.",
+            "cited_chunk_ids": [
+              "doc_cs_02_chk_0"
+            ],
+            "char_start": 85,
+            "char_end": 204,
+            "is_abstention": false
+          }
+        ],
+        "verifications": [
+          {
+            "claim_id": "claim_1",
+            "claim_text": "HydraKV uses an append-only LSM-tree storage engine with tiered leveling compaction.",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_cs_02_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_cs_02_chk_0",
+            "best_matching_chunk_text": "HydraKV uses an append-only LSM-tree storage engine with tiered leveling compaction. In crash recovery benchmarks on NVMe arrays, node recovery times averaged 3.2 seconds for a 500 GB partition state. Node failure detection utilizes heartbeats calibrated with a 450 ms timeout threshold, triggering leader election within an average of 620 ms.",
+            "evidence_span_start": 0,
+            "evidence_span_end": 84,
+            "evidence_exact_text": "HydraKV uses an append-only LSM-tree storage engine with tiered leveling compaction.",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          },
+          {
+            "claim_id": "claim_2",
+            "claim_text": "In crash recovery benchmarks on NVMe arrays, node recovery times averaged 3.2 seconds for a 500 GB partition state.",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_cs_02_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_cs_02_chk_0",
+            "best_matching_chunk_text": "HydraKV uses an append-only LSM-tree storage engine with tiered leveling compaction. In crash recovery benchmarks on NVMe arrays, node recovery times averaged 3.2 seconds for a 500 GB partition state. Node failure detection utilizes heartbeats calibrated with a 450 ms timeout threshold, triggering leader election within an average of 620 ms.",
+            "evidence_span_start": 85,
+            "evidence_span_end": 200,
+            "evidence_exact_text": "In crash recovery benchmarks on NVMe arrays, node recovery times averaged 3.2 seconds for a 500 GB partition state.",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          }
+        ],
+        "faithfulness_score": 1.0,
+        "hallucination_rate": 0.0,
+        "contradiction_rate": 0.0,
+        "claim_coverage": 1.0,
+        "citation_metrics": {
+          "total_citations": 2,
+          "valid_citations": 2,
+          "hallucinated_citations": [],
+          "misattributed_citations": [],
+          "citation_precision": 1.0,
+          "citation_recall": 0.6666666666666666,
+          "citation_support_precision": 1.0,
+          "citation_completeness": 0.5,
+          "uncited_claim_ids": [
+            "claim_1"
+          ],
+          "contradicting_citations": []
+        },
+        "retrieval_metrics": {
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_k": 1.0,
+          "evidence_recall_at_5": 1.0,
+          "no_answer_empty_retrieval": null,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "noise_ratio": 0.8,
+          "retrieved_count": 5
+        },
+        "abstained": false,
+        "correctly_abstained": true,
+        "answer_em": 0.0,
+        "answer_f1": 0.4444,
+        "scenario_type": "standard",
+        "split": "smoke",
+        "retrieval_latency_ms": 0.08,
+        "generation_latency_ms": 0.01,
+        "verification_latency_ms": 0.3,
+        "total_latency_ms": 0.39,
+        "token_count_prompt": 345,
+        "token_count_completion": 32,
+        "estimated_cost_usd": null,
+        "cost_pricing_source": null
+      },
+      {
+        "query_id": "bench_008",
+        "question": "How much senior unsecured debt does ApexCloud hold, when does it mature, and what was the share repurchase in August 2024?",
+        "test_type": "standard",
+        "generated_answer": "As of September 30, 2024, ApexCloud held total cash, cash equivalents, and marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029. [1] The notes carry a fixed coupon rate of 3.875% payable semi-annually. [2]",
+        "retrieved_chunks": [
+          {
+            "chunk": {
+              "id": "doc_fin_02_chk_0",
+              "doc_id": "doc_fin_02",
+              "text": "As of September 30, 2024, ApexCloud held total cash, cash equivalents, and marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029. The notes carry a fixed coupon rate of 3.875% payable semi-annually. In August 2024, the company repurchased $150 million in Class A common stock under its existing $500 million share repurchase authorization.",
+              "chunk_index": 0,
+              "token_count": 61,
+              "start_char": 0,
+              "end_char": 403,
+              "metadata": {
+                "title": "ApexCloud Long-Term Debt and Capital Structure",
+                "domain": "finance"
+              }
+            },
+            "score": 34.147072882842885,
+            "rank": 1,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_conflict_b_chk_0",
+              "doc_id": "doc_conflict_b",
+              "text": "The Arizona Transportation Safety Board safety audit concluded that NovaDrive had deployed only 85 active vehicles in Phoenix as of April 2024, and mandated that all vehicles maintain licensed backup safety operators behind the wheel following two non-fatal intersection collisions in February 2024. The 24-hour unsupervised permit was suspended indefinitely.",
+              "chunk_index": 0,
+              "token_count": 50,
+              "start_char": 0,
+              "end_char": 359,
+              "metadata": {
+                "title": "State Transportation Safety Board Audit on NovaDrive - Official Report (Q3)",
+                "domain": "autonomous_vehicles"
+              }
+            },
+            "score": 22.554939970012224,
+            "rank": 2,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_fin_01_chk_0",
+              "doc_id": "doc_fin_01",
+              "text": "ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth. Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters. Operating cash flow reached $215 million, compared to $145 million in Q3 2023. Net retention rate stood at 119%, moderating slightly from 122% in the prior quarter due to enterprise budget scrutiny in EMEA. For Q4 2024, management expects revenue between $880 million and $890 million with capital expenditures capped at $95 million.",
+              "chunk_index": 0,
+              "token_count": 90,
+              "start_char": 0,
+              "end_char": 582,
+              "metadata": {
+                "title": "ApexCloud Q3 2024 Financial Performance & Guidance",
+                "domain": "finance"
+              }
+            },
+            "score": 22.04177333571122,
+            "rank": 3,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_bio_01_chk_0",
+              "doc_id": "doc_bio_01",
+              "text": "In the randomized double-blind Phase 3 RADIANT-4 trial (n=742), Veloceptin combined with nivolumab demonstrated a median progression-free survival (PFS) of 14.8 months versus 8.2 months with nivolumab monotherapy (hazard ratio 0.61; 95% CI 0.49-0.75; p < 0.001). The confirmed objective response rate (ORR) was 58.4% in the combination cohort compared to 36.1% in the control arm. Grade 3 or higher treatment-related adverse events occurred in 31.2% of patients receiving combination therapy, predominantly manifested as elevated alanine aminotransferase (ALT) and immune-mediated colitis. Discontinuation due to adverse events was 9.4%.",
+              "chunk_index": 0,
+              "token_count": 88,
+              "start_char": 0,
+              "end_char": 637,
+              "metadata": {
+                "title": "Phase 3 Clinical Evaluation of Veloceptin in Metastatic Melanoma",
+                "domain": "biomedical"
+              }
+            },
+            "score": 21.20825533936359,
+            "rank": 4,
+            "retrieval_method": "sparse_bm25"
+          },
+          {
+            "chunk": {
+              "id": "doc_cs_01_chk_0",
+              "doc_id": "doc_cs_01",
+              "text": "HydraKV is a geo-replicated distributed key-value store utilizing a quorum-lease consensus protocol optimized for read-heavy workloads. Under uniform 95% read traffic across 5 planetary regions, HydraKV achieved a median read latency of 1.4 ms and a 99th percentile (p99) read latency of 4.8 ms by servicing reads locally via monotonic read lease grants. Write operations require strict majority quorum consensus with Raft, yielding a median write latency of 74.2 ms across cross-Atlantic links. When partition tolerance is challenged, HydraKV guarantees linearizable reads and sequential consistency for concurrent multi-key transactions.",
+              "chunk_index": 0,
+              "token_count": 89,
+              "start_char": 0,
+              "end_char": 639,
+              "metadata": {
+                "title": "HydraKV: Consensus Protocol and Latency Benchmarks",
+                "domain": "systems"
+              }
+            },
+            "score": 20.635893936987976,
+            "rank": 5,
+            "retrieval_method": "sparse_bm25"
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "claim_1",
+            "text": "As of September 30, 2024, ApexCloud held total cash, cash equivalents",
+            "raw_sentence": "As of September 30, 2024, ApexCloud held total cash, cash equivalents, and marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029.",
+            "cited_chunk_ids": [],
+            "char_start": 0,
+            "char_end": 69,
+            "is_abstention": false
+          },
+          {
+            "claim_id": "claim_2",
+            "text": "marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029.",
+            "raw_sentence": "As of September 30, 2024, ApexCloud held total cash, cash equivalents, and marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029.",
+            "cited_chunk_ids": [],
+            "char_start": 75,
+            "char_end": 193,
+            "is_abstention": false
+          },
+          {
+            "claim_id": "claim_3",
+            "text": "The notes carry a fixed coupon rate of 3.875% payable semi-annually.",
+            "raw_sentence": "[1] The notes carry a fixed coupon rate of 3.875% payable semi-annually.",
+            "cited_chunk_ids": [
+              "doc_fin_02_chk_0"
+            ],
+            "char_start": 194,
+            "char_end": 266,
+            "is_abstention": false
+          }
+        ],
+        "verifications": [
+          {
+            "claim_id": "claim_1",
+            "claim_text": "As of September 30, 2024, ApexCloud held total cash, cash equivalents",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_fin_02_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_fin_02_chk_0",
+            "best_matching_chunk_text": "As of September 30, 2024, ApexCloud held total cash, cash equivalents, and marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029. The notes carry a fixed coupon rate of 3.875% payable semi-annually. In August 2024, the company repurchased $150 million in Class A common stock under its existing $500 million share repurchase authorization.",
+            "evidence_span_start": 0,
+            "evidence_span_end": 262,
+            "evidence_exact_text": "As of September 30, 2024, ApexCloud held total cash, cash equivalents, and marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029. The notes carry a fixed coupon rate of 3.875% payable semi-annually.",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          },
+          {
+            "claim_id": "claim_2",
+            "claim_text": "marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029.",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_fin_02_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_fin_02_chk_0",
+            "best_matching_chunk_text": "As of September 30, 2024, ApexCloud held total cash, cash equivalents, and marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029. The notes carry a fixed coupon rate of 3.875% payable semi-annually. In August 2024, the company repurchased $150 million in Class A common stock under its existing $500 million share repurchase authorization.",
+            "evidence_span_start": 0,
+            "evidence_span_end": 262,
+            "evidence_exact_text": "As of September 30, 2024, ApexCloud held total cash, cash equivalents, and marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029. The notes carry a fixed coupon rate of 3.875% payable semi-annually.",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          },
+          {
+            "claim_id": "claim_3",
+            "claim_text": "The notes carry a fixed coupon rate of 3.875% payable semi-annually.",
+            "label": "supported",
+            "confidence": 0.85,
+            "entailment_prob": 0.85,
+            "neutral_prob": 0.15000000000000002,
+            "contradiction_prob": 0.1,
+            "supporting_chunk_ids": [
+              "doc_fin_02_chk_0"
+            ],
+            "contradicting_chunk_ids": [],
+            "best_matching_chunk_id": "doc_fin_02_chk_0",
+            "best_matching_chunk_text": "As of September 30, 2024, ApexCloud held total cash, cash equivalents, and marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029. The notes carry a fixed coupon rate of 3.875% payable semi-annually. In August 2024, the company repurchased $150 million in Class A common stock under its existing $500 million share repurchase authorization.",
+            "evidence_span_start": 0,
+            "evidence_span_end": 262,
+            "evidence_exact_text": "As of September 30, 2024, ApexCloud held total cash, cash equivalents, and marketable securities of $1.85 billion against total senior unsecured notes of $1.20 billion maturing in October 2029. The notes carry a fixed coupon rate of 3.875% payable semi-annually.",
+            "explanation": "Claim is entailed by source evidence.",
+            "verifier_method": "heuristic",
+            "label_schema_version": "rageval.claim_labels.v1",
+            "fused_from_chunks": false,
+            "single_chunk_label": null
+          }
+        ],
+        "faithfulness_score": 1.0,
+        "hallucination_rate": 0.0,
+        "contradiction_rate": 0.0,
+        "claim_coverage": 1.0,
+        "citation_metrics": {
+          "total_citations": 2,
+          "valid_citations": 2,
+          "hallucinated_citations": [],
+          "misattributed_citations": [],
+          "citation_precision": 1.0,
+          "citation_recall": 0.6666666666666666,
+          "citation_support_precision": 1.0,
+          "citation_completeness": 0.3333333333333333,
+          "uncited_claim_ids": [
+            "claim_1",
+            "claim_2"
+          ],
+          "contradicting_citations": []
+        },
+        "retrieval_metrics": {
+          "recall_at_1": 1.0,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_k": 1.0,
+          "evidence_recall_at_5": 0.0,
+          "no_answer_empty_retrieval": null,
+          "mrr": 1.0,
+          "ndcg_at_k": 1.0,
+          "noise_ratio": 0.8,
+          "retrieved_count": 5
+        },
+        "abstained": false,
+        "correctly_abstained": true,
+        "answer_em": 0.0,
+        "answer_f1": 0.4706,
+        "scenario_type": "standard",
+        "split": "smoke",
+        "retrieval_latency_ms": 0.1,
+        "generation_latency_ms": 0.01,
+        "verification_latency_ms": 0.46,
+        "total_latency_ms": 0.58,
+        "token_count_prompt": 429,
+        "token_count_completion": 42,
+        "estimated_cost_usd": null,
+        "cost_pricing_source": null
+      }
+    ]
+  }
+]

@@ -1,0 +1,47 @@
+name: Smoke_Sparse_Heuristic
+seed: 0
+opt_in: false
+resource_note: ''
+chunker:
+  strategy: fixed
+  chunk_size: 256
+  chunk_overlap: 32
+  window_size: 3
+embedder:
+  model_name: sentence-transformers/all-MiniLM-L6-v2
+  device: cpu
+  batch_size: 32
+  normalize_embeddings: true
+retriever:
+  method: sparse
+  top_k: 5
+  rrf_k: 60
+  index_type: FlatIP
+reranker:
+  enabled: false
+  model_name: cross-encoder/ms-marco-MiniLM-L-6-v2
+  top_k: 3
+  device: cpu
+generator:
+  backend: mock
+  model_name: meta-llama/Llama-3.2-3B-Instruct
+  temperature: 0.0
+  max_tokens: 512
+  timeout_s: 60.0
+  max_retries: 2
+  mock_mode: faithful
+  abstention_policy: empty_context
+  base_url: null
+  api_key_env: null
+  device: cpu
+evaluator:
+  method: heuristic
+  nli_model_name: cross-encoder/nli-deberta-v3-base
+  device: cpu
+  batch_size: 16
+  confidence_threshold: 0.5
+  allow_heuristic_fallback: false
+  enable_multi_hop: false
+  prompt_usd_per_million: null
+  completion_usd_per_million: null
+  pricing_source: null

@@ -14,6 +14,8 @@ from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, field_validator
 
+from rageval.server.workspace import router as workspace_router
+from rageval.server.accounts import router as account_router
 from rageval import __version__
 from rageval.core.assets import resolve_asset
 from rageval.core.schemas import Chunk, QueryEvaluationResult, RetrievedChunk
@@ -67,8 +69,8 @@ app.add_middleware(
 )
 app.add_middleware(ProductionHeadersMiddleware)
 
-from rageval.server.workspace import router as workspace_router
 app.include_router(workspace_router)
+app.include_router(account_router)
 
 CLI_START = (
     "rageval experiment --config configs/experiments/C_retrieve.yaml "
@@ -146,11 +148,15 @@ def _http_evaluator(method: str):
 
 
 def _health_payload() -> Dict[str, Any]:
+    try:
+        busy = is_busy()
+    except Exception:
+        busy = None
     return {
         "status": "ok",
         "service": "rageval",
         "version": __version__,
-        "busy": is_busy(),
+        "busy": busy,
     }
 
 
@@ -165,12 +171,18 @@ def ready_check():
     """Readiness. 200 when data exists and run storage is writable."""
     data_ok = os.path.isdir(data_dir())
     runs_ok = os.path.isdir(runs_root())
-    ready = data_ok and runs_ok and os.access(runs_root(), os.W_OK)
+    storage_ok = True
+    try:
+        busy = is_busy()
+    except Exception:
+        busy, storage_ok = None, False
+    ready = data_ok and runs_ok and os.access(runs_root(), os.W_OK) and storage_ok
     payload = {
         "status": "ready" if ready else "not_ready",
         "service": "rageval",
         "version": __version__,
-        "busy": is_busy(),
+        "busy": busy,
+        "storage_ok": storage_ok,
         "data_ok": data_ok,
         "runs_ok": runs_ok,
     }
@@ -201,7 +213,26 @@ def dataset_detail(dataset_id: str, include_items: bool = Query(default=True)):
 
 @app.get("/experiments", tags=["experiments"])
 def experiments_index():
-    return {"experiments": list_experiments()}
+    from rageval.server.remote_jobs import enabled, list_jobs
+    remote_rows = [{**j, "source":"supabase", "status":{"state":j["state"]}} for j in list_jobs()] if enabled() else []
+    return {"experiments": remote_rows + list_experiments()}
+
+
+@app.get('/experiments/{run_id}/artifacts', tags=['experiments'])
+def experiment_artifacts(run_id: str, x_rageval_admin_token: Optional[str] = Header(default=None)):
+    expected = os.environ.get('RAGEVAL_ADMIN_TOKEN', '')
+    if not expected or not x_rageval_admin_token or not hmac.compare_digest(expected,x_rageval_admin_token):
+        raise HTTPException(403, 'Admin token required')
+    from rageval.server.remote_jobs import enabled, get_job
+    if not enabled():
+        raise HTTPException(409, 'Remote queue is not enabled')
+    try:
+        job = get_job(run_id, include_payload=True)
+    except (ValueError, FileNotFoundError):
+        raise HTTPException(404, 'Run not found') from None
+    if job['state'] != 'complete':
+        raise HTTPException(409, 'Artifacts are not ready')
+    return {'id':run_id, 'encoding':'base64', 'files':job['payload']['files']}
 
 
 @app.get("/experiment-configs", tags=["experiments"])
@@ -213,6 +244,13 @@ def experiment_configs():
 @app.get("/experiments/{run_id}", tags=["experiments"])
 def experiment_detail(run_id: str):
     try:
+        from rageval.server.remote_jobs import enabled, get_job
+        if enabled():
+            try:
+                job = get_job(run_id)
+                return {"id":run_id,"status":{"state":job["state"]},"source":"supabase"}
+            except FileNotFoundError:
+                pass
         return get_experiment(run_id)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -223,6 +261,15 @@ def experiment_detail(run_id: str):
 @app.get("/experiments/{run_id}/results", tags=["experiments"])
 def experiment_results(run_id: str):
     try:
+        from rageval.server.remote_jobs import enabled, get_job
+        if enabled():
+            try:
+                job = get_job(run_id, include_payload=True)
+                if job["state"] != "complete":
+                    raise HTTPException(409, "Run has not completed")
+                return job["payload"]["result"]
+            except FileNotFoundError:
+                pass
         return get_experiment_results(run_id)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

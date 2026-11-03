@@ -1,0 +1,150 @@
+{
+  "schema": "rageval.metrics.v2",
+  "overall_score": null,
+  "note": "No official composite ranking score. Compare named metrics only.",
+  "retrieval_metric_policy": "Document Recall@5 and MRR use only items with gold evidence. Evidence Recall@5 requires a full gold span within one retrieved chunk. No-gold retrieval is reported separately.",
+  "independent_items_assumed": false,
+  "by_config": {
+    "Smoke_Sparse_Heuristic": {
+      "n": 8,
+      "overall_score": null,
+      "has_official_overall_score": false,
+      "claim_support_rate": {
+        "mean": 0.8125,
+        "bootstrap": {
+          "n": 8,
+          "mean": 0.8125,
+          "ci_low": 0.6562,
+          "ci_high": 0.9375,
+          "ci_level": 0.95,
+          "n_bootstrap": 1000,
+          "assumptions_met": false,
+          "assumption_notes": "Diagnostic only. n=8, independent=False. Confirmatory CI requires n>=30 i.i.d. query items (items that share documents are not independent)."
+        }
+      },
+      "unsupported_claim_rate": {
+        "mean": 0.1875
+      },
+      "contradiction_rate": {
+        "mean": 0.0
+      },
+      "recall_at_5": {
+        "mean": 1.0,
+        "n": 6
+      },
+      "evidence_recall_at_5": {
+        "mean": 0.6667,
+        "n": 6
+      },
+      "no_answer_empty_retrieval_rate": {
+        "mean": 0.0,
+        "n": 2
+      },
+      "mrr": {
+        "mean": 1.0,
+        "n": 6
+      },
+      "citation_existence_precision": {
+        "mean": 1.0
+      },
+      "citation_support_precision": {
+        "mean": 1.0
+      },
+      "citation_marker_recall": {
+        "mean": 0.6667,
+        "legacy": true
+      },
+      "answer_em": {
+        "mean": 0.0
+      },
+      "answer_f1": {
+        "mean": 0.3591
+      },
+      "abstention_accuracy": 0.0,
+      "mean_latency_ms": 0.735,
+      "latency_ms": {
+        "retrieval_latency_ms": {
+          "p50": 0.085,
+          "p95": 0.1,
+          "p99": 0.1
+        },
+        "generation_latency_ms": {
+          "p50": 0.02,
+          "p95": 0.0495,
+          "p99": 0.0579
+        },
+        "verification_latency_ms": {
+          "p50": 0.44,
+          "p95": 1.4355,
+          "p99": 1.7351
+        },
+        "total_latency_ms": {
+          "p50": 0.555,
+          "p95": 1.575,
+          "p99": 1.883
+        }
+      },
+      "total_estimated_cost_usd": null,
+      "cost_status": "unpriced_token_usage_only",
+      "cost_pricing_sources": [],
+      "total_prompt_tokens": 3119,
+      "total_completion_tokens": 375,
+      "priced_query_count": 0,
+      "official_metric_names": [
+        "recall_at_k",
+        "evidence_recall_at_5",
+        "no_answer_empty_retrieval_rate",
+        "mrr",
+        "ndcg_at_k",
+        "noise_ratio",
+        "claim_support_rate",
+        "unsupported_claim_rate",
+        "contradiction_rate",
+        "claim_coverage",
+        "citation_existence_precision",
+        "citation_support_precision",
+        "citation_completeness",
+        "citation_marker_recall",
+        "exact_match",
+        "token_f1",
+        "abstention_accuracy",
+        "estimated_cost_usd",
+        "macro_f1"
+      ],
+      "by_scenario": {
+        "standard": {
+          "n": 8,
+          "claim_support_rate": 0.8125,
+          "unsupported_claim_rate": 0.1875,
+          "contradiction_rate": 0.0,
+          "recall_at_5": 1.0,
+          "evidence_recall_at_5": 0.6667,
+          "no_answer_empty_retrieval_rate": 0.0,
+          "mrr": 1.0,
+          "answer_em": 0.0,
+          "answer_f1": 0.3591,
+          "abstention_accuracy": 0.0,
+          "citation_support_precision": 1.0
+        }
+      }
+    }
+  },
+  "label": "pilot",
+  "experiment_id": "smoke",
+  "dataset_id": "smoke_v1",
+  "dataset_version": "1.0.0",
+  "git_commit": "7e63d90ffe572a3c0e78e9a22a3516b0051e3bfa",
+  "timestamp_utc": "2026-11-03T16:27:23.105281+00:00",
+  "n_items": 8,
+  "n_documents": 8,
+  "pipelines": [
+    {
+      "name": "Smoke_Sparse_Heuristic",
+      "generator_backend": "mock",
+      "generator_model": "meta-llama/Llama-3.2-3B-Instruct",
+      "retriever": "sparse",
+      "evaluator_method": "heuristic",
+      "opt_in": false
+    }
+  ]
+}

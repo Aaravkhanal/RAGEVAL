@@ -18,7 +18,7 @@ from rageval.core.config import EvaluatorConfig
 from rageval.evaluator.evaluator import RAGEvalEvaluator
 
 DEFAULT_CORS = "http://127.0.0.1:8000,http://localhost:8000"
-RATE_LIMITED_PREFIXES = ("/evaluate/", "/score", "/workspace/")
+RATE_LIMITED_PREFIXES = ("/evaluate/", "/score", "/workspace/", "/account/")
 PROTECTED_PREFIXES = ("/workspace", "/datasets", "/experiments", "/experiment-configs", "/evaluate", "/score", "/metrics")
 MAX_REQUEST_BYTES = 65536
 _evaluators: Dict[str, RAGEvalEvaluator] = {}
@@ -72,6 +72,8 @@ class APIAuthMiddleware(BaseHTTPMiddleware):
         path = request.url.path
         if not any(path == prefix or path.startswith(prefix + "/") for prefix in PROTECTED_PREFIXES):
             return await call_next(request)
+        if path.startswith("/workspace/") and request.headers.get("authorization", "").startswith("Bearer "):
+            return await call_next(request)  # Workspace dependency verifies the session with Supabase.
         expected = os.environ.get("RAGEVAL_PUBLIC_TOKEN", "")
         if not expected:
             return JSONResponse(status_code=503, content={"detail": "Public API authentication is not configured"})

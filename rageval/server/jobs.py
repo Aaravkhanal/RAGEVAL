@@ -37,6 +37,9 @@ def _connect(root: Optional[str] = None) -> sqlite3.Connection:
 
 
 def is_busy() -> bool:
+    from rageval.server.remote_jobs import enabled, list_jobs
+    if enabled():
+        return any(j['state'] in ('queued','running') for j in list_jobs())
     if not os.path.isdir(runs_root()):
         return False
     try:
@@ -91,6 +94,9 @@ def enqueue_experiment(config_name: str, *, max_items: Optional[int] = None,
     output_root = output_root or runs_root()
     if not os.path.isdir(data_root or data_dir()):
         raise FileNotFoundError(data_root or data_dir())
+    from rageval.server.remote_jobs import enabled, enqueue
+    if enabled():
+        return enqueue(new_run_id(), config_name, max_items)
     with closing(_connect(output_root)) as conn, conn:
         conn.execute("BEGIN IMMEDIATE")
         if conn.execute("SELECT 1 FROM jobs WHERE state='queued' OR "
@@ -109,6 +115,9 @@ def enqueue_experiment(config_name: str, *, max_items: Optional[int] = None,
 def run_next_job(output_root: Optional[str] = None, data_root: Optional[str] = None) -> bool:
     """Claim and execute one job; an expired lease makes a crashed job retryable."""
     output_root, data_root = output_root or runs_root(), data_root or data_dir()
+    from rageval.server.remote_jobs import enabled, execute
+    if enabled():
+        return execute(output_root, data_root)
     with closing(_connect(output_root)) as conn, conn:
         conn.execute("BEGIN IMMEDIATE")
         now = time.time()
@@ -165,5 +174,10 @@ def run_next_job(output_root: Optional[str] = None, data_root: Optional[str] = N
 
 def worker_forever(output_root: Optional[str] = None, data_root: Optional[str] = None) -> None:
     while True:
-        if not run_next_job(output_root, data_root):
-            time.sleep(1)
+        try:
+            if not run_next_job(output_root, data_root):
+                time.sleep(1)
+        except Exception:
+            # A database outage must not permanently stop the worker loop.
+            traceback.print_exc()
+            time.sleep(3)

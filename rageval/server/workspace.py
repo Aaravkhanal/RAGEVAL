@@ -5,12 +5,13 @@ import os
 import sqlite3
 import uuid
 from contextlib import closing
+from rageval.server.accounts import owner, workspace_identity
 from pathlib import Path
 from typing import Literal
-from fastapi import APIRouter, HTTPException, Header
+from fastapi import APIRouter, HTTPException, Header, Depends
 from pydantic import BaseModel, Field, model_validator
 
-def remote(method, query, body=None):
+def remote(method, query, body=None, resource="rageval_records"):
     from urllib.request import Request, urlopen
     from urllib.error import URLError, HTTPError
     base = os.environ['RAGEVAL_SUPABASE_URL'].rstrip('/')
@@ -22,7 +23,7 @@ def remote(method, query, body=None):
     headers = {'apikey': key, 'Content-Type': 'application/json'}
     if not key.startswith('sb_secret_'):
         headers['Authorization'] = 'Bearer ' + key
-    request = Request(base + '/rest/v1/rageval_records' + query,
+    request = Request(base + '/rest/v1/' + resource + query,
         data=json.dumps(body).encode() if body is not None else None,
         headers=headers, method=method)
     try:
@@ -35,7 +36,7 @@ def remote(method, query, body=None):
         raise HTTPException(503, 'Remote storage unavailable; no local fallback was used') from None
 
 
-router = APIRouter(prefix='/workspace', tags=['workspace'])
+router = APIRouter(prefix='/workspace', tags=['workspace'], dependencies=[Depends(workspace_identity)])
 
 
 def connection():
@@ -48,6 +49,7 @@ def connection():
 
 def save(kind, body):
     key = uuid.uuid4().hex
+    body = {**body, '_owner': owner.get()}
     if os.environ.get('RAGEVAL_SUPABASE_URL'):
         remote('POST', '', {'id': key, 'kind': kind, 'body': body})
         return {'id': key, **body}
@@ -58,12 +60,14 @@ def save(kind, body):
 
 def records(kind):
     if os.environ.get('RAGEVAL_SUPABASE_URL'):
-        return [{'id': row['id'], **row['body']} for row in remote('GET', '?select=id,body&kind=eq.' + kind + '&order=created_at.desc&limit=200')]
+        return [{'id': row['id'], **row['body']} for row in remote('GET', '?select=id,body&kind=eq.' + kind + '&body->>_owner=eq.' + owner.get() + '&order=created_at.desc&limit=200')]
     with closing(connection()) as conn, conn:
-        return [{'id': key, **json.loads(body)} for key, body in conn.execute('SELECT id, body FROM records WHERE kind=? ORDER BY rowid DESC LIMIT 200', (kind,))]
+        return [{'id': key, **json.loads(body)} for key, body in conn.execute('SELECT id, body FROM records WHERE kind=? ORDER BY rowid DESC LIMIT 200', (kind,)) if json.loads(body).get('_owner', 'legacy-admin') == owner.get()]
 
 
 def admin(token):
+    if owner.get() != 'legacy-admin':
+        return
     import hmac
     expected = os.environ.get('RAGEVAL_ADMIN_TOKEN')
     if not expected or not token or not hmac.compare_digest(token, expected):
@@ -222,4 +226,46 @@ def accuracy(request: AccuracyRequest):
         fp = sum(matrix[g][label] for g in labels if g != label)
         fn = sum(matrix[label][p] for p in labels if p != label)
         metrics[label] = {'precision': tp/(tp+fp) if tp+fp else None, 'recall': tp/(tp+fn) if tp+fn else None, 'false_positives': fp, 'false_negatives': fn}
-    return {'n': len(request.claims), 'accuracy': sum(matrix[l][l] for l in labels)/len(request.claims), 'confusion_matrix': matrix, 'per_label': metrics, 'errors': errors, 'method': 'heuristic', 'note': 'Human labels are supplied by the caller; their independence is not verified.'}
+    return {'n': len(request.claims), 'accuracy': sum(matrix[label][label] for label in labels)/len(request.claims), 'confusion_matrix': matrix, 'per_label': metrics, 'errors': errors, 'method': 'heuristic', 'note': 'Human labels are supplied by the caller; their independence is not verified.'}
+
+class SavedAnswer(BaseModel):
+    question_id: str = Field(min_length=1, max_length=100)
+    answer: str = Field(min_length=1, max_length=16384)
+
+class DatasetExecution(BaseModel):
+    dataset_id: str = Field(min_length=1, max_length=100)
+    configuration: str = Field(min_length=1, max_length=100)
+    answers: list[SavedAnswer] = Field(min_length=1, max_length=20)
+
+@router.post('/execute')
+def execute_dataset(request: DatasetExecution, x_rageval_admin_token: str | None = Header(default=None)):
+    admin(x_rageval_admin_token)
+    dataset = next((d for d in records('dataset') if d['id']==request.dataset_id), None)
+    if dataset is None:
+        raise HTTPException(404, 'Dataset not found in your workspace')
+    questions = {q['id']:q for q in dataset['questions']}
+    if len({a.question_id for a in request.answers}) != len(request.answers) or any(a.question_id not in questions for a in request.answers):
+        raise HTTPException(422, 'Answers must have unique question IDs belonging to the dataset')
+    from rageval.integrations.external import score_answer
+    from rageval.server.runtime import get_evaluator
+    documents = {d['id']:d['text'] for d in dataset['documents']}
+    evaluated = []
+    for answer in request.answers:
+        q = questions[answer.question_id]
+        result = score_answer(q['question'],answer.answer,[documents[i] for i in q['source_ids']],
+            evaluator=get_evaluator('heuristic'),query_id=q['id'],gold_answer=q['reference_answer'],expected_abstention=q['expected_abstention'])
+        evaluated.append({'question_id':q['id'],'evaluation':result.model_dump(mode='json')})
+    return save('run', {'dataset_id':request.dataset_id,'configuration':request.configuration,'n':len(evaluated),'results':evaluated,
+        'note':'Evaluation uses the dataset reference passages, not retrieval by your agent. Import captured traces to measure actual retrieved evidence.'})
+
+@router.get('/operations')
+def operations(x_rageval_admin_token: str | None = Header(default=None)):
+    import hmac
+    expected = os.environ.get('RAGEVAL_ADMIN_TOKEN','')
+    if not expected or not x_rageval_admin_token or not hmac.compare_digest(expected,x_rageval_admin_token):
+        raise HTTPException(403,'Admin token required')
+    from rageval.server.remote_jobs import enabled, list_jobs
+    rows = list_jobs() if enabled() else []
+    return {'storage_read_ok': isinstance(records('dataset'),list), 'remote_queue_enabled':enabled(),
+        'jobs':{s:sum(r['state']==s for r in rows) for s in ['queued','running','complete','failed']},
+        'note':'External alert delivery and uptime monitoring must be configured separately.'}

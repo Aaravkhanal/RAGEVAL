@@ -1,0 +1,36 @@
+name: Deployed workflow and availability
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */6 * * *'
+permissions:
+  contents: read
+jobs:
+  availability:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check public readiness
+        run: curl --fail --retry 4 --retry-delay 15 --max-time 60 https://rageval-free.onrender.com/ready
+  workflow:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      RAGEVAL_BASE_URL: https://rageval-free.onrender.com
+      RAGEVAL_PUBLIC_TOKEN: ${{ secrets.RAGEVAL_PUBLIC_TOKEN }}
+      RAGEVAL_ADMIN_TOKEN: ${{ secrets.RAGEVAL_ADMIN_TOKEN }}
+      RAGEVAL_TEST_SESSION: ${{ secrets.RAGEVAL_TEST_SESSION }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --require-hashes -r requirements-lock-fast.txt
+      - name: Check workflow when credentials are configured
+        run: |
+          if [ -z "$RAGEVAL_PUBLIC_TOKEN" ] || [ -z "$RAGEVAL_ADMIN_TOKEN" ]; then
+            echo 'Configure deployment test credentials before running this workflow.'
+            exit 1
+          fi
+          python -m scripts.deployed_workflow

@@ -60,3 +60,21 @@ def test_remote_failure_never_falls_back_to_local(client, monkeypatch):
     assert response.status_code == 503
     monkeypatch.delenv('RAGEVAL_SUPABASE_URL')
     assert client.get('/workspace/datasets').json()['datasets'] == []
+
+def test_accounts_isolate_datasets_and_block_cross_owner_execution(client, monkeypatch):
+    monkeypatch.setenv('RAGEVAL_WORKSPACE_USER_AUTH','1')
+    monkeypatch.setenv('RAGEVAL_REQUIRE_AUTH','1')
+    monkeypatch.setenv('RAGEVAL_PUBLIC_TOKEN','public')
+    monkeypatch.setattr('rageval.server.accounts.auth_request',lambda path,body=None,token=None: {'id':token})
+    a={'Authorization':'Bearer user-a'}
+    b={'Authorization':'Bearer user-b'}
+    created=client.post('/workspace/datasets',json=DATASET,headers=a)
+    assert created.status_code==201, created.text
+    key=created.json()['id']
+    assert client.get('/workspace/datasets',headers=b).json()['datasets']==[]
+    assert len(client.get('/workspace/datasets',headers=a).json()['datasets'])==1
+    assert client.get('/workspace/datasets',headers={'X-RAGEVAL-API-TOKEN':'public'}).status_code==401
+    assert client.post('/workspace/execute',headers=b,json={'dataset_id':key,'configuration':'x','answers':[{'question_id':'q','answer':'$100 million'}]}).status_code==404
+    response=client.post('/workspace/execute',headers=a,json={'dataset_id':key,'configuration':'x','answers':[{'question_id':'q','answer':'Revenue was $100 million [1].'}]})
+    assert response.status_code==200, response.text
+    assert response.json()['n']==1
