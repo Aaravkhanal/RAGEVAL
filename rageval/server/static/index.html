@@ -220,7 +220,7 @@
                 <div class="panel">
                     <div class="panel-header">
                         <div class="panel-title">
-                            <span>Input Configuration</span>
+                            <span>Answer and sources</span>
                         </div>
                         <div class="sample-presets">
                             <button class="preset-btn" id="preset-faithful">Faithful</button>
@@ -230,24 +230,24 @@
                     </div>
 
                     <div class="input-group">
-                        <label for="eval-question">User Question</label>
+                        <label for="eval-question">Question</label>
                         <input type="text" id="eval-question" value="What was ApexCloud's Q3 2024 gross margin, and what drove margin expansion?">
                     </div>
 
                     <div class="input-group">
-                        <label for="eval-context">Retrieved Context Chunk(s)</label>
+                        <label for="eval-context">Source text</label>
                         <textarea id="eval-context" rows="4">ApexCloud reported total revenue of $842 million for the third quarter of 2024, representing a 24% year-over-year growth. Non-GAAP gross margin expanded by 180 basis points to 78.2%, driven by custom ASIC silicon deployment across edge datacenters. Operating cash flow reached $215 million.</textarea>
                     </div>
 
                     <div class="input-group">
-                        <label>Active Evidence Span Alignment</label>
+                        <label>Evidence</label>
                         <div class="context-view-box" id="context-highlight-box">
                             Click any atomic claim on the right to visually highlight its matching evidence span.
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label for="eval-answer">Generated Answer (with Citations)</label>
+                        <label for="eval-answer">Answer to check</label>
                         <textarea id="eval-answer" rows="3">ApexCloud achieved a gross margin of 78.2% [1]. This margin expansion was driven by custom ASIC silicon deployment [1].</textarea>
                     </div>
 
@@ -268,7 +268,7 @@
                 <div class="panel">
                     <div class="panel-header">
                         <div class="panel-title">
-                            <span>Verification Analysis</span>
+                            <span>Claim results</span>
                         </div>
                         <span id="eval-timing" style="font-size: 0.8rem; color: var(--text-dim); font-family: var(--font-mono);">Ready</span>
                     </div>
@@ -289,13 +289,12 @@
                     </div>
 
                     <div id="citation-summary" style="padding:0.75rem 1rem; border-radius:6px; font-size:0.8rem;">
-                        Existence precision: <strong id="cite-precision">—</strong>
-                        | Support precision: <strong id="cite-support">—</strong>
-                        | Valid citations: <strong id="cite-valid">—</strong> / <strong id="cite-total">—</strong>
-                        | Marker recall (legacy): <strong id="cite-marker">—</strong>
+                        Citation exists: <strong id="cite-precision">—</strong>
+                        | Citation supports claim: <strong id="cite-support">—</strong>
+                        | Citations: <strong id="cite-valid">—</strong> / <strong id="cite-total">—</strong>
                     </div>
 
-                    <div class="claims-container" id="claims-list"></div>
+                    <div class="claims-container" id="claims-list"><p style="color:var(--text-dim); font-size:13px; margin:0;">Run an audit to see each claim and its evidence.</p></div>
                 </div>
             </div>
         </div>
@@ -498,7 +497,6 @@
             const cm = res.citation_metrics;
             document.getElementById('cite-precision').textContent = Math.round(cm.citation_precision * 100) + "%";
             document.getElementById('cite-support').textContent = Math.round((cm.citation_support_precision || 0) * 100) + "%";
-            document.getElementById('cite-marker').textContent = Math.round((cm.citation_recall || 0) * 100) + "%";
             document.getElementById('cite-valid').textContent = cm.valid_citations;
             document.getElementById('cite-total').textContent = cm.total_citations;
 
