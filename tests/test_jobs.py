@@ -104,7 +104,10 @@ def test_post_heavy_without_allow_403():
 
 def test_light_only_deployment_rejects_heavy_even_when_requested(monkeypatch):
     monkeypatch.setenv("RAGEVAL_LIGHT_ONLY", "1")
-    names = {row["name"] for row in list_named_configs()}
+    response = client.get("/experiment-configs")
+    assert response.status_code == 200
+    assert response.json()["light_only"] is True
+    names = {row["name"] for row in response.json()["configs"]}
     assert names == {"smoke"}
     res = client.post("/experiments", json={"config": "C_retrieve", "max_items": 1, "allow_heavy": True})
     assert res.status_code == 403

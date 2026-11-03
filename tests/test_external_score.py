@@ -50,6 +50,27 @@ def test_score_answer_unsupported_heuristic():
     assert result.hallucination_rate > 0.0
 
 
+def test_unrelated_new_number_is_unsupported_not_contradicted():
+    from rageval.core.schemas import VerificationLabel
+
+    context = "ApexCloud reported revenue of $842 million and a gross margin of 78.2%."
+    unsupported = score_answer(
+        "Did ApexCloud announce a partnership?",
+        "ApexCloud entered a $2 billion partnership with OpenAI in Europe [1].",
+        [context],
+        method="heuristic",
+    )
+    assert unsupported.verifications[0].label == VerificationLabel.UNSUPPORTED
+
+    contradicted = score_answer(
+        "What was ApexCloud's gross margin?",
+        "ApexCloud's gross margin was 12.4% [1].",
+        [context],
+        method="heuristic",
+    )
+    assert contradicted.verifications[0].label == VerificationLabel.CONTRADICTED
+
+
 def test_score_jsonl_roundtrip(tmp_path):
     src = tmp_path / "in.jsonl"
     src.write_text(

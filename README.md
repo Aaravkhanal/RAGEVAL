@@ -34,6 +34,22 @@ The current long-document chunk diagnostic is `reports/phase7/A_chunk_long_v1/`.
 
 ## Install
 
+### Live free preview
+
+[Open RAGeval on Render](https://rageval-free.onrender.com/). Enter the public API
+token from the Render service's **Environment** page. On **Claim Verifier**,
+choose Faithful, Hallucinated, or Contradictory to compare an answer with its
+source text. The claim cards show which individual statements have support;
+click a card to inspect its matching evidence. The default verifier is a fast
+lexical heuristic, so its labels are diagnostic rather than human judgments.
+The **Dataset Explorer** shows questions and gold answers. On **Ablation
+Benchmark**, enter the separate admin token and start the `smoke` job to see
+BM25 retrieval and scoring on two synthetic questions. The free service does
+not run dense embedding, reranking, or NLI experiments, and its new run results
+disappear when Render sleeps or restarts. See [Render free preview](docs/RENDER_FREE.md).
+
+## Local install
+
 Python 3.10+. Prefer a dedicated environment. Software version **0.3.0**. Official ablation tables remain mock run `20261028T183042Z_a97ad68f`.
 
 ```bash

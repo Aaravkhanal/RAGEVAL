@@ -573,7 +573,7 @@
                         <label for="eval-method">Verifier</label>
                         <select id="eval-method">
                             <option value="heuristic" selected>heuristic (default, no model download)</option>
-                            <option value="nli">nli (DeBERTa, first call may download weights)</option>
+                            <option value="nli">nli (requires server enablement)</option>
                         </select>
                     </div>
 
@@ -594,23 +594,23 @@
                     <div class="metric-cards-row">
                         <div class="metric-card entailed">
                             <div class="metric-label">Faithfulness</div>
-                            <div class="metric-value entailed" id="score-faithfulness">100%</div>
+                            <div class="metric-value entailed" id="score-faithfulness">—</div>
                         </div>
                         <div class="metric-card hallucinated">
                             <div class="metric-label">Hallucination</div>
-                            <div class="metric-value hallucinated" id="score-hallucination">0%</div>
+                            <div class="metric-value hallucinated" id="score-hallucination">—</div>
                         </div>
                         <div class="metric-card contradicted">
                             <div class="metric-label">Contradiction</div>
-                            <div class="metric-value contradicted" id="score-contradiction">0%</div>
+                            <div class="metric-value contradicted" id="score-contradiction">—</div>
                         </div>
                     </div>
 
                     <div id="citation-summary" style="background:#0d121c; padding:0.75rem 1rem; border-radius:8px; border:1px solid var(--border-subtle); font-size:0.85rem; color:var(--text-muted);">
-                        Existence precision: <strong style="color:#f8fafc;" id="cite-precision">100%</strong>
-                        | Support precision: <strong id="cite-support">100%</strong>
-                        | Valid citations: <strong id="cite-valid">2</strong> / <strong id="cite-total">2</strong>
-                        | Marker recall (legacy): <strong id="cite-marker">100%</strong>
+                        Existence precision: <strong style="color:#f8fafc;" id="cite-precision">—</strong>
+                        | Support precision: <strong id="cite-support">—</strong>
+                        | Valid citations: <strong id="cite-valid">—</strong> / <strong id="cite-total">—</strong>
+                        | Marker recall (legacy): <strong id="cite-marker">—</strong>
                     </div>
 
                     <div class="claims-container" id="claims-list"></div>
@@ -622,7 +622,7 @@
         <div id="section-benchmark" style="display: none; margin-top: 1rem;">
             <div style="margin-bottom: 1.25rem;">
                 <h2 style="font-size: 1.5rem; font-weight: 800;">Experiment jobs</h2>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">Queues <code>POST /experiments</code> (allowlisted YAML from <code>GET /experiment-configs</code>). Live claim audit stays on the Claim Verifier tab. Heavy NLI / full v1 names stay hidden until you check allow heavy.</p>
+                <p id="job-intro" style="color: var(--text-muted); font-size: 0.95rem;">Queues <code>POST /experiments</code> (allowlisted YAML from <code>GET /experiment-configs</code>). Live claim audit stays on the Claim Verifier tab. Heavy NLI / full v1 names stay hidden until you check allow heavy.</p>
             </div>
             <div class="panel" style="margin-bottom: 1.5rem;">
                 <div class="job-form">
@@ -638,7 +638,7 @@
                         <label for="max-items">max_items</label>
                         <input type="number" id="max-items" min="1" max="32" value="2" step="1">
                     </div>
-                    <div class="input-group">
+                    <div class="input-group" id="heavy-job-control">
                         <label for="allow-heavy">Heavy jobs</label>
                         <label class="checkbox-row" for="allow-heavy">
                             <input type="checkbox" id="allow-heavy">
@@ -924,6 +924,12 @@
                 if (!resp.ok) throw new Error("GET /experiment-configs failed");
                 const payload = await resp.json();
                 namedConfigs = payload.configs || [];
+                if (payload.light_only) {
+                    document.getElementById("heavy-job-control").style.display = "none";
+                    document.getElementById("allow-heavy").checked = false;
+                    document.getElementById("job-intro").textContent = "This free preview runs lightweight smoke jobs. Research experiments with embedding models and NLI run locally.";
+                    document.querySelector('#eval-method option[value="nli"]').disabled = true;
+                }
                 fillConfigSelect();
             } catch (err) {
                 status.textContent = "Could not load GET /experiment-configs: " + err.message;

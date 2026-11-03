@@ -137,7 +137,10 @@ class NLIVerifier:
             num_conflict = False
             if h_numbers and p_numbers:
                 # If hypothesis asserts numbers that don't appear in premise when sharing topic words
-                topic_words = h_words - set(["the", "and", "is", "was", "in", "of", "to", "for", "with", "at", "by", "a", "an"])
+                # A decimal such as 78.2 contributes a bare "2" to the word
+                # set. Digits are not topic anchors for another numeric claim.
+                stop_words = {"the", "and", "is", "was", "in", "of", "to", "for", "with", "at", "by", "a", "an"}
+                topic_words = {word for word in h_words - stop_words if word.isalpha()}
                 if len(topic_words & p_words) >= 2 and not (h_numbers & p_numbers):
                     num_conflict = True
 

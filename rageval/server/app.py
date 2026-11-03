@@ -204,7 +204,7 @@ def experiments_index():
 @app.get("/experiment-configs", tags=["experiments"])
 def experiment_configs():
     """Allowlisted YAML names. Heavy configs need allow_heavy on POST /experiments."""
-    return {"configs": list_named_configs()}
+    return {"configs": list_named_configs(), "light_only": os.environ.get("RAGEVAL_LIGHT_ONLY", "0") == "1"}
 
 
 @app.get("/experiments/{run_id}", tags=["experiments"])
