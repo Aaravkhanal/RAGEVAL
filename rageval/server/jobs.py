@@ -56,6 +56,8 @@ def list_named_configs(root: Optional[str] = None) -> List[Dict[str, Any]]:
     root = resolve_asset(root or EXPERIMENTS_DIR)
     names = [os.path.splitext(os.path.basename(p))[0]
              for p in sorted(glob.glob(os.path.join(root, "*.yaml")))]
+    if os.environ.get("RAGEVAL_LIGHT_ONLY", "0") == "1":
+        names = [name for name in names if name in LIGHT_CONFIGS]
     return [{"name": name, "heavy": name not in LIGHT_CONFIGS} for name in names]
 
 
@@ -79,6 +81,8 @@ def enqueue_experiment(config_name: str, *, max_items: Optional[int] = None,
     if not spec.pipelines:
         raise ValueError(f"Experiment {config_name!r} has no pipelines (analysis-only). Use GET /experiments results.")
     heavy = config_name not in LIGHT_CONFIGS
+    if heavy and os.environ.get("RAGEVAL_LIGHT_ONLY", "0") == "1":
+        raise PermissionError("This deployment accepts only lightweight smoke jobs")
     if heavy and not allow_heavy:
         raise PermissionError(f"Config {config_name!r} is a heavy job. Pass allow_heavy=true or run the CLI.")
     max_items = DEFAULT_HTTP_MAX_ITEMS if max_items is None else int(max_items)

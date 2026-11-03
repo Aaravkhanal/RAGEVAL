@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: rageval-free
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile.render
+    healthCheckPath: /ready
+    envVars:
+      - key: RAGEVAL_REQUIRE_AUTH
+        value: "1"
+      - key: RAGEVAL_LIGHT_ONLY
+        value: "1"
+      - key: RAGEVAL_BIND_HOST
+        value: 0.0.0.0
+      - key: RAGEVAL_ALLOWED_HOSTS
+        value: "*.onrender.com"
+      - key: RAGEVAL_PUBLIC_TOKEN
+        generateValue: true
+      - key: RAGEVAL_ADMIN_TOKEN
+        generateValue: true
