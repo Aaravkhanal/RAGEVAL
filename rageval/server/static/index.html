@@ -204,7 +204,7 @@
             <button class="nav-btn active" id="btn-tab-live">Claim audit</button>
             <button class="nav-btn" id="btn-tab-benchmark">Experiments</button>
             <button class="nav-btn" id="btn-tab-dataset">Datasets</button>
-            <button class="nav-btn" id="btn-tab-batch">Batch audit</button>
+            <button class="nav-btn" id="btn-tab-batch">Batch audit</button><button class="nav-btn" id="btn-tab-workspace">My benchmarks</button>
             <a href="/docs" target="_blank" class="nav-btn" style="text-decoration:none;">API</a>
         </nav>
     </header>
@@ -406,6 +406,26 @@
                 <div id="batch-results"></div>
             </div>
         </section>
+        <section id="section-workspace" style="display:none">
+            <h2>My benchmarks</h2>
+            <p>Save custom benchmarks, measure the evaluator against human labels, and compare captured agent responses. Saving datasets requires the job admin token in Experiments.</p>
+            <div class="panel">
+                <label for="workspace-file">Dataset or human claim labels (.json, maximum 60 KB)</label>
+                <input type="file" id="workspace-file" accept=".json,application/json">
+                <div class="sample-presets">
+                    <button class="preset-btn" id="workspace-example">Dataset example</button>
+                    <button class="preset-btn" id="accuracy-example">Human labels template</button>
+                    <button class="preset-btn" id="workspace-upload">Save dataset</button>
+                    <button class="preset-btn" id="workspace-accuracy">Measure accuracy</button>
+                    <button class="preset-btn" id="workspace-list">Saved datasets</button>
+                    <button class="preset-btn" id="workspace-compare">Compare configurations</button>
+                    <button class="preset-btn" id="workspace-storage">Storage status</button><button class="preset-btn" id="workspace-archives">Archived job results</button>
+                    <button class="preset-btn" id="workspace-export">Export latest report</button>
+                </div>
+                <label for="comparison-baseline">Comparison baseline configuration (optional)</label><input type="text" id="comparison-baseline" placeholder="baseline"><p id="workspace-status" role="status"></p>
+                <pre id="workspace-output" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre>
+            </div>
+        </section>
     </main>
 
     <script>
@@ -429,6 +449,35 @@
                 await loadDatasetExplorer();
             } catch (err) { status.textContent = err.message; }
         });
+        let workspaceReport = {};
+        document.getElementById('workspace-example').onclick = () => downloadJSON('dataset.json', {name:'Revenue benchmark', documents:[{id:'doc1',text:'Revenue was $100 million.'}],questions:[{id:'q1',question:'What was revenue?',reference_answer:'$100 million',source_ids:['doc1']}]});
+        document.getElementById('accuracy-example').onclick = () => downloadJSON('human-labels.json', {claims:[{claim:'Replace with a claim independently labeled by a human',evidence:'Replace with its source passage',human_label:'supported'}]});
+        document.getElementById('workspace-export').onclick = () => downloadJSON('workspace-report.json', workspaceReport);
+        async function workspaceAction(path, upload) {
+            const status = document.getElementById('workspace-status');
+            status.textContent = 'Working…';
+            try {
+                let options = {};
+                if (upload) {
+                    const file = document.getElementById('workspace-file').files[0];
+                    if (!file || file.size > 60000) throw new Error('Select a JSON file up to 60 KB.');
+                    const data = JSON.parse(await file.text());
+                    options = {method:'POST', headers:{'Content-Type':'application/json','X-RAGEVAL-ADMIN-TOKEN':document.getElementById('admin-token').value.trim()}, body:JSON.stringify(data)};
+                }
+                const response = await apiFetch('/workspace/' + path, options);
+                const body = await response.json();
+                if (!response.ok) throw new Error(typeof body.detail === 'string' ? body.detail : JSON.stringify(body.detail));
+                workspaceReport = body;
+                document.getElementById('workspace-output').textContent = JSON.stringify(body,null,2);
+                status.textContent = path === 'accuracy' ? 'Measured against the human labels you supplied. Labels are not independently verified.' : 'Complete. Export the report to keep a copy.';
+            } catch (err) { status.textContent = err.message; }
+        }
+        document.getElementById('workspace-upload').onclick = () => workspaceAction('datasets', true);
+        document.getElementById('workspace-accuracy').onclick = () => workspaceAction('accuracy', true);
+        document.getElementById('workspace-list').onclick = () => workspaceAction('datasets');
+        document.getElementById('workspace-compare').onclick = () => workspaceAction('comparison?baseline=' + encodeURIComponent(document.getElementById('comparison-baseline').value));
+        document.getElementById('workspace-archives').onclick = () => workspaceAction('archived-runs');
+        document.getElementById('workspace-storage').onclick = () => workspaceAction('storage');
         let batchResults = [];
         function downloadJSON(name, value) {
             const url = URL.createObjectURL(new Blob([JSON.stringify(value, null, 2)], {type: 'application/json'}));
@@ -502,7 +551,7 @@
             { btn: 'btn-tab-live', sec: 'section-live-eval' },
             { btn: 'btn-tab-benchmark', sec: 'section-benchmark', onShow: loadExperimentTab },
             { btn: 'btn-tab-dataset', sec: 'section-dataset', onShow: loadDatasetExplorer },
-            { btn: 'btn-tab-batch', sec: 'section-batch' }
+            { btn: 'btn-tab-batch', sec: 'section-batch' }, { btn: 'btn-tab-workspace', sec: 'section-workspace' }
         ];
 
         tabs.forEach(t => {

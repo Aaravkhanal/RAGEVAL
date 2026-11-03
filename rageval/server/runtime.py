@@ -18,8 +18,8 @@ from rageval.core.config import EvaluatorConfig
 from rageval.evaluator.evaluator import RAGEvalEvaluator
 
 DEFAULT_CORS = "http://127.0.0.1:8000,http://localhost:8000"
-RATE_LIMITED_PREFIXES = ("/evaluate/", "/score")
-PROTECTED_PREFIXES = ("/datasets", "/experiments", "/experiment-configs", "/evaluate", "/score", "/metrics")
+RATE_LIMITED_PREFIXES = ("/evaluate/", "/score", "/workspace/")
+PROTECTED_PREFIXES = ("/workspace", "/datasets", "/experiments", "/experiment-configs", "/evaluate", "/score", "/metrics")
 MAX_REQUEST_BYTES = 65536
 _evaluators: Dict[str, RAGEvalEvaluator] = {}
 _eval_lock = threading.Lock()

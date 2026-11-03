@@ -67,6 +67,9 @@ app.add_middleware(
 )
 app.add_middleware(ProductionHeadersMiddleware)
 
+from rageval.server.workspace import router as workspace_router
+app.include_router(workspace_router)
+
 CLI_START = (
     "rageval experiment --config configs/experiments/C_retrieve.yaml "
     "--output-dir experiments/runs"

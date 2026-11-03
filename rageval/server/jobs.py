@@ -145,6 +145,10 @@ def run_next_job(output_root: Optional[str] = None, data_root: Optional[str] = N
         run_experiment(load_experiment(resolve_config_path(config_name)), data_dir=data_root,
                        output_root=output_root, max_items=max_items, existing_run_dir=run_dir)
         write_run_status(run_dir, "complete", extra={"config": config_name, "max_items": max_items})
+        if os.environ.get("RAGEVAL_SUPABASE_URL"):
+            from rageval.server.workspace import save
+            from rageval.server.catalog import get_experiment_results
+            save('run', get_experiment_results(run_id, output_root))
     except Exception as exc:
         state = "failed"
         write_run_status(run_dir, "failed", extra={"config": config_name, "error": str(exc),
