@@ -101,7 +101,11 @@ class Dataset(BaseModel):
 
 @router.get('/storage')
 def storage():
-    return {'remote_configured': bool(os.environ.get('RAGEVAL_SUPABASE_URL')), 'backend': 'supabase' if os.environ.get('RAGEVAL_SUPABASE_URL') else 'sqlite', 'durable_storage_configured': bool(os.environ.get('RAGEVAL_WORKSPACE_DB')), 'note': 'Durability requires RAGEVAL_WORKSPACE_DB on a persistent volume. Render free local storage is ephemeral.'}
+    remote_enabled = bool(os.environ.get('RAGEVAL_SUPABASE_URL'))
+    return {'remote_configured': remote_enabled, 'backend': 'supabase' if remote_enabled else 'sqlite',
+            'durable_storage_configured': remote_enabled or bool(os.environ.get('RAGEVAL_WORKSPACE_DB')),
+            'note': 'Workspace records and archived job metrics use Supabase. Pending jobs and full prediction files remain local.' if remote_enabled else 'SQLite durability requires RAGEVAL_WORKSPACE_DB on a persistent volume. Render free local storage is ephemeral.'}
+
 
 
 @router.post('/datasets', status_code=201)
