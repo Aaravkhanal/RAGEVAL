@@ -142,6 +142,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         path = request.url.path
         limited = any(path == prefix.rstrip("/") or path.startswith(prefix) for prefix in RATE_LIMITED_PREFIXES)
         job_start = request.method == "POST" and path == "/experiments"
+        account_request = path.startswith("/account/")
         protected_read = request.method == "GET" and any(path == prefix or path.startswith(prefix + "/") for prefix in PROTECTED_PREFIXES)
         if not limited and not job_start and not protected_read:
             return await call_next(request)
@@ -150,14 +151,16 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             if len(body) > MAX_REQUEST_BYTES:
                 return JSONResponse(status_code=413, content={"detail": "Request body exceeds 64 KiB"})
         limit = rate_limit_per_minute()
-        if job_start:
+        if account_request:
+            limit = min(limit, 6) if limit else 6
+        elif job_start:
             limit = min(limit, 6) if limit else 6
         elif protected_read:
             limit = read_rate_limit_per_minute()
         client = request.client.host if request.client else "unknown"
-        principal = request.headers.get("x-rageval-api-token", "") or request.headers.get("x-rageval-admin-token", "")
+        principal = "" if account_request else (request.headers.get("authorization", "") or request.headers.get("x-rageval-api-token", "") or request.headers.get("x-rageval-admin-token", ""))
         principal_id = hashlib.sha256(principal.encode()).hexdigest()[:16] if principal else client
-        category = "jobs" if job_start else "reads" if protected_read else "evaluation"
+        category = "accounts" if account_request else "jobs" if job_start else "reads" if protected_read else "evaluation"
         if not allow_request(f"{principal_id}:{category}", limit):
             return JSONResponse(
                 status_code=429,

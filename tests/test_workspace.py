@@ -78,3 +78,12 @@ def test_accounts_isolate_datasets_and_block_cross_owner_execution(client, monke
     response=client.post('/workspace/execute',headers=a,json={'dataset_id':key,'configuration':'x','answers':[{'question_id':'q','answer':'Revenue was $100 million [1].'}]})
     assert response.status_code==200, response.text
     assert response.json()['n']==1
+
+def test_login_throttle_cannot_be_bypassed_with_spoofed_api_headers(client, monkeypatch):
+    from rageval.server.runtime import reset_runtime_for_tests
+    reset_runtime_for_tests()
+    monkeypatch.setattr('rageval.server.accounts.auth_request',lambda *args,**kwargs:{'access_token':'session','expires_in':3600})
+    for i in range(6):
+        assert client.post('/account/login',headers={'X-RAGEVAL-API-TOKEN':str(i)},json={'email':'test@example.com','password':'test-only-password'}).status_code==200
+    assert client.post('/account/login',headers={'X-RAGEVAL-API-TOKEN':'different'},json={'email':'test@example.com','password':'test-only-password'}).status_code==429
+    reset_runtime_for_tests()

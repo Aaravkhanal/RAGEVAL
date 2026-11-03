@@ -1,0 +1,14 @@
+{
+  "live_service": "https://rageval-free.onrender.com",
+  "durable_job_id": "20261103T163505Z_8e648a14",
+  "supabase_lease_reclaim_transaction": "passed; rolled back",
+  "completed_job_read_after_render_rollout": "passed",
+  "full_artifact_download": "passed",
+  "offline_restore_of_downloaded_artifacts": {
+    "metrics_readable": true,
+    "predictions_present": true
+  },
+  "independent_human_accuracy": "not measured; requires human reviewers",
+  "account_owner_isolation": "automated tests passed; live user registration not exercised",
+  "full_hosted_database_disaster_restore": "not exercised"
+}

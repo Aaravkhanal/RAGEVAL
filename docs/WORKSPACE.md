@@ -130,3 +130,13 @@ triggered workflow exercises uploads, reads, capture, comparisons, job completio
 artifact export and restore. It requires GitHub secrets RAGEVAL_PUBLIC_TOKEN and
 RAGEVAL_ADMIN_TOKEN. It creates named E2E records and a smoke job; it is opt-in.
 No external monitoring notification destination has been configured automatically.
+
+For logical application-data backups, `python -m scripts.backup_remote backup
+private-backup.json` exports both records and queue/artifacts using the Supabase
+URL/key from environment variables. Pause writes for cross-table consistency.
+The output is private and is created with owner-only permissions. Restore to a
+prepared project with `python -m scripts.backup_remote restore private-backup.json
+--confirm-project PROJECT_REF`. This upserts data and requires an exact project
+confirmation. Tests cover data round trips and wrong-project rejection using an
+isolated transport. A live full-database restore, Auth-user backup, scheduled
+protected backup destination and alert recipient remain operational setup tasks.

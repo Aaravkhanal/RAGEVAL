@@ -266,6 +266,10 @@ def operations(x_rageval_admin_token: str | None = Header(default=None)):
         raise HTTPException(403,'Admin token required')
     from rageval.server.remote_jobs import enabled, list_jobs
     rows = list_jobs() if enabled() else []
+    import resource
+    import shutil
+    disk = shutil.disk_usage('.')
     return {'storage_read_ok': isinstance(records('dataset'),list), 'remote_queue_enabled':enabled(),
+        'process_peak_rss_platform_units':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss, 'disk_free_bytes':disk.free,
         'jobs':{s:sum(r['state']==s for r in rows) for s in ['queued','running','complete','failed']},
         'note':'External alert delivery and uptime monitoring must be configured separately.'}

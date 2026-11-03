@@ -148,8 +148,9 @@ def _http_evaluator(method: str):
 
 
 def _health_payload() -> Dict[str, Any]:
+    from rageval.server.remote_jobs import enabled
     try:
-        busy = is_busy()
+        busy = None if enabled() else is_busy()
     except Exception:
         busy = None
     return {
