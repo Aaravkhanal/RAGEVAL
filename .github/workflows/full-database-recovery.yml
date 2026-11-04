@@ -1,0 +1,43 @@
+name: Full Supabase database backup and restore verification
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: full-database-recovery
+  cancel-in-progress: false
+jobs:
+  recover:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      RAGEVAL_DATABASE_HOST: ${{ vars.RAGEVAL_DATABASE_HOST }}
+      RAGEVAL_DATABASE_PASSWORD: ${{ secrets.RAGEVAL_DATABASE_PASSWORD }}
+      RAGEVAL_BACKUP_KEY: ${{ secrets.RAGEVAL_BACKUP_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 3.0.0
+      - run: pip install --require-hashes -r requirements-lock-fast.txt
+      - run: sudo apt-get update -qq && sudo apt-get install -y postgresql-client-16
+      - name: Dump source and verify in an isolated Supabase database
+        run: python -m scripts.full_database_recovery --output rageval-full-database.enc
+      - uses: actions/upload-artifact@v4
+        with:
+          name: encrypted-full-database-${{ github.run_id }}
+          path: |
+            rageval-full-database.enc
+            rageval-full-database.enc.hmac
+            rageval-full-database.enc.sha256
+          retention-days: 7
+          if-no-files-found: error
+      - name: Alert on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue create --repo "$GITHUB_REPOSITORY" --title 'Full database recovery verification failed' --body "Investigate $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID. Live database was not a restore target."

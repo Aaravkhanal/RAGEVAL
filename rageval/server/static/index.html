@@ -412,7 +412,7 @@
                 <p>Sign in for a private workspace. Sessions stay in this tab’s memory.</p>
                 <label for="account-email">Email</label><input type="text" id="account-email" autocomplete="username">
                 <label for="account-password">Password</label><input type="password" id="account-password" autocomplete="current-password">
-                <div class="sample-presets"><button class="preset-btn" id="account-login">Sign in</button><button class="preset-btn" id="account-signup">Create account</button><button class="preset-btn" id="account-logout">Sign out</button><button class="preset-btn" id="account-recover">Forgot password</button><button class="preset-btn" id="account-update-password">Set new password</button></div>
+                <div class="sample-presets"><button class="preset-btn" id="account-login">Sign in</button><button class="preset-btn" id="account-signup">Create account</button><button class="preset-btn" id="account-logout">Sign out</button><button class="preset-btn" id="account-recover">Forgot password</button><button class="preset-btn" id="account-resend">Resend confirmation</button><button class="preset-btn" id="account-update-password">Set new password</button></div>
                 <label for="account-delete-confirmation">Permanently delete account and active workspace data: type DELETE MY ACCOUNT</label><input type="text" id="account-delete-confirmation" autocomplete="off"><button class="preset-btn" id="account-delete">Delete my account permanently</button><p id="account-status" role="status">Sign in to keep your datasets separate from other users.</p>
             </div>
             <p>Save custom benchmarks, measure the evaluator against human labels, and compare captured agent responses. Sign in to save private datasets. Operators can use the job admin token in Experiments for the shared admin workspace.</p>
@@ -495,6 +495,7 @@
                 }
             }catch(err){status.textContent=err.message;}
         }
+        document.getElementById('account-resend').onclick=()=>lifecycleAction('resend','POST',{email:document.getElementById('account-email').value.trim()});
         document.getElementById('account-recover').onclick=()=>lifecycleAction('recover','POST',{email:document.getElementById('account-email').value.trim()});
         document.getElementById('account-update-password').onclick=()=>lifecycleAction('password','PUT',{password:document.getElementById('account-password').value});
         document.getElementById('account-delete').onclick=()=>lifecycleAction('me','DELETE',{confirmation:document.getElementById('account-delete-confirmation').value});
