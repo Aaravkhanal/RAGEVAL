@@ -1,7 +1,6 @@
 """PyTorch Natural Language Inference (NLI) Verifier for Claim-Level Evidence Attribution."""
 
 from __future__ import annotations
-import re
 from typing import List, Tuple, Dict, Optional
 from rageval.core.schemas import (
     AtomicClaim,
@@ -124,39 +123,8 @@ class NLIVerifier:
 
     def _heuristic_nli_batch(self, pairs: List[Tuple[str, str]]) -> List[Dict[str, float]]:
         """Lightweight semantic heuristic for fast local testing and fallback."""
-        results = []
-        for premise, hypothesis in pairs:
-            p_words = set(re.findall(r"\w+", premise.lower()))
-            h_words = set(re.findall(r"\w+", hypothesis.lower()))
-            
-            # Key entity/number overlap
-            h_numbers = set(re.findall(r"\b\d+(?:\.\d+)?%?\b", hypothesis))
-            p_numbers = set(re.findall(r"\b\d+(?:\.\d+)?%?\b", premise))
-            
-            # Check for direct numerical conflict
-            num_conflict = False
-            if h_numbers and p_numbers:
-                # If hypothesis asserts numbers that don't appear in premise when sharing topic words
-                # A decimal such as 78.2 contributes a bare "2" to the word
-                # set. Digits are not topic anchors for another numeric claim.
-                stop_words = {"the", "and", "is", "was", "in", "of", "to", "for", "with", "at", "by", "a", "an"}
-                topic_words = {word for word in h_words - stop_words if word.isalpha()}
-                if len(topic_words & p_words) >= 2 and not (h_numbers & p_numbers):
-                    num_conflict = True
-
-            intersection = h_words & p_words
-            overlap_ratio = len(intersection) / max(len(h_words), 1)
-
-            if num_conflict or "contrary" in hypothesis.lower() or "discontinued" in hypothesis.lower():
-                results.append({"entailment": 0.05, "neutral": 0.15, "contradiction": 0.80})
-            elif overlap_ratio >= 0.55:
-                results.append({"entailment": 0.85, "neutral": 0.10, "contradiction": 0.05})
-            elif overlap_ratio >= 0.30:
-                results.append({"entailment": 0.20, "neutral": 0.70, "contradiction": 0.10})
-            else:
-                results.append({"entailment": 0.05, "neutral": 0.85, "contradiction": 0.10})
-
-        return results
+        from rageval.evaluator.lexical import score
+        return [score(premise, hypothesis) for premise, hypothesis in pairs]
 
     def verify_claim(
         self,

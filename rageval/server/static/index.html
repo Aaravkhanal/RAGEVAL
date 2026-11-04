@@ -412,8 +412,8 @@
                 <p>Sign in for a private workspace. Sessions stay in this tab’s memory.</p>
                 <label for="account-email">Email</label><input type="text" id="account-email" autocomplete="username">
                 <label for="account-password">Password</label><input type="password" id="account-password" autocomplete="current-password">
-                <div class="sample-presets"><button class="preset-btn" id="account-login">Sign in</button><button class="preset-btn" id="account-signup">Create account</button><button class="preset-btn" id="account-logout">Sign out</button></div>
-                <p id="account-status" role="status">Sign in to keep your datasets separate from other users.</p>
+                <div class="sample-presets"><button class="preset-btn" id="account-login">Sign in</button><button class="preset-btn" id="account-signup">Create account</button><button class="preset-btn" id="account-logout">Sign out</button><button class="preset-btn" id="account-recover">Forgot password</button><button class="preset-btn" id="account-update-password">Set new password</button></div>
+                <label for="account-delete-confirmation">Permanently delete account and active workspace data: type DELETE MY ACCOUNT</label><input type="text" id="account-delete-confirmation" autocomplete="off"><button class="preset-btn" id="account-delete">Delete my account permanently</button><p id="account-status" role="status">Sign in to keep your datasets separate from other users.</p>
             </div>
             <p>Save custom benchmarks, measure the evaluator against human labels, and compare captured agent responses. Saving datasets requires the job admin token in Experiments.</p>
             <div class="panel">
@@ -470,6 +470,34 @@
                 else status.textContent=body.message;
             } catch(err) {status.textContent=err.message;}
         }
+        // Supabase email links return a session in the fragment. Remove it from
+        // browser history before further navigation and keep it in memory only.
+        const callbackParams=new URLSearchParams(location.hash.slice(1));
+        if (callbackParams.has('access_token')) {
+            accountSession=callbackParams.get('access_token');
+            const recovery=callbackParams.get('type')==='recovery';
+            queueMicrotask(()=>document.getElementById('btn-tab-workspace').click());
+            history.replaceState(null,'',location.pathname+location.search);
+            document.getElementById('account-status').textContent=recovery?'Recovery link accepted. Enter a new password (at least 12 characters) and choose Set new password.':'Email link accepted. Your session is ready.';
+        }
+        async function lifecycleAction(path,method,body) {
+            const status=document.getElementById('account-status');
+            try {
+                const headers={'Content-Type':'application/json'};
+                if(accountSession)headers.Authorization='Bearer '+accountSession;
+                const response=await fetch('/account/'+path,{method,headers,body:JSON.stringify(body)});
+                const result=await response.json();
+                if(!response.ok)throw new Error(typeof result.detail==='string'?result.detail:'Please check the form values.');
+                status.textContent=result.message;
+                document.getElementById('account-password').value='';
+                if(path==='me'||path==='password'){
+                    accountSession=null;workspaceReport={};document.getElementById('workspace-output').textContent='';document.getElementById('workspace-summary').replaceChildren();
+                }
+            }catch(err){status.textContent=err.message;}
+        }
+        document.getElementById('account-recover').onclick=()=>lifecycleAction('recover','POST',{email:document.getElementById('account-email').value.trim()});
+        document.getElementById('account-update-password').onclick=()=>lifecycleAction('password','PUT',{password:document.getElementById('account-password').value});
+        document.getElementById('account-delete').onclick=()=>lifecycleAction('me','DELETE',{confirmation:document.getElementById('account-delete-confirmation').value});
         document.getElementById('account-login').onclick=()=>accountAction('login');
         document.getElementById('account-signup').onclick=()=>accountAction('signup');
         document.getElementById('account-logout').onclick=()=>{accountSession=null;workspaceReport={};document.getElementById('workspace-output').textContent='';document.getElementById('workspace-summary').replaceChildren();document.getElementById('account-password').value='';document.getElementById('account-status').textContent='Signed out.';};

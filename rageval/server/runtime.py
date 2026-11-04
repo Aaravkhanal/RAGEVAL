@@ -127,6 +127,8 @@ class ProductionHeadersMiddleware(BaseHTTPMiddleware):
         rid = request.headers.get("x-request-id") or str(uuid.uuid4())
         request.state.request_id = rid
         response = await call_next(request)
+        if request.url.path.startswith(("/account/", "/workspace/")):
+            response.headers["Cache-Control"] = "no-store"
         response.headers["X-Request-ID"] = rid
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
@@ -146,7 +148,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         protected_read = request.method == "GET" and any(path == prefix or path.startswith(prefix + "/") for prefix in PROTECTED_PREFIXES)
         if not limited and not job_start and not protected_read:
             return await call_next(request)
-        if request.method == "POST":
+        if request.method in {"POST", "PUT", "DELETE"}:
             body = await request.body()
             if len(body) > MAX_REQUEST_BYTES:
                 return JSONResponse(status_code=413, content={"detail": "Request body exceeds 64 KiB"})

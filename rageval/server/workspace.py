@@ -273,3 +273,13 @@ def operations(x_rageval_admin_token: str | None = Header(default=None)):
         'process_peak_rss_platform_units':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss, 'disk_free_bytes':disk.free,
         'jobs':{s:sum(r['state']==s for r in rows) for s in ['queued','running','complete','failed']},
         'note':'External alert delivery and uptime monitoring must be configured separately.'}
+
+@router.get('/backup')
+def export_application_backup(x_rageval_admin_token: str | None = Header(default=None)):
+    import hmac
+    expected = os.environ.get('RAGEVAL_ADMIN_TOKEN','')
+    if not expected or not x_rageval_admin_token or not hmac.compare_digest(expected,x_rageval_admin_token):
+        raise HTTPException(403,'Admin token required')
+    if not os.environ.get('RAGEVAL_SUPABASE_URL'):
+        raise HTTPException(409,'Remote storage is required for a consistent application snapshot')
+    return remote('POST','',{},resource='rpc/rageval_snapshot')

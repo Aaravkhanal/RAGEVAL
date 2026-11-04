@@ -140,3 +140,43 @@ prepared project with `python -m scripts.backup_remote restore private-backup.js
 confirmation. Tests cover data round trips and wrong-project rejection using an
 isolated transport. A live full-database restore, Auth-user backup, scheduled
 protected backup destination and alert recipient remain operational setup tasks.
+
+## Account lifecycle
+
+My benchmarks now includes Forgot password, Set new password, and permanent
+account deletion. Supabase email callbacks return to the hosted app; the fragment
+session is removed from browser history and retained in memory. Password updates
+require a verified session and at least 12 characters. Deletion requires the exact
+phrase DELETE MY ACCOUNT, removes only the verified owner's active records, then
+deletes that Auth user. Existing backups may retain the deleted records for up to
+seven days. Authentication is checked with Supabase on each request, including
+after account deletion; the app does not rely only on a JWT's expiration time.
+
+Email delivery/confirmation and actual password entry require the inbox owner.
+The default Supabase mail service has delivery restrictions; configure a suitable
+SMTP sender before offering registration to arbitrary public users. No test report
+claims a live confirmation email was received unless an inbox owner verifies it.
+
+## Protected scheduled backup and alerts
+
+Apply docs/storage/backups.sql. The admin-only GET /workspace/backup endpoint
+uses a single-statement consistent snapshot of both application tables. The daily
+GitHub backup workflow restores that live snapshot into disposable PostgreSQL
+databases, dumps/restores the complete application public schema and routines,
+compares data, and uploads ciphertext only. AES-256-CBC with PBKDF2 and a separate
+HMAC key derivation protects the archive; verify its HMAC before decrypting.
+GitHub artifacts expire after seven days. The encryption secret is separate from
+the service tokens and a private recovery copy is stored locally at
+~/.config/rageval/backup-encryption.key. Never commit or publish it.
+
+Download the .enc, .hmac and .sha256 files together. Set RAGEVAL_BACKUP_KEY in a
+private shell environment and call scripts.protected_backup.decrypt_snapshot
+before using the resulting JSON. Restore drills are restricted to local disposable
+PostgreSQL targets and never overwrite the live Supabase database. Failed backup
+jobs open a GitHub issue with the workflow link as an operator alert.
+
+This is a complete **application schema/data** recovery drill. It excludes
+Supabase Auth identities, Storage objects, and platform schemas. Full hosted
+PostgreSQL disaster recovery needs a database-level dump or managed backup and a
+separate compatible restore target. The service-role REST key cannot provide that
+full database backup. Do not describe this workflow as full Supabase recovery.

@@ -1,0 +1,56 @@
+name: Protected application backup and restore drill
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '43 2 * * *'
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: protected-backup
+  cancel-in-progress: false
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      RAGEVAL_PUBLIC_TOKEN: ${{ secrets.RAGEVAL_PUBLIC_TOKEN }}
+      RAGEVAL_ADMIN_TOKEN: ${{ secrets.RAGEVAL_ADMIN_TOKEN }}
+      RAGEVAL_BACKUP_KEY: ${{ secrets.RAGEVAL_BACKUP_KEY }}
+      RAGEVAL_RESTORE_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --require-hashes -r requirements-lock-fast.txt
+      - name: Install matching PostgreSQL clients
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y postgresql-client-16
+          echo '/usr/lib/postgresql/16/bin' >> "$GITHUB_PATH"
+      - name: Snapshot, restore in disposable databases, and encrypt
+        run: python -m scripts.protected_backup --verify-postgres --output rageval-backup.enc
+      - uses: actions/upload-artifact@v4
+        with:
+          name: encrypted-application-backup-${{ github.run_id }}
+          path: |
+            rageval-backup.enc
+            rageval-backup.enc.sha256
+            rageval-backup.enc.hmac
+          retention-days: 7
+          if-no-files-found: error
+      - name: Open an alert on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue create --repo "$GITHUB_REPOSITORY" --title 'Backup or restore drill failed' --body "Investigate $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID. No plaintext backup was uploaded."
