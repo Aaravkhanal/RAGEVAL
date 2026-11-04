@@ -1,0 +1,23 @@
+{
+  "workflow": "https://github.com/Aaravkhanal/RAGEVAL/actions/runs/41772437237",
+  "result": "success",
+  "live_snapshot_rows": {
+    "rageval_jobs": 2,
+    "rageval_records": 3
+  },
+  "checks": [
+    "consistent application snapshot",
+    "public schema and routines restored in disposable PostgreSQL",
+    "restored application rows matched source",
+    "authenticated encryption round trip",
+    "ciphertext-only artifact upload"
+  ],
+  "retention_days": 7,
+  "alert_delivery": "GitHub issue 2 created on failure and closed after successful retry",
+  "excluded": [
+    "Supabase Auth identities",
+    "Supabase platform schemas",
+    "Storage objects"
+  ],
+  "live_account_email_confirmation": "awaiting inbox-owner verification"
+}
