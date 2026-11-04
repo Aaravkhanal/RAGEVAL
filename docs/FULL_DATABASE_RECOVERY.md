@@ -1,6 +1,6 @@
 # Full Supabase logical recovery preparation
 
-The existing daily application snapshot is already verified. The separate manual
+The existing daily application snapshot is already verified. The separate daily
 workflow full-database-recovery.yml additionally dumps logical roles, schema and
 data, including auth.users and auth.identities. It follows the
 [Supabase backup/restore procedure](https://supabase.com/docs/guides/platform/migrating-within-supabase/backup-restore)
@@ -17,7 +17,7 @@ repository file. The script safely encodes special characters when building the
 session-pooler URI. The REST API/server key cannot replace this database password.
 No change to the live database password is required.
 
-## What the manual workflow does
+## What the workflow does
 
 1. Dumps roles, schema and COPY-formatted data to a private runner directory.
 2. Requires explicit COPY sections for both RAGeval tables and Auth users/identities.
@@ -29,8 +29,7 @@ No change to the live database password is required.
 8. Stops the disposable database. Failures open a repository issue.
 
 The live project is a read-only dump source and is never used as a restore target.
-This workflow stays manual until its first credentialed execution passes. Do not
-claim it passed based on mocked tests or the application-only restore report.
+The first credentialed run passed on November 4, 2026: https://github.com/Aaravkhanal/RAGEVAL/actions/runs/41774502581 . The workflow is now scheduled daily at 03:13 UTC (08:43 India time), with a manual trigger also available. Auth users and identities were empty in that source snapshot, so this does not establish a populated-account login recovery test.
 
 ## Recovery boundaries
 

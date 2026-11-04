@@ -1,6 +1,8 @@
 name: Full Supabase database backup and restore verification
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '13 3 * * *'
 permissions:
   contents: read
   issues: write

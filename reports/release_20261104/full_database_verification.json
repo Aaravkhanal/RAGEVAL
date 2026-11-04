@@ -1,0 +1,26 @@
+{
+  "workflow": "https://github.com/Aaravkhanal/RAGEVAL/actions/runs/41774502581",
+  "status": "passed",
+  "verified_rows": {
+    "public.rageval_records": 3,
+    "public.rageval_jobs": 2,
+    "auth.users": 0,
+    "auth.identities": 0
+  },
+  "encrypted_artifact": "encrypted-full-database-41774502581",
+  "encrypted_size_bytes": 271255,
+  "checks": [
+    "source roles/schema/data dumped",
+    "restored into isolated local Supabase Postgres",
+    "COPY row counts matched restored tables",
+    "authenticated encryption round trip passed",
+    "ciphertext-only artifact uploaded"
+  ],
+  "schedule_utc": "13 3 * * *",
+  "retention_days": 7,
+  "limitations": [
+    "source contained no registered Auth users",
+    "Storage file bytes and platform settings are separate recovery tasks"
+  ],
+  "live_source_used_as_restore_target": false
+}
