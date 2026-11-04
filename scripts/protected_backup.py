@@ -6,19 +6,26 @@ import os
 from pathlib import Path
 import subprocess
 import tempfile
+import time
 import httpx
 
 
 def fetch_snapshot():
-    with httpx.Client(timeout=120) as client:
-        response=client.get(os.environ.get('RAGEVAL_BASE_URL','https://rageval-free.onrender.com')+'/workspace/backup',headers={
-            'X-RAGEVAL-API-TOKEN':os.environ['RAGEVAL_PUBLIC_TOKEN'],
-            'X-RAGEVAL-ADMIN-TOKEN':os.environ['RAGEVAL_ADMIN_TOKEN']})
-        response.raise_for_status()
-        payload=response.json()
-    if payload.get('schema')!='rageval.logical_backup.v1' or set(payload['tables'])!={'rageval_records','rageval_jobs'}:
-        raise ValueError('Unexpected snapshot format')
-    return payload
+    for attempt in range(4):
+        try:
+            with httpx.Client(timeout=120) as client:
+                response=client.get(os.environ.get('RAGEVAL_BASE_URL','https://rageval-free.onrender.com')+'/workspace/backup',headers={
+                    'X-RAGEVAL-API-TOKEN':os.environ['RAGEVAL_PUBLIC_TOKEN'],
+                    'X-RAGEVAL-ADMIN-TOKEN':os.environ['RAGEVAL_ADMIN_TOKEN']})
+                response.raise_for_status()
+                payload=response.json()
+            if payload.get('schema')!='rageval.logical_backup.v1' or set(payload['tables'])!={'rageval_records','rageval_jobs'}:
+                raise ValueError('Unexpected snapshot format')
+            return payload
+        except (httpx.RequestError, httpx.HTTPStatusError, json.JSONDecodeError) as exc:
+            if isinstance(exc,httpx.HTTPStatusError) and exc.response.status_code not in (502,503,504): raise
+            if attempt==3: raise
+            time.sleep(10*(attempt+1))
 
 
 def encrypt_snapshot(payload, destination):
