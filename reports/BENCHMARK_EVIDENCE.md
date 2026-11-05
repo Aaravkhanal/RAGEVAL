@@ -50,3 +50,5 @@ The deployed workflow passed on 2026-11-05: https://github.com/Aaravkhanal/RAGEV
 The earlier full logical database restore passed: https://github.com/Aaravkhanal/RAGEVAL/actions/runs/41774502581 . Auth tables were empty; populated-account recovery is still pending.
 
 On 2026-11-05 the repository was observed to be public. Both backup schedules were disabled pending confirmation of a private destination or explicit approval for encrypted artifacts in the public repository. Existing backups use encryption; no plaintext exposure was established.
+
+The user subsequently approved encrypted backup artifacts in the public repository on 2026-11-05; both schedules were re-enabled. Independent human review was deferred, with the frozen review packet prepared for later.

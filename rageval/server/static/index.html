@@ -410,10 +410,11 @@
             <h2>My benchmarks</h2>
             <div class="panel" style="margin-bottom:16px">
                 <p>Sign in for a private workspace. Sessions stay in this tab’s memory.</p>
-                <label for="account-email">Email</label><input type="text" id="account-email" autocomplete="username">
+                <label for="account-email">Email</label><input type="email" id="account-email" autocomplete="username">
                 <label for="account-password">Password</label><input type="password" id="account-password" autocomplete="current-password">
                 <div class="sample-presets"><button class="preset-btn" id="account-login">Sign in</button><button class="preset-btn" id="account-signup">Create account</button><button class="preset-btn" id="account-logout">Sign out</button><button class="preset-btn" id="account-recover">Forgot password</button><button class="preset-btn" id="account-resend">Resend confirmation</button><button class="preset-btn" id="account-update-password">Set new password</button></div>
-                <label for="account-delete-confirmation">Permanently delete account and active workspace data: type DELETE MY ACCOUNT</label><input type="text" id="account-delete-confirmation" autocomplete="off"><button class="preset-btn" id="account-delete">Delete my account permanently</button><p id="account-status" role="status">Sign in to keep your datasets separate from other users.</p>
+                <p id="account-status" role="status" aria-live="polite">Sign in to keep your datasets separate from other users.</p>
+                <label for="account-delete-confirmation">Permanently delete account and active workspace data: type DELETE MY ACCOUNT</label><input type="text" id="account-delete-confirmation" autocomplete="off"><button class="preset-btn" id="account-delete">Delete my account permanently</button>
             </div>
             <p>Save custom benchmarks, measure the evaluator against human labels, and compare captured agent responses. Sign in to save private datasets. Operators can use the job admin token in Experiments for the shared admin workspace.</p>
             <div class="panel">
@@ -461,14 +462,41 @@
         });
         async function accountAction(action) {
             const status = document.getElementById('account-status');
+            const email = document.getElementById('account-email');
+            const password = document.getElementById('account-password');
+            const button = document.getElementById('account-'+action);
+            const otherButton = document.getElementById('account-'+(action==='signup'?'login':'signup'));
+            if (button.disabled) return;
+            status.scrollIntoView({block:'nearest'});
+            if (!email.value.trim() || !email.checkValidity()) {
+                status.textContent='Enter a valid email address.';
+                email.focus(); return;
+            }
+            if (password.value.length < 8) {
+                status.textContent='Enter a password with at least 8 characters.';
+                password.focus(); return;
+            }
+            const controller = new AbortController();
+            const timeout = setTimeout(()=>controller.abort(), 25000);
+            button.disabled=true; otherButton.disabled=true;
+            status.textContent=action==='signup'?'Creating account… Please wait.':'Signing in… Please wait.';
+            status.setAttribute('aria-busy','true');
             try {
-                const response = await fetch('/account/'+action, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('account-email').value.trim(),password:document.getElementById('account-password').value})});
-                const body = await response.json();
+                const response = await fetch('/account/'+action, {method:'POST',signal:controller.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.value.trim(),password:password.value})});
+                let body;
+                try { body=await response.json(); }
+                catch { throw new Error('The service returned an unexpected response ('+response.status+'). It may be restarting. Please try again shortly.'); }
                 if (!response.ok) throw new Error(typeof body.detail==='string'?body.detail:'Check your email and password (at least 8 characters).');
-                document.getElementById('account-password').value='';
+                password.value='';
                 if (body.access_token) {accountSession=body.access_token; status.textContent='Signed in. Your workspace is private.';}
-                else status.textContent=body.message;
-            } catch(err) {status.textContent=err.message;}
+                else status.textContent=body.message || 'Request completed. Check your email, including spam, for confirmation.';
+            } catch(err) {
+                status.textContent=err.name==='AbortError'?'The account service did not respond within 25 seconds. It may be waking up. Please try again shortly.':err instanceof TypeError?'Could not reach the account service. Check your connection and reload the page, then try again. Registration is not confirmed; check your inbox before retrying.':err.message;
+            } finally {
+                clearTimeout(timeout);
+                button.disabled=false; otherButton.disabled=false;
+                status.setAttribute('aria-busy','false');
+            }
         }
         // Supabase email links return a session in the fragment. Remove it from
         // browser history before further navigation and keep it in memory only.
