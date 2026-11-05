@@ -35,7 +35,8 @@ def auth_request(path, body=None, token=None, method=None):
             return json.loads(raw) if raw else {}
     except HTTPError as exc:
         try:
-            code = json.loads(exc.read()).get("error_code", "")
+            payload = json.loads(exc.read())
+            code = payload.get("error_code") or payload.get("code", "")
         except (ValueError, AttributeError):
             code = ""
         if code == "email_address_not_authorized":

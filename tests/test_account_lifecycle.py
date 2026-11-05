@@ -55,14 +55,15 @@ def test_delete_requires_exact_confirmation_and_removes_only_owner(client,monkey
     assert records('dataset')==[]
     accounts.owner.reset(marker)
 
-def test_mail_restriction_and_quota_are_actionable_without_echoing_address(client,monkeypatch):
+@pytest.mark.parametrize('code_field', ['error_code', 'code'])
+def test_mail_restriction_and_quota_are_actionable_without_echoing_address(client,monkeypatch,code_field):
     from urllib.error import HTTPError
     import io,json
     monkeypatch.setenv('RAGEVAL_SUPABASE_URL','https://example.supabase.co')
     monkeypatch.setenv('RAGEVAL_SUPABASE_KEY','test-only-key')
     for code,status in [('email_address_not_authorized',503),('over_email_send_rate_limit',429)]:
         def refused(*args,**kwargs):
-            raise HTTPError('https://example.supabase.co',400,'refused',{},io.BytesIO(json.dumps({'error_code':code,'msg':'private-recipient@example.com'}).encode()))
+            raise HTTPError('https://example.supabase.co',400,'refused',{},io.BytesIO(json.dumps({code_field:code,'msg':'private-recipient@example.com'}).encode()))
         monkeypatch.setattr('rageval.server.accounts.urlopen',refused)
         response=client.post('/account/resend',json={'email':'test@example.com'})
         assert response.status_code==status

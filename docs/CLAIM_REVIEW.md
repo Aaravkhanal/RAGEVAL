@@ -13,4 +13,4 @@ python scripts/export_claim_review.py \
   --output data/gold/review/claim_review_v1.jsonl
 ```
 
-Until independent labels are supplied, the existing 24-pair verifier evaluation remains diagnostic. Its partial-support F1 is zero. The code now checks faithfulness against all retrieved chunks and audits whether the cited subset supports the claim separately.
+Until independent labels are supplied, the existing 24-pair verifier evaluation remains a development diagnostic. After tuning on these examples, the lexical verifier makes 4 errors out of 24 (macro-F1 0.8529); this is not independent test accuracy. See `reports/release_20261104/ANALYSIS.md`. The code checks faithfulness against all retrieved chunks and audits whether the cited subset supports the claim separately.

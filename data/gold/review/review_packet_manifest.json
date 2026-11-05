@@ -1,0 +1,10 @@
+{
+  "queue": "data/gold/review/claim_review_v1.jsonl",
+  "sha256": "4964da179c47fa0c246e8d0555a58c3fa740132c87cb82626ba03c6e254a163d",
+  "answers": 40,
+  "independent_human_review": "pending",
+  "instructions": [
+    "docs/CLAIM_REVIEW.md",
+    "docs/ANNOTATION_GUIDELINES.md"
+  ]
+}
